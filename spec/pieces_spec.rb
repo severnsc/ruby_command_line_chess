@@ -21,17 +21,30 @@ describe Piece do
 
 		before(:example) {pawn.current_position = "A2"}
 
-		it "should be able to move 1 or 2 spaces forward from opening position" do
-			expect(pawn.)
+		it "should be able to move 1 space forward from opening position" do
+			expect(pawn.is_move_legal?("C2")).to eql(true)
 		end
 
+		it "should be able to move 2 spaces forward from opening position" do
+			expect(pawn.is_move_legal?("D2")).to eql(true)
+		end
+
+		before(:example) {pawn.current_position = "D2"}
+
 		it "should be able to move 1 space foward from other positions" do
+			expect(pawn.is_move_legal?("E2")).to eql(true)
+		end
+
+		it "should not be able to move 2 spaces forward from other positions" do
+			expect(pawn.is_move_legal?("F2")).to eql(false)
 		end
 
 		it "should not be able to move backwards" do
+			expect(pawn.is_move_legal?("C2")).to eql(false)
 		end
 
 		it "should not be able to move horizontally" do
+			expect(pawn.is_move_legal)
 		end
 
 		it "should be able to take a piece diagonally" do
