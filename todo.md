@@ -1,0 +1,13 @@
+-[ ] Create Board
+  -[ ] Should be 8 x 8
+  -[ ] X-axis letter markers
+  -[ ] Y-axis number markers
+  -[ ] Squares should alternate between black and white with A1 being black
+-[ ] Create Pieces
+  -[ ] Pawn
+    -[ ] Get printable character
+    -[ ] Opening move can be either 1 or 2 squares
+    -[ ] Regular moves are 1 square forward
+    -[ ] Can take other pieces diagonally
+    -[ ] if it reaches the last row opposite side of the board it can be transformed into a Queen, Knight, Rook or Bishop
+    
