@@ -1,1 +1,76 @@
--[ ] Create Board
+- [ ] Board
+  - [ ] 8 x 8
+  - [ ] X-axis letter markers
+  - [ ] Y-axis number markers
+  - [ ] Squares alternate between black and white with A1 being black
+  - [ ] When created, places all pieces in correct positions
+    - [ ] 8 pawns (for each color)
+    - [ ] 2 rooks
+    - [ ] 2 bishops
+    - [ ] 2 knights
+    - [ ] 1 queen
+    - [ ] 1 king
+- [ ] Pieces
+  - [ ] Are black or white
+  - [ ] Pawn
+    - [ ] Printable character
+    - [ ] Opening move can be either 1 or 2 squares
+    - [ ] Regular moves are 1 square forward
+    - [ ] Can take other pieces diagonally
+    - [ ] Can only move forward
+    - [ ] if it reaches the last row opposite side of the board it can be transformed into a Queen, Knight, Rook or Bishop
+    - [ ] If attacking a square that an opposing pawn makes a 2 square opening move through, it can capture the pawn and move           to square the opposing pawn moved through (en passant)
+  - [ ] Rook
+    - [ ] Printable Character
+    - [ ] Can move unlimited number of squares horizontally or vertically
+    - [ ] Can take other pieces horiztonally or vertically
+    - [ ] Can castle
+      - [ ] Rook has never moved
+      - [ ] King has never moved
+      - [ ] Squares between king and rook are open
+      - [ ] King is not in check
+      - [ ] King does not move into check
+      - [ ] King does not end in check
+      - [ ] King moves 2 squares towards rook
+      - [ ] Rook moves onto the first space the king crossed
+  - [ ] Bishop
+    - [ ] Printable character
+    - [ ] can move unlimited number of squares diagonally along same color
+    - [ ] can take pieces along diagonal
+  - [ ] Knight
+    - [ ] Printable character
+    - [ ] moves either 1 square horizontal and 2 squares vertical or vice-versa
+    - [ ] Can take pieces 1 square horizontal and 2 squares vertical or vice-versa
+  - [ ] Queen
+    - [ ] Printable character
+    - [ ] Can move in any direction, any number of squares
+    - [ ] Can take pieces in any direction
+  - [ ] King
+    - [ ] Printable character
+    - [ ] can move 1 square in any direction
+    - [ ] can take pieces 1 square in any direction
+- [ ] Player
+  - [ ] Has a name
+  - [ ] Has a color
+  - [ ] When created only the name is provided
+- [ ] Game
+  - [ ] Has two players
+  - [ ] Assigns colors to the two players randomly
+  - [ ] Tracks which player's turn it is
+  - [ ] Assigns the white player to go first
+  - [ ] tracks if the game is over
+    - [ ] If either king is in check mate the other player wins
+    - [ ] If the current player is not in check but has no legal moves left it is a draw
+    - [ ] If the same position is repeated three times it is a draw (threefold rule)
+      - [ ] Must involve the same types of pieces with the same move options each time
+    - [ ] If the last 50 moves haven't involved a capture or pawn move
+    - [ ] If there is insufficient material for a checkmate
+      - [ ] King vs King
+      - [ ] King and Bishop vs King
+      - [ ] King and Knight vs King
+      - [ ] King and Bishop vs King and Bishop when Bishops are on same color squares
+- [ ] Turn
+  - [ ] player gives a piece and coordinate order to take the turn i.e. Qe6 (Queen to E6)
+  - [ ] checks if the move is legal
+  - [ ] if an opponents piece is on the ending square then it is captured
+  - [ ] Captured pieces are removed from the board
