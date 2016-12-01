@@ -98,6 +98,62 @@ describe Piece do
 	end
 
 	describe Knight do
+		subject(:knight) {Knight.new "white"}
+
+		current_position = "D4"
+		before(:each) {knight.instance_variable_set(:@current_position, current_position)}
+
+		it "should be able to move 2 spaces up and 1 space left" do
+			expect(knight.is_move_legal?("C6")).to eql(true)
+		end
+
+		it "should be able to move 2 spaces up and 1 space right" do
+			expect(knight.is_move_legal?("E6")).to eql(true)
+		end
+
+		it "should be able to move 2 spaces left and 1 space up" do
+			expect(knight.is_move_legal?("B5")).to eql(true)
+		end
+
+		it "should be able to move 2 spaces left and 1 space down" do
+			expect(knight.is_move_legal("B3")).to eql(true)
+		end
+
+		it "should be able to move 2 spaces down and 1 space left" do
+			expect(knight.is_move_legal?("C2")).to eql(true)
+		end
+
+		it "should be able to move 2 spaces down and 1 space right" do
+			expect(knight.is_move_legal?("E2")).to eql(true)
+		end
+
+		it "should be able to move 2 spaces right and 1 space up" do
+			expect(knight.is_move_legal?("F5")).to eql(true)
+		end
+
+		it "should be able to move 2 spaces right and 1 space down" do
+			expect(knight.is_move_legal?("F3")).to eql(true)
+		end
+
+		it "should not be able to move straight backwards" do
+			expect(knight.is_move_legal?("D3")).to eql(false)
+		end
+
+		it "should not be able to move straight forwards" do
+			expect(knight.is_move_legal?("D5")).to eql(false)
+		end
+
+		it "should not be able to move straight to the left" do
+			expect(knight.is_move_legal?("C4")).to eql(false)
+		end
+
+		it "should not be able to move straight to the right" do
+			expect(knight.is_move_legal("E4")).to eql(false)
+		end
+
+		it "should not be able to move diagonally" do
+			expect(knight.is_move_legal?("E5")).to eql(false)
+		end 
 	end
 
 	describe Bishop do
