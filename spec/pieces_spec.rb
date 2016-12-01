@@ -13,47 +13,46 @@ describe Piece do
 	end
 
 	describe Pawn do
-		subject(:pawn) {Pawn.new "black"}
+		subject(:pawn) {Pawn.new "white"}
 
 		it "should respond to .current_position" do
 			expect(pawn).to respond_to(:current_position)
 		end
 
-		before(:example) {pawn.current_position = "A2"}
+		context "when in the starting position" do
 
-		it "should be able to move 1 space forward from opening position" do
-			expect(pawn.is_move_legal?("C2")).to eql(true)
+			before(:each) {pawn.current_position = "A2"}
+
+			it "should be able to move 1 space forward from opening position" do
+				expect(pawn.is_move_legal?("A3")).to eql(true)
+			end
+
+			it "should be able to move 2 spaces forward from opening position" do
+				expect(pawn.is_move_legal?("A4")).to eql(true)
+			end
+
 		end
 
-		it "should be able to move 2 spaces forward from opening position" do
-			expect(pawn.is_move_legal?("D2")).to eql(true)
-		end
+		context "after being moved from starting position" do
 
-		before(:example) {pawn.current_position = "D2"}
+			before(:each) {pawn.current_position = "D3"}
 
-		it "should be able to move 1 space foward from other positions" do
-			expect(pawn.is_move_legal?("E2")).to eql(true)
-		end
+			it "should be able to move 1 space foward from other positions" do
+				expect(pawn.is_move_legal?("D4")).to eql(true)
+			end
 
-		it "should not be able to move 2 spaces forward from other positions" do
-			expect(pawn.is_move_legal?("F2")).to eql(false)
-		end
+			it "should not be able to move 2 spaces forward from other positions" do
+				expect(pawn.is_move_legal?("D5")).to eql(false)
+			end
 
-		it "should not be able to move backwards" do
-			expect(pawn.is_move_legal?("C2")).to eql(false)
-		end
+			it "should not be able to move backwards" do
+				expect(pawn.is_move_legal?("D2")).to eql(false)
+			end
 
-		it "should not be able to move horizontally" do
-			expect(pawn.is_move_legal)
-		end
+			it "should not be able to move horizontally" do
+				expect(pawn.is_move_legal?("C3")).to eql(false)
+			end
 
-		it "should be able to take a piece diagonally" do
-		end
-
-		it "should receive .promote when it reaches the opponents first row" do
-		end
-
-		it "should capture an opposing pawn when en passant" do
 		end
 	end
 
