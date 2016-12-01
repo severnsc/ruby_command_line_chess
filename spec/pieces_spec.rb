@@ -116,7 +116,7 @@ describe Piece do
 		end
 
 		it "should be able to move 2 spaces left and 1 space down" do
-			expect(knight.is_move_legal("B3")).to eql(true)
+			expect(knight.is_move_legal?("B3")).to eql(true)
 		end
 
 		it "should be able to move 2 spaces down and 1 space left" do
@@ -148,7 +148,7 @@ describe Piece do
 		end
 
 		it "should not be able to move straight to the right" do
-			expect(knight.is_move_legal("E4")).to eql(false)
+			expect(knight.is_move_legal?("E4")).to eql(false)
 		end
 
 		it "should not be able to move diagonally" do
