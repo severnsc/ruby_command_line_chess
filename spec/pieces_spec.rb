@@ -12,16 +12,17 @@ describe Piece do
 		expect(piece.color).to eql("black")
 	end
 
+	it "should respond to .current_position" do
+		expect(piece).to respond_to(:current_position)
+	end
+
 	describe Pawn do
 		subject(:pawn) {Pawn.new "white"}
 
-		it "should respond to .current_position" do
-			expect(pawn).to respond_to(:current_position)
-		end
-
 		context "when in the starting position" do
 
-			before(:each) {pawn.current_position = "A2"}
+			current_position = "A2"
+			before(:each) {pawn.instance_variable_set(:@current_position, current_position)}
 
 			it "should be able to move 1 space forward from opening position" do
 				expect(pawn.is_move_legal?("A3")).to eql(true)
@@ -35,7 +36,8 @@ describe Piece do
 
 		context "after being moved from starting position" do
 
-			before(:each) {pawn.current_position = "D3"}
+			current_position = "D3"
+			before(:each) {pawn.instance_variable_set(:@current_position, current_position)}
 
 			it "should be able to move 1 space foward from other positions" do
 				expect(pawn.is_move_legal?("D4")).to eql(true)
@@ -57,6 +59,42 @@ describe Piece do
 	end
 
 	describe Rook do
+		subject(:rook) {Rook.new "white"}
+
+		context "when in the starting position" do
+			current_position = "A1"
+			before(:each) {rook.instance_variable_set(:@current_position, current_position)}
+
+			it "should be able to move up to 7 spaces vertically" do
+				expect(rook.is_move_legal?("A8")).to eql(true)
+			end
+
+			it "should be able to move up to 7 spaces horizontally" do
+				expect(rook.is_move_legal?("H1")).to eql(true)
+			end
+
+			it "should not be able to move diagonally" do
+				expect(rook.is_move_legal?("B2")).to eql(false)
+			end
+		end
+
+		context "when not in the starting position" do
+			current_position = "D4"
+			before(:each) {rook.instance_variable_set(:@current_position, current_position)}
+
+			it "should be able to move backwards" do
+				expect(rook.is_move_legal?("D2")).to eql(true)
+			end
+
+			it "should be able to move to the left" do
+				expect(rook.is_move_legal?("A4")).to eql(true)
+			end
+
+			it "should be able to move to the right" do
+				expect(rook.is_move_legal?("F4")).to eql(true)
+			end
+		end
+
 	end
 
 	describe Knight do
