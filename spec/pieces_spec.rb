@@ -226,7 +226,7 @@ describe Piece do
 		subject(:queen) {Queen.new "white"}
 
 		current_position = "D4"
-		queen.instance_variable_set(:@current_position, current_position)
+		before(:each) {queen.instance_variable_set(:@current_position, current_position)}
 
 		it "should be able to move 4 squares up" do
 			expect(queen.is_move_legal?("D8")).to eql(true)

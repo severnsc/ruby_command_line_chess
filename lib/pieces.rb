@@ -81,6 +81,20 @@ class Bishop < Piece
 end
 
 class Queen < Piece
+
+	def is_move_legal?(square)
+		@current_column = @current_position.split('').first.downcase
+		@current_row = @current_position.split('').last.to_i
+		x_values = ("a".."h").to_a
+		legal = false
+		x_dist = (x_values.index(square.split('').first.downcase) - x_values.index(@current_column)).abs
+		y_dist = (square.split('').last.to_i - @current_row).abs
+		legal = true if square.split('').first.downcase == current_column && (1..7).include?((square.split('').last.to_i - current_row).abs)
+		legal = true if ("a".."h").include?(square.split('').first.downcase) && square.split('').last.to_i == current_row && square.split('').first.downcase != current_column
+		legal = true if x_dist == y_dist
+		legal
+	end
+
 end
 
 class King < Piece
