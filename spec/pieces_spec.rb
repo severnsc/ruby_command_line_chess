@@ -157,6 +157,69 @@ describe Piece do
 	end
 
 	describe Bishop do
+		subject(:bishop) {Bishop.new "white"}
+
+		context "when in starting position on black square" do
+
+			current_position = "C1"
+			before(:each) {bishop.instance_variable_set(:@current_position, current_position)}
+
+			it "should be able to move up 1 left 1" do
+				expect(bishop.is_move_legal?("B2")).to eql(true)
+			end
+
+			it "should be able to move up 1 right 1" do
+				expect(bishop.is_move_legal?("D2")).to eql(true)
+			end
+
+			it "should be able to move 2 squares left diagonal" do
+				expect(bishop.is_move_legal?("A3")).to eql(true)
+			end
+
+			it "should be able to move 5 squares right diagonal" do
+				expect(bishop.is_move_legal?("H6")).to eql(true)
+			end
+
+			it "shouldn't be able to move up 1" do
+				expect(bishop.is_move_legal?("C2")).to eql(false)
+			end
+
+			it "shouldn't be able to move left 1" do
+				expect(bishop.is_move_legal?("B1")).to eql(false)
+			end
+
+			it "shouldn't be able to move right 1" do
+				expect(bishop.is_move_legal?("D1")).to eql(false)
+			end
+
+			it "shouldn't be able to jump to white square" do
+				expect(bishop.is_move_legal?("G2")).to eql(false)
+			end
+
+		end
+
+		context "when in the center of the board" do
+
+			current_position = "D4"
+			before(:each) {bishop.instance_variable_set(:@current_position, current_position)}
+
+			it "should be able to move down 1 left 1" do
+				expect(bishop.is_move_legal?("C3")).to eql(true)
+			end
+
+			it "should be able to move down 1 right 1" do
+				expect(bishop.is_move_legal?("E3")).to eql(true)
+			end
+
+			it "should be able to move down 3 left 3" do
+				expect(bishop.is_move_legal?("A1")).to eql(true)
+			end
+
+			it "should be able to move down 3 right 3" do
+				expect(bishop.is_move_legal?("G1")).to eql(true)
+			end
+
+		end
 	end
 
 	describe Queen do
