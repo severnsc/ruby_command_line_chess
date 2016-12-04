@@ -19,6 +19,20 @@ describe Piece do
 	describe Pawn do
 		subject(:pawn) {Pawn.new "white"}
 
+		it "should respond to display" do
+			expect(pawn).to respond_to(:display)
+		end
+
+		it "should print white pawn when white" do
+			expect{pawn.display}.to output("♙").to_stdout
+		end
+
+		subject(:black_pawn) {Pawn.new "black"}
+
+		it "should print black pawn when black" do
+			expect{black_pawn.display}.to output("♟").to_stdout
+		end
+
 		context "when in the starting position" do
 
 			current_position = "A2"
