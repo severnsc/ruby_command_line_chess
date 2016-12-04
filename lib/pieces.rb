@@ -98,4 +98,18 @@ class Queen < Piece
 end
 
 class King < Piece
+
+	def is_move_legal?(square)
+		@current_column = @current_position.split('').first.downcase
+		@current_row = @current_position.split('').last.to_i
+		x_values = ("a".."h").to_a
+		legal = false
+		x_dist = (x_values.index(square.split('').first.downcase) - x_values.index(@current_column)).abs
+		y_dist = (square.split('').last.to_i - @current_row).abs
+		legal = true if x_dist == 1 && y_dist == 1
+		legal = true if x_dist == 1 && y_dist == 0
+		legal = true if x_dist == 0 && y_dist == 1
+		legal
+	end
+
 end
