@@ -201,6 +201,20 @@ describe Piece do
 	describe Bishop do
 		subject(:bishop) {Bishop.new "white"}
 
+		it "should respond to display" do
+			expect(bishop).to respond_to(:display)
+		end
+
+		it "should print a white bishop when color is white" do
+			expect{bishop.display}.to output("♗").to_stdout
+		end
+
+		subject(:black_bishop) {Bishop.new "black"}
+
+		it "should print a black bishop when color is black" do
+			expect{black_bishop.display}.to output("♝").to_stdout
+		end
+
 		context "when in starting position on black square" do
 
 			current_position = "C1"
