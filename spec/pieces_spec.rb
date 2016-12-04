@@ -75,6 +75,20 @@ describe Piece do
 	describe Rook do
 		subject(:rook) {Rook.new "white"}
 
+		it "should respond to display" do
+			expect(rook).to respond_to(:display)
+		end
+
+		it "should print a white rook when color is white" do
+			expect{rook.display}.to output("♖").to_stdout
+		end
+
+		subject(:black_rook) {Rook.new "black"}
+
+		it "should print a black rook when color is black" do
+			expect{black_rook.display}.to output("♜").to_stdout
+		end
+
 		context "when in the starting position" do
 			current_position = "A1"
 			before(:each) {rook.instance_variable_set(:@current_position, current_position)}
