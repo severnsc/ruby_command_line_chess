@@ -266,6 +266,78 @@ describe Piece do
 	end
 
 	describe King do
+		subject(:king) {King.new "white"}
+
+		current_position = "D4"
+		before(:each) {king.instance_variable_set(:@current_position, current_position)}
+
+		it "should be able to move 1 space forward" do
+			expect(king.is_move_legal?("D5")).to eql(true)
+		end
+
+		it "should be able to move 1 space backwards" do
+			expect(king.is_move_legal?("D3")).to eql(true)
+		end
+
+		it "should be able to move 1 space left" do
+			expect(king.is_move_legal?("C4")).to eql(true)
+		end
+
+		it "should be able to move 1 space right" do
+			expect(king.is_move_legal?("E4")).to eql(true)
+		end
+
+		it "should be able to move 1 space up 1 space left" do
+			expect(king.is_move_legal?("C5")).to eql(true)
+		end
+
+		it "should be able to move 1 space up 1 space right" do
+			expect(king.is_move_legal?("E5")).to eql(true)
+		end
+
+		it "should be able to move 1 space down 1 space left" do
+			expect(king.is_move_legal?("C3")).to eql(true)
+		end
+
+		it "should be able to move 1 space down 1 space right" do
+			expect(king.is_move_legal?("E3")).to eql(true)
+		end
+
+		it "shouldn't be able to move 3 spaces up" do
+			expect(king.is_move_legal?("D7")).to eql(false)
+		end
+
+		it "shouldn't be able to move 3 spaces back" do
+			expect(king.is_move_legal?("D1")).to eql(false)
+		end
+
+		it "shouldn't be able to move 3 spaces left" do
+			expect(king.is_move_legal?("A4")).to eql(false)
+		end
+
+		it "shouldn't be able to move 3 spaces right" do
+			expect(king.is_move_legal?("G4")).to eql(false)
+		end
+
+		it "shouldn't be able to move 3 up 3 left" do
+			expect(king.is_move_legal?("A7")).to eql(false)
+		end
+
+		it "shouldn't be able to move 3 down 3 left" do
+			expect(king.is_move_legal?("A1")).to eql(false)
+		end
+
+		it "shouldn't be able to move 3 down 3 right" do
+			expect(king.is_move_legal?("G1")).to eql(false)
+		end
+
+		it "shouldn't be able to move 3 up 3 right" do
+			expect(king.is_move_legal?("G7")).to eql(false)
+		end
+
+		it "shouldn't be able to move 2 up 1 left" do
+			expect(king.is_move_legal?("C6")).to eql(false)
+		end
 	end
 
 end
