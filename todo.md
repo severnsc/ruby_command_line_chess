@@ -9,27 +9,27 @@
     - [ ] 2 knights
     - [ ] 1 queen
     - [ ] 1 king
-- [ ] Pieces
+- [x] Pieces
   - [x] Are black or white
-  - [ ] Pawn
-    - [ ] Printable character
+  - [x] Pawn
+    - [x] Printable character
     - [x] Opening move can be either 1 or 2 squares
     - [x] Regular moves are 1 square forward
     - [x] Can only move forward
-  - [ ] Rook
-    - [ ] Printable Character
+  - [x] Rook
+    - [x] Printable Character
     - [x] Can move unlimited number of squares horizontally or vertically
-  - [ ] Bishop
-    - [ ] Printable character
+  - [x] Bishop
+    - [x] Printable character
     - [x] can move unlimited number of squares diagonally along same color
-  - [ ] Knight
-    - [ ] Printable character
+  - [x] Knight
+    - [x] Printable character
     - [x] moves either 1 square horizontal and 2 squares vertical or vice-versa
-  - [ ] Queen
-    - [ ] Printable character
+  - [x] Queen
+    - [x] Printable character
     - [x] Can move in any direction, any number of squares
-  - [ ] King
-    - [ ] Printable character
+  - [x] King
+    - [x] Printable character
     - [x] can move 1 square in any direction
 - [ ] Player
   - [ ] Has a name
