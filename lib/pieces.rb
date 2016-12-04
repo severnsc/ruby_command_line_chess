@@ -152,4 +152,12 @@ class King < Piece
 		legal
 	end
 
+	def display
+		if @color == "white"
+			print "♔"
+		else
+			print "♚"
+		end
+	end
+
 end

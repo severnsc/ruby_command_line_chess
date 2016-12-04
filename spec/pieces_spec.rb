@@ -338,6 +338,20 @@ describe Piece do
 	describe King do
 		subject(:king) {King.new "white"}
 
+		it "should respond to display" do
+			expect(king).to respond_to(:display)
+		end
+
+		it "should print a white king when color is white" do
+			expect{king.display}.to output("♔").to_stdout
+		end
+
+		subject(:black_king) {King.new "black"}
+
+		it "should print a black king when color is black" do
+			expect{black_king.display}.to output("♚").to_stdout
+		end
+
 		current_position = "D4"
 		before(:each) {king.instance_variable_set(:@current_position, current_position)}
 
