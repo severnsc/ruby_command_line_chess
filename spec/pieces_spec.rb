@@ -223,6 +223,46 @@ describe Piece do
 	end
 
 	describe Queen do
+		subject(:queen) {Queen.new "white"}
+
+		current_position = "D4"
+		queen.instance_variable_set(:@current_position, current_position)
+
+		it "should be able to move 4 squares up" do
+			expect(queen.is_move_legal?("D8")).to eql(true)
+		end
+
+		it "should be able to move 3 squares back" do
+			expect(queen.is_move_legal?("D1")).to eql(true)
+		end
+
+		it "should be able to move 3 squares left" do
+			expect(queen.is_move_legal?("A4")).to eql(true)
+		end
+
+		it "should be able to move 4 squares right" do
+			expect(queen.is_move_legal?("H4")).to eql(true)
+		end
+
+		it "should be able to move 3 left 3 up" do
+			expect(queen.is_move_legal?("A7")).to eql(true)
+		end
+
+		it "should be able to move 4 right 4 up" do
+			expect(queen.is_move_legal?("H8")).to eql(true)
+		end
+
+		it "should be able to move 3 left 3 down" do
+			expect(queen.is_move_legal?("A1")).to eql(true)
+		end
+
+		it "should be able to move 3 right 3 down" do
+			expect(queen.is_move_legal?("G1")).to eql(true)
+		end
+
+		it "shouldn't be able to move up 2 right 1" do
+			expect(queen.is_move_legal?("E6")).to eql(false)
+		end
 	end
 
 	describe King do
