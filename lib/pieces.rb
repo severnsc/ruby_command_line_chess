@@ -57,7 +57,7 @@ class Rook < Piece
 	end
 
 	def display
-		if color == "white"
+		if @color == "white"
 			print "♖"
 		else
 			print "♜"
@@ -77,6 +77,14 @@ class Knight < Piece
 		y_dist = (square.split('').last.to_i - @current_row).abs
 		legal = true if [1,2].include?(x_dist) && [1,2].include?(y_dist) && x_dist != y_dist
 		legal
+	end
+
+	def display
+		if @color == "white"
+			print "♘"
+		else
+			print "♞"
+		end
 	end
 
 end

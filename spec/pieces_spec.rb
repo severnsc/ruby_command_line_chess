@@ -128,6 +128,20 @@ describe Piece do
 	describe Knight do
 		subject(:knight) {Knight.new "white"}
 
+		it "should respond to display" do
+			expect(knight).to respond_to(:display)
+		end
+
+		it "should print a white knight when color is white" do
+			expect{knight.display}.to output("♘").to_stdout
+		end
+
+		subject(:black_knight) {Knight.new "black"}
+
+		it "should print a black knight when color is black" do
+			expect{black_knight.display}.to output("♞").to_stdout
+		end
+
 		current_position = "D4"
 		before(:each) {knight.instance_variable_set(:@current_position, current_position)}
 
