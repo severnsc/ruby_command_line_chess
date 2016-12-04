@@ -31,10 +31,10 @@
   - [x] King
     - [x] Printable character
     - [x] can move 1 square in any direction
-- [ ] Player
-  - [ ] Has a name
-  - [ ] Has a color
-  - [ ] When created only the name is provided
+- [x] Player
+  - [x] Has a name
+  - [x] Has a color
+  - [x] When created only the name is provided
 - [ ] Game
   - [ ] Has two players
   - [ ] Assigns colors to the two players randomly
