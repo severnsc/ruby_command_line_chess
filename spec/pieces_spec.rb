@@ -281,6 +281,20 @@ describe Piece do
 	describe Queen do
 		subject(:queen) {Queen.new "white"}
 
+		it "should respond to display" do
+			expect(queen).to respond_to(:display)
+		end
+
+		it "should print a white queen when color is white" do
+			expect{queen.display}.to output("♕").to_stdout
+		end
+
+		subject(:black_queen) {Queen.new "black"}
+
+		it "should print a black queen when color is black" do
+			expect{black_queen.display}.to output("♛").to_stdout
+		end
+
 		current_position = "D4"
 		before(:each) {queen.instance_variable_set(:@current_position, current_position)}
 

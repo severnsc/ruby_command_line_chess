@@ -127,6 +127,14 @@ class Queen < Piece
 		legal
 	end
 
+	def display
+		if @color == "white"
+			print "♕"
+		else
+			print "♛"
+		end
+	end
+
 end
 
 class King < Piece
