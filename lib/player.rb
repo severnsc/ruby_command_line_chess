@@ -1,4 +1,5 @@
 class Player
+	attr_writer :color
 
 	def initialize name
 		@name = name
