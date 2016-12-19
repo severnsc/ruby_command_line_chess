@@ -39,6 +39,7 @@ describe Game do
 		end
 	end
 
+
 	describe ".game_over?" do
 
 		context "when win or draw conditions haven't been met" do
