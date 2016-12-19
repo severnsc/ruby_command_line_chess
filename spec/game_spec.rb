@@ -5,15 +5,15 @@ describe Game do
 	before(:each) do
 		@player1 = Player.new "player1"
 		@player2 = Player.new "player2"
-		@game = Game.new [@player1, @player2]
+		@game = Game.new(@player1, @player2)
 	end
 
 	context "when starting a new game" do
 
 		context "given incorrect arguments" do
 
-			it "raises a NoMethod error" do
-				expect(Game.new ["player1", "player2"]).to raise_error(NoMethodError)
+			it "raises a TypeError" do
+				expect{Game.new("player1", "player2")}.to raise_error
 			end
 
 		end
