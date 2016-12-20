@@ -4,7 +4,7 @@ class Board
 
 	attr_reader :squares, :pawns, :rooks, :knights, :bishops, :queens, :kings
 
-	@@x_axis = ("a".."h").to_a
+	@@x_axis = ("A".."H").to_a
 	@@y_axis = (1..8).to_a
 
 	def initialize
