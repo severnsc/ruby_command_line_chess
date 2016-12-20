@@ -64,7 +64,10 @@ describe Game do
 			end
 
 			context "because player is a different color than the piece to be moved" do
-				before {@game.current_player = @game.players.select {|p| p.color == "black"}}
+				before(:each) do 
+					current_player = @game.players.select {|p| p.color == "black"}
+					@game.instance_variable_set(:@current_player, current_player.first)
+				end
 
 				it "prints a message stating that the piece to be moved is a different color than the current player's color" do
 					expect{@game.play_turn("A2", "A3")}.to output("That's not your piece! Try again.").to_stdout
