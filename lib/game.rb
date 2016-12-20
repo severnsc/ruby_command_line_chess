@@ -61,20 +61,5 @@ class Game
 			false
 		end
 	end
-
-	def game_over?
-		if @player1.check_mate?
-			puts "Game over! Player 2 wins!"
-			true
-		elsif @player2.check_mate?
-			puts "Game over! Player 1 wins!"
-			true
-		elsif draw?
-			puts "Game over! It's a draw!"
-			true
-		else
-			false
-		end
-	end
 	
 end
