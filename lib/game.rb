@@ -26,13 +26,49 @@ class Game
 
 	def play_turn(start, finish)
 		moving_piece = @board.squares[start]
-		if moving_piece != "" && moving_piece.color == @current_player.color && moving_piece.is_move_legal?(finish)
+		if moving_piece.is_a? Pawn
+			if moving_piece.color != @current_player.color
+				puts "That's not your piece! Try again."
+				false
+			elsif moving_piece.is_move_legal?(finish) && @board.squares[finish] == ""
+				moving_piece.current_position = finish
+				@board.squares[start] = ""
+				@board.squares[finish] = moving_piece
+				puts finish
+			elsif moving_piece.is_move_legal?(finish) && @board.squares[finish].color == moving_piece.color
+				puts "You alredy have a piece there! Try again."
+				false
+			elsif moving_piece.is_move_legal?(finish) && @board.squares[finish].color != moving_piece.color
+				puts "That move is illegal! Try again."
+			elsif @board.squares[finish] != "" && @board.squares[finish].color != moving_piece.color && (((@board.x_axis.index(finish.split('').first) - @board.x_axis.index(moving_piece.current_column)).abs == 1) && (finish.split('').last.to_i - moving_piece.current_row) == 1)
+				@board.squares[finish].current_position = ""
+				@board.squares[finish] = moving_piece
+				@board.squares[start] = ""
+				moving_piece.current_position = finish
+				puts "#{start.split('').first}x" + finish
+			else
+				puts "That move is illegal! Try again."
+				false
+			end
+		elsif moving_piece != "" && moving_piece.color == @current_player.color && moving_piece.is_move_legal?(finish)
 			#If the piece on the destination square is an opposing color
 			if @board.squares[finish] != "" && @board.squares[finish].color != moving_piece.color
 				captured_piece = @board.squares[finish]
 				captured_piece.current_position = ""
 				@board.squares[finish] = moving_piece
+				@board.squares[start] = ""
 				moving_piece.current_position = finish
+				if moving_piece.is_a? Rook
+					puts "Rx" + finish
+				elsif moving_piece.is_a? Knight
+					puts "Nx" + finish
+				elsif moving_piece.is_a? Bishop
+					puts "Bx" + finish
+				elsif moving_piece.is_a? Queen
+					puts "Qx" + finish
+				else
+					puts "Kx" + finish
+				end	
 			#If the piece on the destination square is the same color
 			elsif @board.squares[finish] != "" && @board.squares[finish].color == moving_piece.color
 				puts "You already have a piece there! Try again."
@@ -43,9 +79,7 @@ class Game
 				moving_piece.current_position = finish
 				moving_piece.update_row_column
 				@board.squares[start] = ""
-				if moving_piece.is_a? Pawn
-					puts finish
-				elsif moving_piece.is_a? Rook
+				if moving_piece.is_a? Rook
 					puts "R" + finish
 				elsif moving_piece.is_a? Knight
 					puts "N" + finish
