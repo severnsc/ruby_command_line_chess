@@ -37,6 +37,7 @@ class Game
 			else
 				@board.squares[finish] = moving_piece
 				moving_piece.current_position = finish
+				moving_piece.update_row_column
 				@board.squares[start] = ""
 				if moving_piece.is_a? Pawn
 					puts finish
