@@ -33,12 +33,75 @@ describe Game do
 			end
 
 			it "sets the player who has color white to go first" do
-				expect(@game.players.select {|p| p.color == "white"}).to eql(@game.current_player)
+				expect(@game.current_player.color).to eql("white")
 			end
 
 		end
 	end
 
+	describe ".play_turn" do
+
+		context "when move is illegal" do
+
+			context "because of piece's movement" do
+				it "prints a message stating that the move is illegal and asking to try another move" do
+					expect{@game.play_turn("B2", "B1")}.to output("That move is illegal! Try again.\n").to_stdout
+				end
+
+				it "returns false" do
+					expect(@game.play_turn("B2", "B1")).to eql(false)
+				end
+			end
+
+			context "because piece of same color occupies destination square" do
+				it "prints a message stating a piece of the same color is already there and asks to try another move" do
+					expect{@game.play_turn("A1", "A2")}.to output("You already have a piece there! Try again.").to_stdout
+				end
+
+				it "returns false" do
+					expect(@game.play_turn("A1", "A2")).to eql(false)
+				end
+			end
+
+			context "because player is a different color than the piece to be moved" do
+				before {@game.current_player = @game.players.select {|p| p.color == "black"}}
+
+				it "prints a message stating that the piece to be moved is a different color than the current player's color" do
+					expect{@game.play_turn("A2", "A3")}.to output("That's not your piece! Try again.").to_stdout
+				end
+
+				it "returns false" do
+					expect(@game.play_turn("A2", "A3")).to eql(false)
+				end
+			end
+		end
+
+		context "when move is legal" do
+			context "and the square is open" do
+				
+				before(:each) do
+					@piece = @game.board.squares["A2"]
+					@game.play_turn("A2", "A3")
+				end
+
+				it "changes the destination square to the piece that was moved" do
+					expect(@game.board.squares["A3"]).to eql(@piece)
+				end
+
+				it "vacates the starting square" do
+					expect(@game.board.squares["A2"]).to eql("")
+				end
+
+				it "prints the Algebraic notation of the move to the terminal" do
+					expect{@game.play_turn("A3", "A4")}.to output("A4").to_stdout
+				end
+			end
+
+			context "when the square is occupied by an opposing piece" do
+			end
+		end
+
+	end
 
 	describe ".game_over?" do
 
