@@ -91,6 +91,10 @@ describe Game do
 					expect(@game.board.squares["A3"]).to eql(@piece)
 				end
 
+				it "updates the pieces current position to the destination square" do
+					expect(@piece.current_position).to eql("A3")
+				end
+
 				it "vacates the starting square" do
 					expect(@game.board.squares["A2"]).to eql("")
 				end
@@ -108,20 +112,65 @@ describe Game do
 					@white_rook = Rook.new "white"
 					@game.board.squares["A2"] = @white_rook
 					@white_rook.current_position = "A2"
-					@game.play_turn("A2", "A3")
 				end
 
 				it "removes the opposing piece from the board" do
+					@game.play_turn("A2", "A3")
 					expect(@black_pawn.current_position).to eql("")
 				end
 
+				it "vacates the start space" do
+					@game.play_turn("A2", "A3")
+					expect(@game.board.squares["A2"]).to eql("")
+				end
+
 				it "places the piece that was moved on the destination square" do
+					@game.play_turn("A2", "A3")
 					expect(@game.board.squares["A3"]).to eql(@white_rook)
 				end
 
 				it "updates the moved piece's current position to the destination square" do
+					@game.play_turn("A2", "A3")
 					expect(@white_rook.current_position).to eql("A3")
 				end
+
+				it "prints the algebraic notation of the move" do
+					expect{@game.play_turn("A2", "A3")}.to output("RxA3\n").to_stdout
+				end
+
+			end
+		end
+
+		context "when a pawn is capturing another piece" do
+			before(:each) do
+				@white_pawn = @game.board.squares["A2"]
+				@black_pawn = Pawn.new "black"
+				@game.board.squares["B3"] = @black_pawn
+				@black_pawn.current_position = "B3"
+			end
+
+			it "removes the captured piece from the board" do
+				@game.play_turn("A2", "B3")
+				expect(@black_pawn.current_position).to eql("")
+			end
+
+			it "vacates the start space" do
+				@game.play_turn("A2", "B3")
+				expect(@game.board.squares["A2"]).to eql("")
+			end
+
+			it "places the pawn on the destination diagonal space" do
+				@game.play_turn("A2", "B3")
+				expect(@game.board.squares["B3"]).to eql(@white_pawn)
+			end
+
+			it "updates the pawns current position to the diagonal space" do
+				@game.play_turn("A2", "B3")
+				expect(@white_pawn.current_position).to eql("B3")
+			end
+
+			it "prints the algebraic notation of the move" do
+				expect{@game.play_turn("A2", "B3")}.to output("AxB3\n").to_stdout
 			end
 		end
 
