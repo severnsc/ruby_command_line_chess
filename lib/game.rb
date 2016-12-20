@@ -36,6 +36,7 @@ class Game
 			#If the square is open
 			else
 				@board.squares[finish] = moving_piece
+				moving_piece.current_position = finish
 				@board.squares[start] = ""
 			end	
 		elsif moving_piece.color != @current_player.color
