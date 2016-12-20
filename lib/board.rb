@@ -33,37 +33,65 @@ class Board
 			end
 		end
 		black_pawn_squares = ["A7", "B7", "C7", "D7", "E7", "F7", "G7", "H7"]
-		black_pawns = @pawns.select {|pawn| pawn.color == "black"}
-		black_pawn_squares.each_with_index {|sq, index| @squares[sq] = black_pawns[index]}
+		black_pawns = pawns.select {|pawn| pawn.color == "black"}
+		black_pawn_squares.each_with_index do |sq, index| 
+			@squares[sq] = black_pawns[index]
+			black_pawns[index].current_position = @squares[sq]
+		end
 		white_pawn_squares = ["A2", "B2", "C2", "D2", "E2", "F2", "G2", "H2"]
-		white_pawns = @pawns.select {|pawn| pawn.color == "white"}
-		white_pawn_squares.each_with_index {|sq, index| @squares[sq] = white_pawns[index]}
+		white_pawns = pawns.select {|pawn| pawn.color == "white"}
+		white_pawn_squares.each_with_index do |sq, index| 
+			@squares[sq] = white_pawns[index]
+			white_pawns[index].current_position = @squares[sq]
+		end
 		black_rook_squares = ["A8", "H8"]
-		black_rooks = @rooks.select {|rook| rook.color == "black"}
-		black_rook_squares.each_with_index {|sq, index| @squares[sq] = black_rooks[index]}
+		black_rooks = rooks.select {|rook| rook.color == "black"}
+		black_rook_squares.each_with_index do |sq, index| 
+			@squares[sq] = black_rooks[index]
+			black_rooks[index].current_position = @squares[sq]
+		end
 		white_rook_squares = ["A1", "H1"]
-		white_rooks = @rooks.select {|rook| rook.color == "white"}
-		white_rook_squares.each_with_index {|sq, index| @squares[sq] = white_rooks[index]}
+		white_rooks = rooks.select {|rook| rook.color == "white"}
+		white_rook_squares.each_with_index do |sq, index| 
+			@squares[sq] = white_rooks[index]
+			white_rooks[index].current_position = @squares[sq]
+		end
 		black_knight_squares = ["B8", "G8"]
-		black_knights = @knights.select {|knight| knight.color == "black"}
-		black_knight_squares.each_with_index {|sq, index| @squares[sq] = black_knights[index]}
+		black_knights = knights.select {|knight| knight.color == "black"}
+		black_knight_squares.each_with_index do |sq, index|
+			@squares[sq] = black_knights[index]
+			black_knights[index].current_position = @squares[sq]
+		end
 		white_knight_squares = ["B1", "G1"]
-		white_knights = @knights.select {|knight| knight.color == "white"}
-		white_knight_squares.each_with_index {|sq, index| @squares[sq] = white_knights[index]}
+		white_knights = knights.select {|knight| knight.color == "white"}
+		white_knight_squares.each_with_index do |sq, index|
+			@squares[sq] = white_knights[index]
+			white_knights[index].current_position = @squares[sq]
+		end
 		black_bishop_squares = ["C8", "F8"]
-		black_bishops = @bishops.select {|bishop| bishop.color == "black"}
-		black_bishop_squares.each_with_index {|sq, index| @squares[sq] = black_bishops[index]}
+		black_bishops = bishops.select {|bishop| bishop.color == "black"}
+		black_bishop_squares.each_with_index do |sq, index|
+			@squares[sq] = black_bishops[index]
+			black_bishops[index].current_position = @squares[sq]
+		end
 		white_bishop_squares = ["C1", "F1"]
-		white_bishops = @bishops.select {|bishop| bishop.color == "white"}
-		white_bishop_squares.each_with_index {|sq, index| @squares[sq] = white_bishops[index]}
-		black_queen = @queens.select {|queen| queen.color == "black"}
+		white_bishops = bishops.select {|bishop| bishop.color == "white"}
+		white_bishop_squares.each_with_index do |sq, index|
+			@squares[sq] = white_bishops[index]
+			white_bishops[index].current_position = @squares[sq]
+		end
+		black_queen = queens.select {|queen| queen.color == "black"}
 		@squares["D8"] = black_queen[0]
-		white_queen = @queens.select {|queen| queen.color == "white"}
+		black_queen[0].current_position = @squares["D8"]
+		white_queen = queens.select {|queen| queen.color == "white"}
 		@squares["D1"] = white_queen[0]
-		black_king = @kings.select {|king| king.color == "black"}
+		white_queen[0].current_position = @squares["D1"]
+		black_king = kings.select {|king| king.color == "black"}
 		@squares["E8"] = black_king[0]
-		white_king = @kings.select {|king| king.color == "white"}
-		@squares["E1"] = white_king
+		black_king[0].current_position = @squares["E8"]
+		white_king = kings.select {|king| king.color == "white"}
+		@squares["E1"] = white_king[0]
+		white_king[0].current_position = @squares["E1"]
 	end
 
 	def x_axis
