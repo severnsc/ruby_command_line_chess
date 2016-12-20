@@ -104,32 +104,26 @@ class Board
 
 	def create_pawns(color)
 		8.times {|i| @pawns.push(Pawn.new color)}
-		@pawns
 	end
 
 	def create_rooks(color)
 		2.times {|i| @rooks.push(Rook.new color)}
-		@rooks
 	end
 
 	def create_bishops(color)
 		2.times {|i| @bishops.push(Bishop.new color)}
-		@bishops
 	end
 
 	def create_knights(color)
 		2.times {|i| @knights.push(Knight.new color)}
-		@knights
 	end
 
 	def create_queen(color)
 		@queens.push(Queen.new color)
-		@queens
 	end
 
 	def create_king(color)
 		@kings.push(King.new color)
-		@kings
 	end
 
 end
