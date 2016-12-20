@@ -56,7 +56,7 @@ class Rook < Piece
 		#move is legal if the column stays the same and the new row is 1-7 rows away
 		legal = true if square.split('').first == current_column && (1..7).include?((square.split('').last.to_i - current_row).abs)	
 		#move is legal if the row stays the same and the new column is 1-7 columns away
-		legal = true if ("a".."h").include?(square.split('').first) && square.split('').last.to_i == current_row && square.split('').first != current_column
+		legal = true if ("A".."H").include?(square.split('').first) && square.split('').last.to_i == current_row && square.split('').first != current_column
 		legal
 	end
 
@@ -74,7 +74,7 @@ class Knight < Piece
 
 	def is_move_legal?(square)
 		update_row_column
-		x_values = ("a".."h").to_a
+		x_values = ("A".."H").to_a
 		legal = false
 		x_dist = (x_values.index(square.split('').first) - x_values.index(@current_column)).abs
 		y_dist = (square.split('').last.to_i - @current_row).abs
@@ -96,7 +96,7 @@ class Bishop < Piece
 
 	def is_move_legal?(square)
 		update_row_column
-		x_values = ("a".."h").to_a
+		x_values = ("A".."H").to_a
 		legal = false
 		x_dist = (x_values.index(square.split('').first) - x_values.index(@current_column)).abs
 		y_dist = (square.split('').last.to_i - @current_row).abs
@@ -118,12 +118,12 @@ class Queen < Piece
 
 	def is_move_legal?(square)
 		update_row_column
-		x_values = ("a".."h").to_a
+		x_values = ("A".."H").to_a
 		legal = false
 		x_dist = (x_values.index(square.split('').first) - x_values.index(@current_column)).abs
 		y_dist = (square.split('').last.to_i - @current_row).abs
 		legal = true if square.split('').first == current_column && (1..7).include?((square.split('').last.to_i - current_row).abs)
-		legal = true if ("a".."h").include?(square.split('').first) && square.split('').last.to_i == current_row && square.split('').first != current_column
+		legal = true if ("A".."H").include?(square.split('').first) && square.split('').last.to_i == current_row && square.split('').first != current_column
 		legal = true if x_dist == y_dist
 		legal
 	end
@@ -142,7 +142,7 @@ class King < Piece
 
 	def is_move_legal?(square)
 		update_row_column
-		x_values = ("a".."h").to_a
+		x_values = ("A".."H").to_a
 		legal = false
 		x_dist = (x_values.index(square.split('').first) - x_values.index(@current_column)).abs
 		y_dist = (square.split('').last.to_i - @current_row).abs
