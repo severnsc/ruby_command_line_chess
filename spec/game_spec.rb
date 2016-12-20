@@ -55,7 +55,7 @@ describe Game do
 
 			context "because piece of same color occupies destination square" do
 				it "prints a message stating a piece of the same color is already there and asks to try another move" do
-					expect{@game.play_turn("A1", "A2")}.to output("You already have a piece there! Try again.").to_stdout
+					expect{@game.play_turn("A1", "A2")}.to output("You already have a piece there! Try again.\n").to_stdout
 				end
 
 				it "returns false" do
@@ -70,7 +70,7 @@ describe Game do
 				end
 
 				it "prints a message stating that the piece to be moved is a different color than the current player's color" do
-					expect{@game.play_turn("A2", "A3")}.to output("That's not your piece! Try again.").to_stdout
+					expect{@game.play_turn("A2", "A3")}.to output("That's not your piece! Try again.\n").to_stdout
 				end
 
 				it "returns false" do
@@ -96,7 +96,7 @@ describe Game do
 				end
 
 				it "prints the Algebraic notation of the move to the terminal" do
-					expect{@game.play_turn("A3", "A4")}.to output("A4").to_stdout
+					expect{@game.play_turn("A3", "A4")}.to output("A4\n").to_stdout
 				end
 			end
 
