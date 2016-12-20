@@ -1,5 +1,6 @@
 class Piece
-	attr_reader :color, :current_position, :current_column, :current_row
+	attr_reader :color, :current_column, :current_row
+	attr_accessor :current_position
 
 	def initialize(color)
 		@color = color
