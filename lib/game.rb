@@ -29,6 +29,10 @@ class Game
 		if moving_piece != "" && moving_piece.color == @current_player.color && moving_piece.is_move_legal?(finish)
 			#If the piece on the destination square is an opposing color
 			if @board.squares[finish] != "" && @board.squares[finish].color != moving_piece.color
+				captured_piece = @board.squares[finish]
+				captured_piece.current_position = ""
+				@board.squares[finish] = moving_piece
+				moving_piece.current_position = finish
 			#If the piece on the destination square is the same color
 			elsif @board.squares[finish] != "" && @board.squares[finish].color == moving_piece.color
 				puts "You already have a piece there! Try again."
