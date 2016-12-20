@@ -105,41 +105,5 @@ describe Game do
 		end
 
 	end
-
-	describe ".game_over?" do
-
-		context "when win or draw conditions haven't been met" do
-
-			it "returns false" do
-				expect(@game.game_over?).to eql(false)
-			end
-
-		end
-
-		context "when black is in check mate" do
-
-			it "returns true" do
-				expect(@game.game_over?).to eql(true)
-			end
-
-		end
-
-		context "when white is in check mate" do
-
-			it "returns true" do
-				expect(@game.game_over?).to eql(true)
-			end
-
-		end
-
-		context "when a draw has been reached" do
-
-			it "returns true" do
-				expect(@game.game_over?).to eql(true)
-			end
-
-		end
-
-	end
 	
 end
