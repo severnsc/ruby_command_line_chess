@@ -101,6 +101,27 @@ describe Game do
 			end
 
 			context "when the square is occupied by an opposing piece" do
+				before(:each) do
+					@black_pawn = Pawn.new "black"
+					@game.board.squares["A3"] = @black_pawn
+					@black_pawn.current_position = "A3"
+					@white_rook = Rook.new "white"
+					@game.board.squares["A2"] = @white_rook
+					@white_rook.current_position = "A2"
+					@game.play_turn("A2", "A3")
+				end
+
+				it "removes the opposing piece from the board" do
+					expect(@black_pawn.current_position).to eql("")
+				end
+
+				it "places the piece that was moved on the destination square" do
+					expect(@game.board.squares["A3"]).to eql(@white_rook)
+				end
+
+				it "updates the moved piece's current position to the destination square" do
+					expect(@white_rook.current_position).to eql("A3")
+				end
 			end
 		end
 
