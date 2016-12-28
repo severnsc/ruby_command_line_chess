@@ -26,8 +26,8 @@ class Game
 
 	def play_turn(start, finish)
 		moving_piece = @board.squares[start]
-		return "That move is illegal! Try again." unless moving_piece != ""
-		return "That move is illegal! Try again." unless moving_piece.color == @current_player.color
+		return "There's no piece there! Try again." unless moving_piece != ""
+		return "That's not your piece! Try again." unless moving_piece.color == @current_player.color
 		return "You already have a piece there! Try again." if @board.squares[finish] != "" && @board.squares[finish].color == moving_piece.color
 		pawn_capture(moving_piece, start, finish) if moving_piece.is_a?(Pawn) && (((@board.x_axis.index(finish.split('').first) - @board.x_axis.index(pawn.current_column)).abs == 1) && (finish.split('').last.to_i - pawn.current_row) == 1)
 		return "That move is illegal! Try again." unless moving_piece.is_move_legal?
