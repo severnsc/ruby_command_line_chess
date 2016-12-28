@@ -71,6 +71,81 @@ describe Game do
 			end
 		end
 
+		context "when performing a pawn capture" do
+			before(:each) {@board.squares["B6"] = Pawn.new "white"}
+
+			it "returns the algebraic notation of the capture" do
+				expect(@game.play_turn("A7", "B6")).to eql("AxB6")
+			end
+		end
+
+		context "when moving a pawn to an open square" do
+
+			it "returns the algebraic notation of the move" do
+				expect(@game.play_turn("A7", "A6")).to eql("A6")
+			end
+		end
+
+	end
+
+	describe ".pawn_legal_capture_distance?" do
+		subject(:black_pawn) {@board.squares["A7"]}
+
+		context "when moving a black pawn from A7 to B6" do
+			it "returns true" do
+				expect(@game.pawn_legal_capture_distance?(black_pawn, "B6")).to eql(true)
+			end
+		end
+
+	end
+
+	describe ".pawn_capture" do
+		before(:each) do
+			current_player = @game.players.select {|p| p.color == "black"}
+			@game.instance_variable_set(:@current_player, current_player[0])
+			@white_pawn = Pawn.new "white"
+			@board.squares["B6"] = @white_pawn
+			@capturing_pawn = @board.squares["A7"]
+			@capturing_pawn.update_row_column
+		end
+
+		before(:each) {@game.pawn_capture(@capturing_pawn, "A7", "B6")}
+
+		it "updates the current position of the captured piece to ''" do
+			expect(@white_pawn.current_position).to eql("")
+		end
+
+		it "sets the finish square equal to the capturing pawn" do
+			expect(@board.squares["B6"]).to eql(@capturing_pawn)
+		end
+
+		it "clears the start square setting it equal to ''" do
+			expect(@board.squares["A7"]).to eql("")
+		end
+
+		it "updates the capturing pawn's current position to the finish square" do
+			expect(@capturing_pawn.current_position).to eql("B6")
+		end
+
+	end
+
+	describe ".open_square_move" do
+		before(:each) do
+			@moving_piece = @board.squares["A7"]
+			@game.open_square_move(@moving_piece, "A7", "A6")
+		end
+
+		it "sets the finish square equal to the moving piece" do
+			expect(@board.squares["A6"]).to eql(@moving_piece)
+		end
+
+		it "clears the start square and sets it equal to ''" do
+			expect(@board.squares["A7"]).to eql("")
+		end
+
+		it "updates the moving piece's current position" do
+			expect(@moving_piece.current_position).to eql("A6")
+		end
 	end
 	
 end
