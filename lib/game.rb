@@ -29,10 +29,25 @@ class Game
 		return "There's no piece there! Try again." unless moving_piece != ""
 		return "That's not your piece! Try again." unless moving_piece.color == @current_player.color
 		return "You already have a piece there! Try again." if @board.squares[finish] != "" && @board.squares[finish].color == moving_piece.color
-		pawn_capture(moving_piece, start, finish) if moving_piece.is_a?(Pawn) && (((@board.x_axis.index(finish.split('').first) - @board.x_axis.index(pawn.current_column)).abs == 1) && (finish.split('').last.to_i - pawn.current_row) == 1)
-		return "That move is illegal! Try again." unless moving_piece.is_move_legal?
-		open_square_move(moving_piece, start, finish) if @board.squares[finish] == ""
-		piece_capture(moving_piece, start, finish) if @board.squares[finish] != ""
+		return pawn_capture(moving_piece, start, finish) if moving_piece.is_a?(Pawn) && pawn_legal_capture_distance?(moving_piece, finish)
+		return "That move is illegal! Try again." unless moving_piece.is_move_legal?(finish)
+		return open_square_move(moving_piece, start, finish) if @board.squares[finish] == ""
+		return piece_capture(moving_piece, start, finish) if @board.squares[finish] != ""
+	end
+
+	def pawn_legal_capture_distance?(pawn, square)
+		legal = false
+		landing_distance = []
+		landing_distance.push(@board.x_axis.index(square.split('').first) - @board.x_axis.index(pawn.current_column))
+		landing_distance.push(square.split('').last.to_i - pawn.current_row)
+		if pawn.color == "white"
+			legal_distances = [[-1, 1], [1,1]]
+			legal = true if legal_distances.include?(landing_distance)
+		else
+			legal_distances = [[-1, -1], [1, -1]]
+			legal = true if legal_distances.include?(landing_distance)
+		end
+		legal
 	end
 
 	def pawn_capture(pawn, start, finish)
@@ -47,23 +62,22 @@ class Game
 		@board.squares[finish] = piece
 		@board.squares[start] = ""
 		piece.current_position = finish
-		case piece.class
-		when Pawn
+		if piece.is_a? Pawn
 			return finish
-		when Rook
+		elsif piece.is_a? Rook
 			return "R" + finish
-		when Knight
+		elsif piece.is_a? Knight
 			return "N" + finish
-		when Bishop
+		elsif piece.is_a? Bishop
 			return "B" + finish
-		when Queen
+		elsif piece.is_a? Queen
 			return "Q" + finish
-		when King
+		else
 			return "K" + finish
 		end
 	end
 
-	def piece_capture(piece, start finish)
+	def piece_capture(piece, start, finish)
 		captured_piece = @board.squares[finish]
 		captured_piece.current_position = ""
 		@board.squares[finish] = piece
