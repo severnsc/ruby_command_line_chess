@@ -6,6 +6,7 @@ describe Game do
 		@player1 = Player.new "player1"
 		@player2 = Player.new "player2"
 		@game = Game.new(@player1, @player2)
+		@board = @game.board
 	end
 
 	context "when starting a new game" do
@@ -41,136 +42,32 @@ describe Game do
 
 	describe ".play_turn" do
 
+		before(:each) do
+			current_player = @game.players.select {|p| p.color == "black"}
+			@game.instance_variable_set(:@current_player, current_player[0])
+		end
+
+		context "when start square is empty" do
+			it "returns a message stating that there's no piece there" do
+				expect(@game.play_turn("A4", "A5")).to eql("There's no piece there! Try again.")
+			end
+		end
+
+		context "when moving piece isn't the same color as the current player" do
+			it "returns a message stating that the piece the player is attempting to move doesn't belong to them" do
+				expect(@game.play_turn("A2", "A3")).to eql("That's not your piece! Try again.")
+			end
+		end
+
+		context "when attempting to move a piece to a square where a different piece of the same color already is" do
+			it "returns a message stating that the player already has a piece on that square" do
+				expect(@game.play_turn("A8", "A7")).to eql("You already have a piece there! Try again.")
+			end
+		end
+
 		context "when move is illegal" do
-
-			context "because of piece's movement" do
-				it "prints a message stating that the move is illegal and asking to try another move" do
-					expect{@game.play_turn("B2", "B1")}.to output("That move is illegal! Try again.\n").to_stdout
-				end
-
-				it "returns false" do
-					expect(@game.play_turn("B2", "B1")).to eql(false)
-				end
-			end
-
-			context "because piece of same color occupies destination square" do
-				it "prints a message stating a piece of the same color is already there and asks to try another move" do
-					expect{@game.play_turn("A1", "A2")}.to output("You already have a piece there! Try again.\n").to_stdout
-				end
-
-				it "returns false" do
-					expect(@game.play_turn("A1", "A2")).to eql(false)
-				end
-			end
-
-			context "because player is a different color than the piece to be moved" do
-				before(:each) do 
-					current_player = @game.players.select {|p| p.color == "black"}
-					@game.instance_variable_set(:@current_player, current_player.first)
-				end
-
-				it "prints a message stating that the piece to be moved is a different color than the current player's color" do
-					expect{@game.play_turn("A2", "A3")}.to output("That's not your piece! Try again.\n").to_stdout
-				end
-
-				it "returns false" do
-					expect(@game.play_turn("A2", "A3")).to eql(false)
-				end
-			end
-		end
-
-		context "when move is legal" do
-			context "and the square is open" do
-				
-				before(:each) do
-					@piece = @game.board.squares["A2"]
-					@game.play_turn("A2", "A3")
-				end
-
-				it "changes the destination square to the piece that was moved" do
-					expect(@game.board.squares["A3"]).to eql(@piece)
-				end
-
-				it "updates the pieces current position to the destination square" do
-					expect(@piece.current_position).to eql("A3")
-				end
-
-				it "vacates the starting square" do
-					expect(@game.board.squares["A2"]).to eql("")
-				end
-
-				it "prints the Algebraic notation of the move to the terminal" do
-					expect{@game.play_turn("A3", "A4")}.to output("A4\n").to_stdout
-				end
-			end
-
-			context "when the square is occupied by an opposing piece" do
-				before(:each) do
-					@black_pawn = Pawn.new "black"
-					@game.board.squares["A3"] = @black_pawn
-					@black_pawn.current_position = "A3"
-					@white_rook = Rook.new "white"
-					@game.board.squares["A2"] = @white_rook
-					@white_rook.current_position = "A2"
-				end
-
-				it "removes the opposing piece from the board" do
-					@game.play_turn("A2", "A3")
-					expect(@black_pawn.current_position).to eql("")
-				end
-
-				it "vacates the start space" do
-					@game.play_turn("A2", "A3")
-					expect(@game.board.squares["A2"]).to eql("")
-				end
-
-				it "places the piece that was moved on the destination square" do
-					@game.play_turn("A2", "A3")
-					expect(@game.board.squares["A3"]).to eql(@white_rook)
-				end
-
-				it "updates the moved piece's current position to the destination square" do
-					@game.play_turn("A2", "A3")
-					expect(@white_rook.current_position).to eql("A3")
-				end
-
-				it "prints the algebraic notation of the move" do
-					expect{@game.play_turn("A2", "A3")}.to output("RxA3\n").to_stdout
-				end
-
-			end
-		end
-
-		context "when a pawn is capturing another piece" do
-			before(:each) do
-				@white_pawn = @game.board.squares["A2"]
-				@black_pawn = Pawn.new "black"
-				@game.board.squares["B3"] = @black_pawn
-				@black_pawn.current_position = "B3"
-			end
-
-			it "removes the captured piece from the board" do
-				@game.play_turn("A2", "B3")
-				expect(@black_pawn.current_position).to eql("")
-			end
-
-			it "vacates the start space" do
-				@game.play_turn("A2", "B3")
-				expect(@game.board.squares["A2"]).to eql("")
-			end
-
-			it "places the pawn on the destination diagonal space" do
-				@game.play_turn("A2", "B3")
-				expect(@game.board.squares["B3"]).to eql(@white_pawn)
-			end
-
-			it "updates the pawns current position to the diagonal space" do
-				@game.play_turn("A2", "B3")
-				expect(@white_pawn.current_position).to eql("B3")
-			end
-
-			it "prints the algebraic notation of the move" do
-				expect{@game.play_turn("A2", "B3")}.to output("AxB3\n").to_stdout
+			it "returns a message stating that the move is illegal" do
+				expect(@game.play_turn("A7", "A4")).to eql("That move is illegal! Try again.")
 			end
 		end
 
