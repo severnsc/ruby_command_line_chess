@@ -26,77 +26,60 @@ class Game
 
 	def play_turn(start, finish)
 		moving_piece = @board.squares[start]
-		if moving_piece.is_a? Pawn
-			if moving_piece.color != @current_player.color
-				puts "That's not your piece! Try again."
-				false
-			elsif moving_piece.is_move_legal?(finish) && @board.squares[finish] == ""
-				moving_piece.current_position = finish
-				@board.squares[start] = ""
-				@board.squares[finish] = moving_piece
-				puts finish
-			elsif moving_piece.is_move_legal?(finish) && @board.squares[finish].color == moving_piece.color
-				puts "You alredy have a piece there! Try again."
-				false
-			elsif moving_piece.is_move_legal?(finish) && @board.squares[finish].color != moving_piece.color
-				puts "That move is illegal! Try again."
-			elsif @board.squares[finish] != "" && @board.squares[finish].color != moving_piece.color && (((@board.x_axis.index(finish.split('').first) - @board.x_axis.index(moving_piece.current_column)).abs == 1) && (finish.split('').last.to_i - moving_piece.current_row) == 1)
-				@board.squares[finish].current_position = ""
-				@board.squares[finish] = moving_piece
-				@board.squares[start] = ""
-				moving_piece.current_position = finish
-				puts "#{start.split('').first}x" + finish
-			else
-				puts "That move is illegal! Try again."
-				false
-			end
-		elsif moving_piece != "" && moving_piece.color == @current_player.color && moving_piece.is_move_legal?(finish)
-			#If the piece on the destination square is an opposing color
-			if @board.squares[finish] != "" && @board.squares[finish].color != moving_piece.color
-				captured_piece = @board.squares[finish]
-				captured_piece.current_position = ""
-				@board.squares[finish] = moving_piece
-				@board.squares[start] = ""
-				moving_piece.current_position = finish
-				if moving_piece.is_a? Rook
-					puts "Rx" + finish
-				elsif moving_piece.is_a? Knight
-					puts "Nx" + finish
-				elsif moving_piece.is_a? Bishop
-					puts "Bx" + finish
-				elsif moving_piece.is_a? Queen
-					puts "Qx" + finish
-				else
-					puts "Kx" + finish
-				end	
-			#If the piece on the destination square is the same color
-			elsif @board.squares[finish] != "" && @board.squares[finish].color == moving_piece.color
-				puts "You already have a piece there! Try again."
-				false
-			#If the square is open
-			else
-				@board.squares[finish] = moving_piece
-				moving_piece.current_position = finish
-				moving_piece.update_row_column
-				@board.squares[start] = ""
-				if moving_piece.is_a? Rook
-					puts "R" + finish
-				elsif moving_piece.is_a? Knight
-					puts "N" + finish
-				elsif moving_piece.is_a? Bishop
-					puts "B" + finish
-				elsif moving_piece.is_a? Queen
-					puts "Q" + finish
-				else
-					puts "K" + finish
-				end	
-			end	
-		elsif moving_piece != "" && moving_piece.color != @current_player.color
-			puts "That's not your piece! Try again."
-			false
-		else
-			puts "That move is illegal! Try again."
-			false
+		return "That move is illegal! Try again." unless moving_piece != ""
+		return "That move is illegal! Try again." unless moving_piece.color == @current_player.color
+		return "You already have a piece there! Try again." if @board.squares[finish] != "" && @board.squares[finish].color == moving_piece.color
+		pawn_capture(moving_piece, start, finish) if moving_piece.is_a?(Pawn) && (((@board.x_axis.index(finish.split('').first) - @board.x_axis.index(pawn.current_column)).abs == 1) && (finish.split('').last.to_i - pawn.current_row) == 1)
+		return "That move is illegal! Try again." unless moving_piece.is_move_legal?
+		open_square_move(moving_piece, start, finish) if @board.squares[finish] == ""
+		piece_capture(moving_piece, start, finish) if @board.squares[finish] != ""
+	end
+
+	def pawn_capture(pawn, start, finish)
+		@board.squares[finish].current_position = ""
+		@board.squares[finish] = pawn
+		@board.squares[start] = ""
+		pawn.current_position = finish
+		return "#{start.split('').first}x" + finish
+	end
+
+	def open_square_move(piece, start, finish)
+		@board.squares[finish] = piece
+		@board.squares[start] = ""
+		piece.current_position = finish
+		case piece.class
+		when Pawn
+			return finish
+		when Rook
+			return "R" + finish
+		when Knight
+			return "N" + finish
+		when Bishop
+			return "B" + finish
+		when Queen
+			return "Q" + finish
+		when King
+			return "K" + finish
+		end
+	end
+
+	def piece_capture(piece, start finish)
+		captured_piece = @board.squares[finish]
+		captured_piece.current_position = ""
+		@board.squares[finish] = piece
+		@board.squares[start] = ""
+		piece.current_position = finish
+		case piece.class
+		when Rook
+			return "Rx" + finish
+		when Knight
+			return "Nx" + finish
+		when Bishop
+			return "Bx" + finish
+		when Queen
+			return "Qx" + finish
+		when King
+			return "Kx" + finish
 		end
 	end
 	
