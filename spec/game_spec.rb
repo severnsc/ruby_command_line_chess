@@ -65,6 +65,17 @@ describe Game do
 			end
 		end
 
+		context "when a piece is in the way of the desitnation square" do
+			before(:each) do
+				@black_pawn = Pawn.new "black"
+				@board.squares["A6"] = @black_pawn
+			end
+
+			it "prints a message stating that there is a piece in the way" do
+				expect{@game.play_turn("A7", "A5")}.to output("There's a piece in the way! Try again.\n").to_stdout
+			end
+		end
+
 		context "when move is illegal" do
 			it "prints a message stating that the move is illegal" do
 				expect{@game.play_turn("A7", "A4")}.to output("That move is illegal! Try again.\n").to_stdout
