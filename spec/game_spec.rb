@@ -65,7 +65,7 @@ describe Game do
 			end
 		end
 
-		context "when a piece is in the way of the desitnation square" do
+		context "when a piece is in the way of the destination square" do
 			before(:each) do
 				@black_pawn = Pawn.new "black"
 				@board.squares["A6"] = @black_pawn
