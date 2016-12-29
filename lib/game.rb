@@ -3,7 +3,7 @@ require_relative "./pieces.rb"
 require_relative "./board.rb"
 
 class Game
-	attr_reader :board, :current_player
+	attr_reader :board, :current_player, :king_in_check
 
 	def initialize(player1, player2)
 		player1.is_a?(Player) ? @player1 = player1 : raise(TypeError)
@@ -18,6 +18,7 @@ class Game
 			@player2.color = "white"
 		end
 		@player1.color == "white" ? @current_player = @player1 : @current_player = @player2
+		@king_in_check = false
 	end
 
 	def players
@@ -252,6 +253,13 @@ class Game
 		else
 			puts "Kx" + finish
 		end
+	end
+
+	def king_in_check?
+		@white_king = @board.kings.select {|k| k.color == "white"}[0]
+		@black_king = @board.kings.select {|k| k.color == "black"}[0]
+		@king_in_check = @white_king if @board.squares.any? {|sq, piece| piece != "" && piece.color == "black" && piece.is_move_legal?(@white_king.current_position) && !piece_in_the_way?(piece, sq, @white_king.current_position)}
+		@king_in_check = @black_king if @board.squares.any? {|sq, piece| piece != "" && piece.color == "white" && piece.is_move_legal?(@black_king.current_position) && !piece_in_the_way?(piece, sq, @black_king.current_position)}
 	end
 	
 end
