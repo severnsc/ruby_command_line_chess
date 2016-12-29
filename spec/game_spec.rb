@@ -476,5 +476,231 @@ describe Game do
 			expect(@black_rook.current_position).to eql("C5")
 		end
 	end
+
+	describe ".king_in_check?" do
+		subject(:king) {@board.kings.select {|k| k.color=="black"}[0]}
+		subject(:queen) {Queen.new "white"}
+
+		context "when King is at E8" do
+			before(:each) do
+				@board.squares["E8"] = king
+				king.current_position = "E8"
+			end
+
+			context "and attacking Queen at E7" do
+				before(:example) do
+					@board.squares["E7"] = queen
+					queen.current_position = "E7"
+					@game.king_in_check?
+				end
+
+				it "sets @game.king_in_check to the black King" do
+					expect(@game.king_in_check).to eql(king)
+				end
+			end
+
+			context "and attacking Queen at D7" do
+				before(:example) do
+					@board.squares["D7"] = queen
+					queen.current_position = "D7"
+					@game.king_in_check?
+				end
+
+				it "sets @game.king_in_check to the black King" do
+					expect(@game.king_in_check).to eql(king)
+				end
+			end
+
+			context "and attacking queen at F7" do
+				before(:example) do
+					@board.squares["F7"] = queen
+					queen.current_position = "F7"
+					@game.king_in_check?
+				end
+
+				it "sets @game.king_in_check to the black King" do
+					expect(@game.king_in_check).to eql(king)
+				end
+			end
+
+			context "and attacking queen at D8" do
+				before(:example) do
+					@board.squares["D8"] = queen
+					queen.current_position = "D8"
+					@game.king_in_check?
+				end
+
+				it "sets the @game.king_in_check to black King" do
+					expect(@game.king_in_check).to eql(king)
+				end
+			end
+
+			context "and attacking queen at F8" do
+				before(:example) do
+					@board.squares["E8"] = queen
+					queen.current_position = "E8"
+					@game.king_in_check?
+				end
+
+				it "sets @game.king_in_check to the black King" do
+					expect(@game.king_in_check).to eql(king)
+				end
+			end
+
+			context "and attacking queen is at E6 with pawn in the way" do
+				before(:example) do
+					@board.squares["E6"] = queen
+					queen.current_position = "E6"
+					@game.king_in_check?
+				end
+
+				it "leaves @game.king_in_check as false" do
+					expect(@game.king_in_check).to eql(false)
+				end
+			end
+
+			context "and attacking queen is at D6 with a pawn in the way" do
+				before(:example) do
+					@board.squares["D6"] = queen
+					queen.current_position = "D6"
+					@game.king_in_check?
+				end
+
+				it "leaves @game.king_in_check as false" do
+					expect(@game.king_in_check).to eql(false)
+				end
+			end
+
+			context "and attacking queen is at F6 with a pawn in the way" do
+				before(:example) do 
+					@board.squares["F6"] = queen
+					queen.current_position = "F6"
+					@game.king_in_check?
+				end
+
+				it "leaves @game.king_in_check as false" do
+					expect(@game.king_in_check).to eql(false)
+				end
+			end
+
+			context "and attacking queen is at C8 with a Queen in the way" do
+				before(:example) do
+					@board.squares["C8"] = queen
+					queen.current_position = "C8"
+					@game.king_in_check?
+				end
+
+				it "leaves @game.king_in_check as false" do
+					expect(@game.king_in_check).to eql(false)
+				end
+			end
+
+			context "and attacking queen is at G8 with a bishop in the way" do
+				before(:example) do
+					@board.squares["G8"] = queen
+					queen.current_position = "G8"
+					@game.king_in_check?
+				end
+
+				it "leaves @game.king_in_check as false" do
+					expect(@game.king_in_check).to eql(false)
+				end
+			end
+		end
+
+		context "when King is at E7" do
+			before(:each) do
+				@board.squares["E7"] = king
+				king.current_position = "E7"
+			end
+
+			context "and attacking queen is at E8" do
+				before(:example) do
+					@board.squares["E8"] = queen
+					queen.current_position = "E8"
+					@game.king_in_check?
+				end
+
+				it "sets @game.king_in_check to the black King" do
+					expect(@game.king_in_check).to eql(king)
+				end
+			end
+
+			context "and attacking queen is at D8" do
+				before(:example) do
+					@board.squares["D8"] = queen
+					queen.current_position = "D8"
+					@game.king_in_check?
+				end
+
+				it "sets @game.king_in_check to the black King" do
+					expect(@game.king_in_check).to eql(king)
+				end
+			end
+
+			context "and attacking queen is at F8" do
+				before(:example) do
+					@board.squares["F8"] = queen
+					queen.current_position = "F8"
+					@game.king_in_check?
+				end
+
+				it "sets @game.king_in_check to the black King" do
+					expect(@game.king_in_check).to eql(king)
+				end
+			end
+		end
+
+		context "when king is at E5 with a pawn blocker" do
+			subject(:blocking_pawn) {@board.pawns.select {|p| p.color=="black"}[0]}
+			
+			before(:each) do
+				@board.squares["E5"] = king
+				king.current_position = "E5"
+			end
+
+			context "and attacking queen is at E7 with black pawn at E6" do
+				before(:example) do
+					@board.squares["E6"] = blocking_pawn
+					blocking_pawn.current_position = "E6"
+					@board.squares["E7"] = queen
+					queen.current_position = "E7"
+					@game.king_in_check?
+				end
+
+				it "leaves @game.king_in_check as false" do
+					expect(@game.king_in_check).to eql(false)
+				end
+			end
+
+			context "and attacking queen is at C7 with black pawn at D6" do
+				before(:example) do
+					@board.squares["D6"] = blocking_pawn
+					blocking_pawn.current_position = "D6"
+					@board.squares["C7"] = queen
+					queen.current_position = "C7"
+					@game.king_in_check?
+				end
+
+				it "leaves @game.king_in_check as false" do
+					expect(@game.king_in_check).to eql(false)
+				end
+			end
+
+			context "and attacking queen is at G7 with a black pawn at F6" do
+				before(:example) do
+					@board.squares["F6"] = blocking_pawn
+					blocking_pawn.current_position = "F6"
+					@board.squares["G7"] = queen
+					queen.current_position = "G7"
+					@game.king_in_check?
+				end
+
+				it "leaves @game.king_in_check as false" do
+					expect(@game.king_in_check).to eql(false)
+				end
+			end
+		end
+	end
 	
 end
