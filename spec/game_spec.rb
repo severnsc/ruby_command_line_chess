@@ -77,12 +77,39 @@ describe Game do
 			it "prints the algebraic notation of the capture" do
 				expect{@game.play_turn("A7", "B6")}.to output("AxB6\n").to_stdout
 			end
+
+			it "updates the current player to the player of the opposing color" do
+				@game.play_turn("A7", "B6")
+				expect(@game.current_player).to eql(@game.players.select {|p| p.color=="white"}[0])
+			end
 		end
 
 		context "when moving a pawn to an open square" do
 
 			it "prints the algebraic notation of the move" do
 				expect{@game.play_turn("A7", "A6")}.to output("A6\n").to_stdout
+			end
+		end
+
+		context "when capturing a piece with a rook" do
+			before(:each) do
+				@black_rook = Rook.new "black"
+				@board.squares["C6"] = @black_rook
+				@black_rook.current_position = "C6"
+				@black_rook.update_row_column
+				@white_pawn = Pawn.new "white"
+				@board.squares["C5"] = @white_pawn
+				@white_pawn.current_position = "C5"
+				@white_pawn.update_row_column
+			end
+
+			it "prints the algebraic notation of the capture" do
+				expect{@game.play_turn("C6", "C5")}.to output("RxC5").to_stdout
+			end
+
+			it "updates the current player to the player of opposing color" do
+				@game.play_turn("C6", "C5")
+				expect(@game.current_player).to eql(@game.players.select {|p| p.color=="white"}[0])
 			end
 		end
 
@@ -145,6 +172,36 @@ describe Game do
 
 		it "updates the moving piece's current position" do
 			expect(@moving_piece.current_position).to eql("A6")
+		end
+	end
+
+	describe ".piece_capture" do
+		before(:each) do
+			@black_rook = Rook.new "black"
+			@board.squares["C6"] = @black_rook
+			@black_rook.current_position = "C6"
+			@black_rook.update_row_column
+			@white_pawn = Pawn.new "white"
+			@board.squares["C5"] = @white_pawn
+			@white_pawn.current_position = "C5"
+			@white_pawn.update_row_column
+			@game.piece_capture(@black_rook, "C6", "C5")
+		end
+
+		it "updates the captured piece's current position to ''" do
+			expect(@white_pawn.current_position).to eql("")
+		end
+
+		it "moves the capturing piece to the finish square" do
+			expect(@board.squares["C5"]).to eql(@black_rook)
+		end
+
+		it "clears the starting square" do
+			expect(@board.squares["C6"]).to eql("")
+		end
+
+		it "updates the capturing piece's current position to the finish square" do
+			expect(@black_rook.current_position).to eql("C5")
 		end
 	end
 	
