@@ -34,8 +34,19 @@ class Game
 		elsif @board.squares[finish] != "" && @board.squares[finish].color == moving_piece.color
 			puts "You already have a piece there! Try again."
 		elsif moving_piece.is_a?(Pawn) && pawn_legal_capture_distance?(moving_piece, finish)
+			captured_piece = @board.squares[finish]
 			pawn_capture(moving_piece, start, finish)
-			@current_player = players.select {|p| p != @current_player}[0]
+			king_in_check?
+			if @king_in_check && @king_in_check.color == @current_player.color
+				@board.squares[finish] = captured_piece
+				captured_piece.current_position = finish
+				moving_piece.current_position = start
+				@board.squares[start] = moving_piece
+				@king_in_check = false
+				puts "That puts your king in check! Try again."
+			else
+				@current_player = players.select {|p| p != @current_player}[0]
+			end
 		elsif !moving_piece.is_move_legal?(finish)
 			puts "That move is illegal! Try again."
 		elsif piece_in_the_way?(moving_piece, start, finish)
@@ -258,8 +269,8 @@ class Game
 	def king_in_check?
 		@white_king = @board.kings.select {|k| k.color == "white"}[0]
 		@black_king = @board.kings.select {|k| k.color == "black"}[0]
-		@king_in_check = @white_king if @board.squares.any? {|sq, piece| piece != "" && piece.color == "black" && piece.is_move_legal?(@white_king.current_position) && !piece_in_the_way?(piece, sq, @white_king.current_position)}
-		@king_in_check = @black_king if @board.squares.any? {|sq, piece| piece != "" && piece.color == "white" && piece.is_move_legal?(@black_king.current_position) && !piece_in_the_way?(piece, sq, @black_king.current_position)}
+		@board.squares.any? {|sq, piece| piece != "" && piece.color == "black" && piece.is_move_legal?(@white_king.current_position) && !piece_in_the_way?(piece, sq, @white_king.current_position)} ? @king_in_check = @white_king : @king_in_check = false
+		@board.squares.any? {|sq, piece| piece != "" && piece.color == "white" && piece.is_move_legal?(@black_king.current_position) && !piece_in_the_way?(piece, sq, @black_king.current_position)} ? @king_in_check = @black_king : @king_in_check = false
 	end
 	
 end
