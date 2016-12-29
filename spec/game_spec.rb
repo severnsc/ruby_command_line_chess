@@ -104,7 +104,7 @@ describe Game do
 			end
 
 			it "prints the algebraic notation of the capture" do
-				expect{@game.play_turn("C6", "C5")}.to output("RxC5").to_stdout
+				expect{@game.play_turn("C6", "C5")}.to output("RxC5\n").to_stdout
 			end
 
 			it "updates the current player to the player of opposing color" do
