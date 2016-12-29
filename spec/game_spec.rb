@@ -124,6 +124,51 @@ describe Game do
 			end
 		end
 
+		context "when a pawn capture would put the current player's King in check" do
+			before(:each) do |example|
+				@black_pawn = @board.squares["E7"]
+				@black_king = @board.squares["E8"]
+				@white_queen = @board.squares["D1"]
+				@white_pawn = @board.squares["D2"]
+				@white_pawn.current_position = "D6"
+				@board.squares["D6"] = @white_pawn
+				@white_queen.current_position = "E6"
+				@board.squares["E6"] = @white_queen
+				unless example.metadata[:skip_before]
+					@game.play_turn("E7", "D6")
+				end
+			end
+
+			it "prints a message saying the move is illegal because it puts current player's king in check", skip_before: true do
+				expect{@game.play_turn("E7", "D6")}.to output("ExD6\nThat puts your king in check! Try again.\n").to_stdout
+			end
+
+			it "replaces the captured piece on the board" do
+				expect(@board.squares["D6"]).to eql(@white_pawn)
+			end
+
+			it "resets the captured piece's current position to its original square" do
+				expect(@white_pawn.current_position).to eql("D6")
+			end
+
+			it "moves the moving piece back to its original square" do
+				expect(@board.squares["E7"]).to eql(@black_pawn)
+			end
+
+			it "updates the moving piece's current position to its original square" do
+				expect(@black_pawn.current_position).to eql("E7")
+			end
+
+			it "resets @king_in_check to false" do
+				expect(@game.king_in_check).to eql(false)
+			end
+
+			it "leaves the current player the same" do
+				expect(@game.current_player).to eql(@game.players.select {|p| p.color=="black"}[0])
+			end
+
+		end
+
 	end
 
 	describe ".piece_in_the_way?" do
