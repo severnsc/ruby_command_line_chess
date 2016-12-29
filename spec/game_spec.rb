@@ -208,6 +208,48 @@ describe Game do
 
 		end
 
+		context "when a piece capture would put the current player's king in check" do
+			before(:each) do |example|
+				@black_king = @board.squares["E8"]
+				@black_knight = @board.squares["B8"]
+				@white_queen = @board.squares["D1"]
+				@white_pawn = @board.squares["D2"]
+				@black_knight.current_position = "E7"
+				@board.squares["E7"] = @black_knight
+				@white_queen.current_position = "E6"
+				@board.squares["E6"] = @white_queen
+				@white_pawn.current_position = "F5"
+				@board.squares["F5"] = @white_pawn
+				unless example.metadata[:skip_before]
+					@game.play_turn("E7", "F5")
+				end
+			end
+
+			it "prints a message stating that you can't put your own king in check", skip_before: true do
+				expect{@game.play_turn("E7", "F5")}.to output("NxF5\nThat puts your king in check! Try again.\n").to_stdout
+			end
+
+			it "replaces the captured piece on the board" do
+				expect(@board.squares["F5"]).to  eql(@white_pawn)
+			end
+
+			it "updates the captured piece's current position to the original square" do
+				expect(@white_pawn.current_position).to eql("F5")
+			end
+
+			it "replaces the moving piece to its original square" do
+				expect(@board.squares["E7"]).to eql(@black_knight)
+			end
+
+			it "updates the moving piece's current position to its original position" do
+				expect(@black_knight.current_position).to eql("E7")
+			end
+
+			it "resets @king_in_check to false" do
+				expect(@game.king_in_check).to eql(false)
+			end
+		end
+
 	end
 
 	describe ".piece_in_the_way?" do
