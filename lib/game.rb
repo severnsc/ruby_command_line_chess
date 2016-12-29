@@ -41,6 +41,7 @@ class Game
 			open_square_move(moving_piece, start, finish)
 		elsif @board.squares[finish] != ""
 			piece_capture(moving_piece, start, finish)
+			@current_player = players.select {|p| p != @current_player}[0]
 		end
 	end
 
@@ -92,16 +93,15 @@ class Game
 		@board.squares[finish] = piece
 		@board.squares[start] = ""
 		piece.current_position = finish
-		case piece.class
-		when Rook
+		if piece.is_a? Rook
 			puts "Rx" + finish
-		when Knight
+		elsif piece.is_a? Knight
 			puts "Nx" + finish
-		when Bishop
+		elsif piece.is_a? Bishop
 			puts "Bx" + finish
-		when Queen
+		elsif piece.is_a? Queen
 			puts "Qx" + finish
-		when King
+		else
 			puts "Kx" + finish
 		end
 	end
