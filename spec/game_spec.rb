@@ -100,6 +100,11 @@ describe Game do
 			it "prints the algebraic notation of the move" do
 				expect{@game.play_turn("A7", "A6")}.to output("A6\n").to_stdout
 			end
+
+			it "changes the current player to the opponent" do
+				@game.play_turn("A7", "A6")
+				expect(@game.current_player).to eql(@game.players.select {|p| p.color=="white"}[0])
+			end
 		end
 
 		context "when capturing a piece with a rook" do
