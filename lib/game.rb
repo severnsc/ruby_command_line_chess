@@ -26,13 +26,22 @@ class Game
 
 	def play_turn(start, finish)
 		moving_piece = @board.squares[start]
-		return "There's no piece there! Try again." unless moving_piece != ""
-		return "That's not your piece! Try again." unless moving_piece.color == @current_player.color
-		return "You already have a piece there! Try again." if @board.squares[finish] != "" && @board.squares[finish].color == moving_piece.color
-		return pawn_capture(moving_piece, start, finish) if moving_piece.is_a?(Pawn) && pawn_legal_capture_distance?(moving_piece, finish)
-		return "That move is illegal! Try again." unless moving_piece.is_move_legal?(finish)
-		return open_square_move(moving_piece, start, finish) if @board.squares[finish] == ""
-		return piece_capture(moving_piece, start, finish) if @board.squares[finish] != ""
+		if moving_piece == ""
+			puts "There's no piece there! Try again."
+		elsif moving_piece.color != @current_player.color
+			puts "That's not your piece! Try again."
+		elsif @board.squares[finish] != "" && @board.squares[finish].color == moving_piece.color
+			puts "You already have a piece there! Try again."
+		elsif moving_piece.is_a?(Pawn) && pawn_legal_capture_distance?(moving_piece, finish)
+			pawn_capture(moving_piece, start, finish)
+			@current_player = players.select {|p| p != @current_player}[0]
+		elsif !moving_piece.is_move_legal?(finish)
+			puts "That move is illegal! Try again."
+		elsif @board.squares[finish] == ""
+			open_square_move(moving_piece, start, finish)
+		elsif @board.squares[finish] != ""
+			piece_capture(moving_piece, start, finish)
+		end
 	end
 
 	def pawn_legal_capture_distance?(pawn, square)
@@ -55,7 +64,7 @@ class Game
 		@board.squares[finish] = pawn
 		@board.squares[start] = ""
 		pawn.current_position = finish
-		return "#{start.split('').first}x" + finish
+		puts "#{start.split('').first}x" + finish
 	end
 
 	def open_square_move(piece, start, finish)
@@ -63,17 +72,17 @@ class Game
 		@board.squares[start] = ""
 		piece.current_position = finish
 		if piece.is_a? Pawn
-			return finish
+			puts finish
 		elsif piece.is_a? Rook
-			return "R" + finish
+			puts "R" + finish
 		elsif piece.is_a? Knight
-			return "N" + finish
+			puts "N" + finish
 		elsif piece.is_a? Bishop
-			return "B" + finish
+			puts "B" + finish
 		elsif piece.is_a? Queen
-			return "Q" + finish
+			puts "Q" + finish
 		else
-			return "K" + finish
+			puts "K" + finish
 		end
 	end
 
@@ -85,15 +94,15 @@ class Game
 		piece.current_position = finish
 		case piece.class
 		when Rook
-			return "Rx" + finish
+			puts "Rx" + finish
 		when Knight
-			return "Nx" + finish
+			puts "Nx" + finish
 		when Bishop
-			return "Bx" + finish
+			puts "Bx" + finish
 		when Queen
-			return "Qx" + finish
+			puts "Qx" + finish
 		when King
-			return "Kx" + finish
+			puts "Kx" + finish
 		end
 	end
 	
