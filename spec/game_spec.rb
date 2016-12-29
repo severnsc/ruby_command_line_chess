@@ -308,6 +308,83 @@ describe Game do
 				end
 			end
 		end
+
+		context "when moving a Queen with a piece in the way" do
+			subject(:queen) {Queen.new "black"}
+			subject(:pawn) {Pawn.new "white"}
+
+			before(:each) {@board.squares["D4"] = queen}
+
+			context "and the queen is moving vertically" do
+				context "up the board" do
+					before(:example) {@board.squares["D5"] = pawn}
+
+					it "returns true" do
+						expect(@game.piece_in_the_way?(queen, "D4", "D6")).to eql(true)
+					end
+				end
+
+				context "down the board" do
+					before(:example) {@board.squares["D3"] = pawn}
+
+					it "returns true" do
+						expect(@game.piece_in_the_way?(queen, "D4", "D2")).to eql(true)
+					end
+				end
+			end
+
+			context "and the queen is moving horizontally" do
+				context "to the right" do
+					before(:example) {@board.squares["E4"] = pawn}
+
+					it "returns true" do
+						expect(@game.piece_in_the_way?(queen, "D4", "F4")).to eql(true)
+					end
+				end
+
+				context "to the left" do
+					before(:example) {@board.squares["C4"] = pawn}
+
+					it "returns true" do
+						expect(@game.piece_in_the_way?(queen, "D4", "B4")).to eql(true)
+					end
+				end
+			end
+
+			context "and the queen is moving diagonally" do
+				context "increasing row and column" do
+					before(:example) {@board.squares["E5"] = pawn}
+
+					it "returns true" do
+						expect(@game.piece_in_the_way?(queen, "D4", "F6")).to eql(true)
+					end
+				end
+
+				context "decreasing row, increasing column" do
+					before(:example) {@board.squares["E3"] = pawn}
+
+					it "returns true" do
+						expect(@game.piece_in_the_way?(queen, "D4", "F2")).to eql(true)
+					end
+				end
+
+				context "decreasing row and column" do
+					before(:example) {@board.squares["C3"] = pawn}
+
+					it "returns true" do
+						expect(@game.piece_in_the_way?(queen, "D4", "B2")).to eql(true)
+					end
+				end
+
+				context "increasing row, decreasing column" do
+					before(:example) {@board.squares["C5"] = pawn}
+
+					it "returns true" do
+						expect(@game.piece_in_the_way?(queen, "D4", "B6")).to eql(true)
+					end
+				end
+			end
+		end
 	end
 
 	describe ".pawn_legal_capture_distance?" do
