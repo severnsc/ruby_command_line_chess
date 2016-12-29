@@ -127,7 +127,7 @@ class Game
 				between_cols.each_with_index {|col, index| between_squares.push(col + between_rows[index].to_s)}
 				in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
 			end
-		elsif piece.is_a?(Queen) || piece.is_a?(King)
+		elsif piece.is_a?(Queen)
 			#moving horizontally
 			if start_col != finish_col
 				#moving right
@@ -187,6 +187,8 @@ class Game
 				between_cols.each_with_index {|col, index| between_squares.push(col + between_rows[index].to_s)}
 				in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
 			end
+		else
+			in_the_way = false
 		end
 		in_the_way
 	end
