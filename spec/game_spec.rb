@@ -48,41 +48,41 @@ describe Game do
 		end
 
 		context "when start square is empty" do
-			it "returns a message stating that there's no piece there" do
-				expect(@game.play_turn("A4", "A5")).to eql("There's no piece there! Try again.")
+			it "prints a message stating that there's no piece there" do
+				expect{@game.play_turn("A4", "A5")}.to output("There's no piece there! Try again.\n").to_stdout
 			end
 		end
 
 		context "when moving piece isn't the same color as the current player" do
-			it "returns a message stating that the piece the player is attempting to move doesn't belong to them" do
-				expect(@game.play_turn("A2", "A3")).to eql("That's not your piece! Try again.")
+			it "prints a message stating that the piece the player is attempting to move doesn't belong to them" do
+				expect{@game.play_turn("A2", "A3")}.to output("That's not your piece! Try again.\n").to_stdout
 			end
 		end
 
 		context "when attempting to move a piece to a square where a different piece of the same color already is" do
-			it "returns a message stating that the player already has a piece on that square" do
-				expect(@game.play_turn("A8", "A7")).to eql("You already have a piece there! Try again.")
+			it "prints a message stating that the player already has a piece on that square" do
+				expect{@game.play_turn("A8", "A7")}.to output("You already have a piece there! Try again.\n").to_stdout
 			end
 		end
 
 		context "when move is illegal" do
-			it "returns a message stating that the move is illegal" do
-				expect(@game.play_turn("A7", "A4")).to eql("That move is illegal! Try again.")
+			it "prints a message stating that the move is illegal" do
+				expect{@game.play_turn("A7", "A4")}.to output("That move is illegal! Try again.\n").to_stdout
 			end
 		end
 
 		context "when performing a pawn capture" do
 			before(:each) {@board.squares["B6"] = Pawn.new "white"}
 
-			it "returns the algebraic notation of the capture" do
-				expect(@game.play_turn("A7", "B6")).to eql("AxB6")
+			it "prints the algebraic notation of the capture" do
+				expect{@game.play_turn("A7", "B6")}.to output("AxB6\n").to_stdout
 			end
 		end
 
 		context "when moving a pawn to an open square" do
 
-			it "returns the algebraic notation of the move" do
-				expect(@game.play_turn("A7", "A6")).to eql("A6")
+			it "prints the algebraic notation of the move" do
+				expect{@game.play_turn("A7", "A6")}.to output("A6\n").to_stdout
 			end
 		end
 
