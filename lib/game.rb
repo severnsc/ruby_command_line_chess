@@ -37,12 +37,72 @@ class Game
 			@current_player = players.select {|p| p != @current_player}[0]
 		elsif !moving_piece.is_move_legal?(finish)
 			puts "That move is illegal! Try again."
+		elsif piece_in_the_way?(moving_piece, start, finish)
+			puts "There's a piece in the way! Try again."
 		elsif @board.squares[finish] == ""
 			open_square_move(moving_piece, start, finish)
 		elsif @board.squares[finish] != ""
 			piece_capture(moving_piece, start, finish)
 			@current_player = players.select {|p| p != @current_player}[0]
 		end
+	end
+
+	def piece_in_the_way?(piece, start, finish)
+		in_the_way = true
+		start_col = start.split("").first
+		finish_col = finish.split("").first
+		start_row = start.split("").last.to_i
+		finish_row = finish.split("").last.to_i
+		if piece.is_a? Pawn
+			if piece.color == "black" && start_row == 7 && @board.squares[start_col + "6"] == ""
+				in_the_way = false
+			elsif piece.color == "white" && start_row == 2 && @board.squares[start_col + "3"] == ""
+				in_the_way = false
+			elsif piece.color == "black" && @board.squares[start_col + (start_row - 1).to_s] == ""
+				in_the_way = false
+			elsif piece.color == "white" && @board.squares[start_col + (start_row + 1).to_s] == ""
+				in_the_way = false
+			end
+		elsif piece.is_a? Rook
+			#moving horizontally
+			if start_col != finish_col
+				#moving right
+				if start_col < finish_col
+					between_cols = @board.x_axis[(@board.x_axis.index(start_col)+1)...@board.x_axis.index(finish_col)]
+					between_squares = []
+					between_cols.each {|col| between_squares.push(col + piece.current_row.to_s)}
+					in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
+				#moving left
+				else
+					between_cols = @board.x_axis[(@board.x_axis.index(finish_col)+1)...@board.x_axis.index(start_col)]
+					between_squares = []
+					between_cols.each {|col| between_squares.push(col + piece.current_row.to_s)}
+					in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
+				end
+			#moving vertically
+			elsif start_row != finish_row
+				#moving up the board
+				if start_row < finish_row
+					between_rows = @board.y_axis[(start_row)...(finish_row-1)]
+					between_squares = []
+					between_rows.each {|row| between_squares.push(start_col + row.to_s)}
+					in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
+				#moving down the board
+				else
+					between_rows = @board.y_axis[(finish_row)...(start_row-1)]
+					between_squares = []
+					between_rows.each {|row| between_squares.push(start_col + row.to_s)}
+					in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
+				end
+			end
+		elsif piece.is_a? Knight
+			in_the_way = false
+		elsif piece.is_a? Bishop
+
+		elsif piece.is_a? Queen
+		else #piece.is_a? King
+		end
+		in_the_way
 	end
 
 	def pawn_legal_capture_distance?(pawn, square)
