@@ -127,8 +127,66 @@ class Game
 				between_cols.each_with_index {|col, index| between_squares.push(col + between_rows[index].to_s)}
 				in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
 			end
-		elsif piece.is_a? Queen
-		else #piece.is_a? King
+		elsif piece.is_a?(Queen) || piece.is_a?(King)
+			#moving horizontally
+			if start_col != finish_col
+				#moving right
+				if start_col < finish_col
+					between_cols = @board.x_axis[(@board.x_axis.index(start_col)+1)...@board.x_axis.index(finish_col)]
+					between_squares = []
+					between_cols.each {|col| between_squares.push(col + piece.current_row.to_s)}
+					in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
+				#moving left
+				else
+					between_cols = @board.x_axis[(@board.x_axis.index(finish_col)+1)...@board.x_axis.index(start_col)]
+					between_squares = []
+					between_cols.each {|col| between_squares.push(col + piece.current_row.to_s)}
+					in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
+				end
+			#moving vertically
+			elsif start_row != finish_row
+				#moving up the board
+				if start_row < finish_row
+					between_rows = @board.y_axis[(start_row)...(finish_row-1)]
+					between_squares = []
+					between_rows.each {|row| between_squares.push(start_col + row.to_s)}
+					in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
+				#moving down the board
+				else
+					between_rows = @board.y_axis[(finish_row)...(start_row-1)]
+					between_squares = []
+					between_rows.each {|row| between_squares.push(start_col + row.to_s)}
+					in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
+				end
+			#increasing column and row
+			elsif start_col < finish_col && start_row < finish_row
+				between_cols = @board.x_axis[@board.x_axis.index(start_col)...@board.x_axis.index(finish_col)]
+				between_rows = @board.y_axis[start_row...(finish_row-1)]
+				between_squares = []
+				between_cols.each_with_index {|col, index| between_squares.push(col + between_rows[index].to_s)}
+				in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
+			#increasing column, decreasing row
+			elsif start_col < finish_col && start_row > finish_row
+				between_cols = @board.x_axis[@board.x_axis.index(start_col)...@board.x_axis.index(finish_col)]
+				between_rows = @board.y_axis[finish_row...(start_row-1)]
+				between_squares = []
+				between_cols.each_with_index {|col, index| between_squares.push(col + between_rows[index].to_s)}
+				in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
+			#decreasing column and row
+			elsif start_col > finish_col && start_row > finish_row
+				between_cols = @board.x_axis[@board.x_axis.index(finish_col)...@board.x_axis.index(start_col)]
+				between_rows = @board.y_axis[finish_row...(start_row-1)]
+				between_squares = []
+				between_cols.each_with_index {|col, index| between_squares.push(col + between_rows[index].to_s)}
+				in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
+			#decresing column, increasing row
+			else
+				between_cols = @board.x_axis[@board.x_axis.index(finish_col)...@board.x_axis.index(start_col)]
+				between_rows = @board.y_axis[start_row...(finish_row-1)]
+				between_squares = []
+				between_cols.each_with_index {|col, index| between_squares.push(col + between_rows[index].to_s)}
+				in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
+			end
 		end
 		in_the_way
 	end
