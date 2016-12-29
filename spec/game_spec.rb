@@ -169,6 +169,40 @@ describe Game do
 
 		end
 
+		context "when an open square move would put the current player's king in check" do
+			before(:each) do |example|
+				@black_king = @board.squares["E8"]
+				@black_pawn = @board.squares["D7"]
+				@white_queen = @board.squares["D1"]
+				@white_queen.current_position = "C6"
+				@board.squares["C6"] = @white_queen
+				unless example.metadata[:skip_before]
+					@game.play_turn("D7", "D6")
+				end
+			end
+
+			it "prints a message stating that you can't put your own king in check", skip_before: true do
+				expect{@game.play_turn("D7", "D6")}.to output("D6\nThat puts your king in check! Try again.\n").to_stdout
+			end
+
+			it "resets the moving piece back to the start square" do
+				expect(@board.squares["D7"]).to eql(@black_pawn)
+			end
+
+			it "resets the moving piece's current position" do
+				expect(@black_pawn.current_position).to eql("D7")
+			end
+
+			it "empties the destination square" do
+				expect(@board.squares["D6"]).to eql("")
+			end
+
+			it "resets @king_in_check to false" do
+				expect(@game.king_in_check).to eql(false)
+			end
+
+		end
+
 	end
 
 	describe ".piece_in_the_way?" do
