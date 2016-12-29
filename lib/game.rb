@@ -53,6 +53,16 @@ class Game
 			puts "There's a piece in the way! Try again."
 		elsif @board.squares[finish] == ""
 			open_square_move(moving_piece, start, finish)
+			king_in_check?
+			if @king_in_check && @king_in_check.color == @current_player.color
+				@board.squares[start] = moving_piece
+				moving_piece.current_position = start
+				@board.squares[finish] = ""
+				@king_in_check = false
+				puts "That puts your king in check! Try again."
+			else
+				@current_player = players.select {|p| p != @current_player}[0]
+			end
 		elsif @board.squares[finish] != ""
 			piece_capture(moving_piece, start, finish)
 			@current_player = players.select {|p| p != @current_player}[0]
