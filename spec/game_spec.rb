@@ -228,6 +228,85 @@ describe Game do
 		end 
 
 		context "when a bishop is moving with a piece in the way" do
+			context "and the bishop is moving on black squares" do
+				before(:each) do
+					@black_bishop = Bishop.new "black"
+					@board.squares["C3"] = @black_bishop
+					@black_bishop.current_position = "C3"
+					@black_bishop.update_row_column
+				end
+
+				context "and increasing row and column" do
+					it "returns true" do
+						expect(@game.piece_in_the_way?(@black_bishop, "C3", "H8")).to eql(true)
+					end
+				end
+
+				context "and decreasing row and column" do
+					it "returns true" do
+						expect(@game.piece_in_the_way?(@black_bishop, "C3", "A1")).to eql(true)
+					end
+				end
+
+				context "and increasing row and decreasing column" do
+					it "returns true" do
+						expect(@game.piece_in_the_way?(@black_bishop, "C3", "E1"))
+					end
+				end
+
+				context "and decreasing row and increasing column" do
+					before(:example) do
+						@white_pawn = Pawn.new "white"
+						@board.squares["B4"] = @white_pawn
+					end
+
+					it "returns true" do
+						expect(@game.piece_in_the_way?(@black_bishop, "C3", "A5")).to eql(true)
+					end
+				end
+			end
+
+			context "and the bishop is moving on white squares" do
+				before(:each) do
+					@black_bishop = Bishop.new "black"
+					@board.squares["D3"] = @black_bishop
+					@black_bishop.current_position = "D3"
+					@black_bishop.update_row_column
+				end
+
+				context "and increasing row and column" do
+					before(:example) do
+						@white_pawn = Pawn.new "white"
+						@board.squares["G6"] = @white_pawn
+					end
+					it "returns true" do
+						expect(@game.piece_in_the_way?(@black_bishop, "D3", "H7")).to eql(true)
+					end
+				end
+
+				context "and decreasing row and column" do
+					it "returns true" do
+						expect(@game.piece_in_the_way?(@black_bishop, "D3", "B1")).to eql(true)
+					end
+				end
+
+				context "and increasing row and decreasing column" do
+					it "returns true" do
+						expect(@game.piece_in_the_way?(@black_bishop, "D3", "F1")).to eql(true)
+					end
+				end
+
+				context "and decreasing row and increasing column" do
+					before(:example) do
+						@white_pawn = Pawn.new "white"
+						@board.squares["B5"] = @white_pawn
+					end
+
+					it "returns true" do
+						expect(@game.piece_in_the_way?(@black_bishop, "D3", "A6")).to eql(true)
+					end
+				end
+			end
 		end
 	end
 
