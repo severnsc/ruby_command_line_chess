@@ -126,6 +126,111 @@ describe Game do
 
 	end
 
+	describe ".piece_in_the_way?" do
+		
+		context "when moving a black pawn from the opening position with a piece in the way" do
+			before(:each) do
+				@black_pawn = @board.squares["A7"]
+				@white_pawn = Pawn.new "white"
+				@board.squares["A6"] = @white_pawn
+			end
+
+			context "when moving the pawn 1 square from the opening posiiton" do
+				it "returns true" do
+					expect(@game.piece_in_the_way?(@black_pawn, "A7", "A6")).to eql(true)
+				end
+			end
+
+			context "when moving the pawn 2 squares from the opening position" do
+				it "returns true" do
+					expect(@game.piece_in_the_way?(@black_pawn, "A7", "A5")).to eql(true)
+				end
+			end
+		end
+
+		context "when moving a white pawn from the opening position with a piece in the way" do
+			before(:each) do
+				@white_pawn = @board.squares["A2"]
+				@black_pawn = Pawn.new "black"
+				@board.squares["A3"] = @black_pawn
+			end
+
+			context "when moving 1 square from opening position" do
+				it "returns true" do
+					expect(@game.piece_in_the_way?(@white_pawn, "A2", "A3")).to eql(true)
+				end
+			end
+
+			context "when moving 2 squares from the opening position" do
+				it "returns true" do
+					expect(@game.piece_in_the_way?(@white_pawn, "A2", "A4")).to eql(true)
+				end
+			end
+		end
+
+		context "when moving a pawn after the opening position with a piece in the way" do
+			before(:each) do
+				@black_pawn = Pawn.new "black"
+				@board.squares["A5"] = @black_pawn
+				@black_pawn.current_position = "A4"
+				@black_pawn.update_row_column
+				@white_pawn = Pawn.new "white"
+				@board.squares["A4"] = @white_pawn
+				@white_pawn.current_position = "A4"
+				@white_pawn.update_row_column
+			end
+
+			context "and the pawn is black" do
+				it "returns true" do
+					expect(@game.piece_in_the_way?(@black_pawn, "A5", "A4")).to eql(true)
+				end
+			end
+
+			context "and the pawn is white" do
+				it "returns true" do
+					expect(@game.piece_in_the_way?(@white_pawn, "A4", "A5")).to eql(true)
+				end
+			end
+		end
+
+		context "when moving a rook with a piece in the way" do
+			subject(:black_rook) {@board.squares["A8"]}
+			subject(:white_rook) {@board.squares["A1"]}
+
+			context "and the rook is moving vertically" do
+				context "down the board" do
+					it "returns true" do
+						expect(@game.piece_in_the_way?(black_rook, "A8", "A6")).to eql(true)
+					end
+				end
+
+				context "up the board" do
+					it "returns true" do
+						expect(@game.piece_in_the_way?(white_rook, "A1", "A3")).to eql(true)
+					end
+				end
+			end
+
+			context "and the rook is moving horizontally" do
+				context "to the right" do
+					it "returns true" do
+						expect(@game.piece_in_the_way?(black_rook, "A8", "C8")).to eql(true)
+					end
+				end
+
+				context "to the left" do
+					it "returns true" do
+						expect(@game.piece_in_the_way?(white_rook, "A1", "C1")).to eql(true)
+					end
+				end
+			end
+
+		end 
+
+		context "when a bishop is moving with a piece in the way" do
+		end
+	end
+
 	describe ".pawn_legal_capture_distance?" do
 		subject(:black_pawn) {@board.squares["A7"]}
 
