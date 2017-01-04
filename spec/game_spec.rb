@@ -967,6 +967,7 @@ describe Game do
 		context "when given a rook as an argument" do
 			subject(:white_rook) {Rook.new "white"}
 			subject(:black_pawn) {Pawn.new "black"}
+			subject(:white_pawn) {@board.squares["A2"]}
 
 			context "and the rook is in the starting position" do
 				before(:each) do
@@ -1023,6 +1024,63 @@ describe Game do
 
 					it "returns an array of the squares the knight, bishop and queen vacated" do
 						expect(@game.legal_moves(white_rook)).to eql(["B1", "C1", "D1"])
+					end
+				end
+			end
+
+			context "and the rook is in the middle of the board" do
+				before(:each) do
+					white_rook.current_position = "D4"
+					@board.squares["D4"] = white_rook
+				end
+
+				context "and all other peices are in their starting places" do
+					it "returns an array consisting of A4-H4, D3, D5, D6 & D7" do
+						expect(@game.legal_moves(white_rook)).to eql(["A4", "B4", "C4", "D3", "D5", "D6", "D7", "E4", "F4", "G4", "H4"])
+					end
+				end
+
+				context "and there's a pawn of the same color directly to its left" do
+					before(:example) do
+						white_pawn.current_position = "C4"
+						@board.squares["C4"] = white_pawn
+					end
+
+					it "returns an array consisting of D3, D5, D6, D7, E4, F4, G4 and H4" do
+						expect(@game.legal_moves(white_rook)).to eql(["D3", "D5", "D6", "D7", "E4", "F4", "G4", "H4"])
+					end
+				end
+
+				context "and there's a pawn of the same color directly to its right" do
+					before(:example) do
+						white_pawn.current_position = "E4"
+						@board.squares["E4"] = white_pawn
+					end
+
+					it "returns an array consisting of all squares to the left, open squares behind, open squares ahead and square occupied by opposing piece" do
+						expect(@game.legal_moves(white_rook)).to eql(["A4", "B4", "C4", "D3", "D5", "D6", "D7"])
+					end
+				end
+
+				context "and there's a pawn of the same color directly behind it" do
+					before(:example) do
+						white_pawn.current_position = "D3"
+						@board.squares["D3"] = white_pawn
+					end
+
+					it "returns an array consisting of all open squares to the left, all open squares ahead, square ahead occupied by an opposing pawn and all open squares to the right" do
+						expect(@game.legal_moves(white_rook)).to eql(["A4", "B4", "C4", "D5", "D6", "D7", "E4", "F4", "G4", "H4"])
+					end
+				end
+
+				context "and there's a pawn of the same color directly in front of it" do
+					before(:example) do
+						white_pawn.current_position = "D5"
+						@board.squares["D5"] = white_pawn
+					end
+
+					it "returns an array consisting of all open squares to the left, the open square behind and all open squares to the right" do
+						expect(@game.legal_moves(white_rook)).to eql(["A4", "B4", "C4", "D3", "E4", "F4", "G4", "H4"])
 					end
 				end
 			end
