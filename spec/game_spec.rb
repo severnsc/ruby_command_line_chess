@@ -47,6 +47,18 @@ describe Game do
 			@game.instance_variable_set(:@current_player, current_player[0])
 		end
 
+		context "when the move is legal and the player is not in check" do
+			subject(:white_player) {@game.players.select {|p| p.color=="white"}[0]}
+
+			it "prints the algebraic notation of the move and states that it's the next player's turn" do
+				expect{@game.play_turn("A7", "A6")}.to output("A6\n#{white_player.name}'s turn.\n").to_stdout
+			end
+		end
+
+		context "when the move is legal and the player is now in check" do
+
+		end
+
 		context "when start square is empty" do
 			it "prints a message stating that there's no piece there" do
 				expect{@game.play_turn("A4", "A5")}.to output("There's no piece there! Try again.\n").to_stdout
@@ -825,6 +837,242 @@ describe Game do
 				it "leaves @game.king_in_check as false" do
 					expect(@game.king_in_check).to eql(false)
 				end
+			end
+		end
+	end
+
+	describe ".legal_moves" do
+		context "when given a pawn as an argument" do
+			subject(:white_pawn) {Pawn.new "white"}
+			subject(:black_pawn) {Pawn.new "black"}
+
+			context "and the pawn is at the starting position" do
+				before(:each) do
+					@board.squares["A2"] = white_pawn
+					white_pawn.current_position = "A2"
+				end
+
+				context "and there are no pieces in the pawn's path" do
+					it "returns an array containing the two squares in front of the pawn" do
+						expect(@game.legal_moves(white_pawn)).to eql(["A3", "A4"])
+					end
+				end
+
+				context "and there is a piece one square in front of the pawn" do
+					before(:example) do
+						black_pawn.current_position = "A3"
+						@board.squares["A3"] = black_pawn
+					end
+
+					it "returns an empty array" do
+						expect(@game.legal_moves(white_pawn)).to eql([])
+					end
+				end
+
+				context "and there is a piece on the square two forward for the pawn" do
+					before(:example) do
+						black_pawn.current_position = "A4"
+						@board.squares["A4"] = black_pawn
+					end
+
+					it "returns an array containing the one square directly ahead of the pawn" do
+						expect(@game.legal_moves(white_pawn)).to eql(["A3"])
+					end
+				end
+
+				context "and there are no pieces in the direct path, but one in capture position" do
+					before(:example) do
+						black_pawn.current_position = "B3"
+						@board.squares["B3"] = black_pawn
+					end
+
+					it "returns an array consisting of the two squares in front of the pawn, and the square of the pawn that can be captured" do
+						expect(@game.legal_moves(white_pawn)).to eql(["A3", "A4", "B3"])
+					end
+				end
+
+				context "and there is a piece directly in front of and one in capture position" do
+					before(:example) do
+						@black_pawn = Pawn.new "black"
+						@black_pawn.current_position = "A3"
+						@board.squares["A3"] = @black_pawn
+						black_pawn.current_position = "B3"
+						@board.squares["B3"] = black_pawn
+ 					end
+
+ 					it "returns an array consisting of the capture square" do
+ 						expect(@game.legal_moves(white_pawn)).to eql(["B3"])
+ 					end
+				end
+
+				context "and there is a piece 2 squares directly in front and one in capture position" do
+					before(:example) do
+						@black_pawn = Pawn.new "black"
+						@black_pawn.current_position = "A4"
+						@board.squares["A4"] = @black_pawn
+						black_pawn.current_position = "B3"
+						@board.squares["B3"] = black_pawn
+					end
+
+					it "returns an array consisting of the square directly in front and the capture position" do
+						expect(@game.legal_moves(white_pawn)).to eql(["A3", "B3"])
+					end
+				end
+
+				context "and there are 2 pieces in capture position" do
+					before(:example) do
+						white_pawn.current_position = "B2"
+						@board.squares["B2"] = white_pawn
+						black_pawn.current_position = "A3"
+						@board.squares["A3"] = black_pawn
+						@black_pawn = Pawn.new "black"
+						@black_pawn.current_position = "C3"
+						@board.squares["C3"] = @black_pawn
+					end
+
+					context "with no pieces in front" do
+						it "returns an array consisting of the two forward squares and the two capture squares" do
+							expect(@game.legal_moves(white_pawn)).to eql(["A3", "B3", "B4", "C3"])
+						end
+					end
+
+					context "with one piece directly in front" do
+						before(:example) do
+							blocking_pawn = Pawn.new "black"
+							blocking_pawn.current_position = "B3"
+							@board.squares["B3"] = blocking_pawn
+						end
+						
+						it "returns an array consisting of the two capture squares" do
+							expect(@game.legal_moves(white_pawn)).to eql(["A3", "C3"])
+						end
+					end
+
+					context "with one piece 2 squares in front" do
+						before(:example) do
+							blocking_pawn = Pawn.new "black"
+							blocking_pawn.current_position = "B4"
+							@board.squares["B4"] = blocking_pawn
+						end
+
+						it "returns an array consisting of the 2 capture squares and the 1 directly forward square" do
+							expect(@game.legal_moves(white_pawn)).to eql(["A3", "B3", "C3"])
+						end
+					end
+				end
+
+			end
+		end
+
+		context "when given a rook as an argument" do
+			subject(:white_rook) {Rook.new "white"}
+			subject(:black_pawn) {Pawn.new "black"}
+
+			context "and the rook is in the starting position" do
+				before(:each) do
+					white_rook.current_position = "A1"
+					@board.squares["A1"] = white_rook
+				end
+
+				context "and the pawn in front has not moved" do
+					it "returns an empty array" do
+						expect(@game.legal_moves(white_rook)).to eql([])
+					end
+				end
+
+				context "and the pawn in front has moved 1 square forward" do
+					before(:example) do
+						pawn = @board.squares["A2"]
+						pawn.current_position = "A3"
+						@board.squares["A3"] = pawn
+						@board.squares["A2"] = ""
+					end
+
+					it "returns the square the pawn vacated" do
+						expect(@game.legal_moves(white_rook)).to eql(["A2"])
+					end
+				end
+
+				context "and the pawn in front has moved 2 squares forward" do
+					before(:example) do
+						pawn = @board.squares["A2"]
+						pawn.current_position = "A4"
+						@board.squares["A4"] = pawn
+						@board.squares["A2"] = ""
+					end
+
+					it "returns the square the pawn vacated and the one it crossed" do
+						expect(@game.legal_moves(white_rook)).to eql(["A2", "A3"])
+					end
+				end
+
+				context "and the knight to its side has moved" do
+					before(:example) {@board.squares["B1"] = ""}
+
+					it "returns an array consisting of the square the knight vacated" do
+						expect(@game.legal_moves(white_rook)).to eql(["B1"])
+					end
+				end
+
+				context "and the knight, bishop and queen have moved" do
+					before(:example) do
+						@board.squares["B1"] = ""
+						@board.squares["C1"] = ""
+						@board.squares["D1"] = ""
+					end
+
+					it "returns an array of the squares the knight, bishop and queen vacated" do
+						expect(@game.legal_moves(white_rook)).to eql(["B1", "C1", "D1"])
+					end
+				end
+			end
+		end
+	end
+
+	describe ".check_mate?" do
+		context "when black King is in check mate" do
+			before(:each) do
+				@black_king = @board.squares["E8"]
+				@white_bishop = @board.squares["C1"]
+				@white_rook = @board.squares["A1"]
+				@white_rook2 = @board.squares["H1"]
+				@white_queen = @board.squares["D1"]
+				@white_rook.current_position = "E7"
+				@board.squares["E7"] = @white_rook
+				@white_bishop.current_position = "D7"
+				@board.squares["D7"] = @white_bishop
+				@white_queen.current_position = "G8"
+				@board.squares["G8"] = @white_queen
+				@white_rook2.current_position = "F7"
+				@board.squares["F7"] = @white_rook2
+				@black_player = @game.players.select {|p| p.color=="black"}[0]
+			end
+
+			it "sets @checkmate to the black player" do
+				expect(@game.checkmate).to eql(@black_player)
+			end
+		end
+
+		context "when white King is in check mate" do
+			before(:each) do
+				@white_king = @board.squares["E1"]
+				@black_bishop = @board.squares["C8"]
+				@black_rook = @board.squares["A8"]
+				@black_rook2 = @board.squares["H8"]
+				@black_queen = @board.squares["D8"]
+				@black_rook.current_position = "E7"
+				@board.squares["E7"] = @black_rook
+				@black_bishop.current_position = "D7"
+				@board.squares["D7"] = @black_bishop
+				@black_queen.current_position = "G8"
+				@board.squares["G8"] = @black_queen
+				@black_rook2.current_position = "F7"
+				@board.squares["F7"] = @black_rook2
+				@white_player = @game.players.select {|p| p.color=="white"}[0]
+			end
+
+			it "sets @checkmate to the white player" do
+				expect(@game.checkmate).to eql(@white_player)
 			end
 		end
 	end
