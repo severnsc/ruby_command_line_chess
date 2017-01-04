@@ -1103,6 +1103,7 @@ describe Game do
 				@board.squares["G8"] = @white_queen
 				@white_rook2.current_position = "F7"
 				@board.squares["F7"] = @white_rook2
+				@board.squares["F8"] = ""
 				@black_player = @game.players.select {|p| p.color=="black"}[0]
 			end
 
