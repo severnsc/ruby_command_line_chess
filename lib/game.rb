@@ -290,10 +290,12 @@ class Game
 	end
 
 	def king_in_check?
-		@white_king = @board.kings.select {|k| k.color == "white"}[0]
-		@black_king = @board.kings.select {|k| k.color == "black"}[0]
-		@board.squares.any? {|sq, piece| piece != "" && piece.color == "black" && piece.is_move_legal?(@white_king.current_position) && !piece_in_the_way?(piece, sq, @white_king.current_position)} ? @king_in_check = @white_king : @king_in_check = false
-		@board.squares.any? {|sq, piece| piece != "" && piece.color == "white" && piece.is_move_legal?(@black_king.current_position) && !piece_in_the_way?(piece, sq, @black_king.current_position)} ? @king_in_check = @black_king : @king_in_check = false
+		white_king = @board.kings.select {|k| k.color == "white"}[0]
+		black_king = @board.kings.select {|k| k.color == "black"}[0]
+		@board.squares.any? {|sq, piece| piece != "" && piece.color == "black" && piece.is_move_legal?(white_king.current_position) && !piece_in_the_way?(piece, sq, white_king.current_position)} ? @king_in_check = white_king : @king_in_check = false
+		return @king_in_check if @king_in_check
+		@board.squares.any? {|sq, piece| piece != "" && piece.color == "white" && piece.is_move_legal?(black_king.current_position) && !piece_in_the_way?(piece, sq, black_king.current_position)} ? @king_in_check = black_king : @king_in_check = false
+		return @king_in_check if @king_in_check
 	end
 
 	def legal_moves(piece)
@@ -306,27 +308,34 @@ class Game
 	end
 
 	def check_mate?
-		@white_king = @board.kings.select {|k| k.color == "white"}[0]
-		@black_king = @board.kings.select {|k| k.color == "black"}[0]
-		white_king_legal_moves = legal_moves(@white_king)
-		black_king_legal_moves = legal_moves(@black_king)
-		white_piece_squares = @board.squares.select {|sq, piece| piece != "" && piece.color == "white"}
-		black_piece_squares = @board.squares.select {|sq, piece| piece != "" && piece.color == "black"}
-		white_pieces = white_piece_squares.values
-		black_pieces = black_piece_squares.values
-		all_white_legal_moves = []
-		all_black_legal_moves = []
-		white_pieces.each do |piece|
-			piece_legal_moves = legal_moves(piece)
-			piece_legal_moves.each {|move| all_white_legal_moves.push(move)}
+		white_king = @board.kings.select {|k| k.color == "white"}[0]
+		black_king = @board.kings.select {|k| k.color == "black"}[0]
+		white_king_legal_moves = legal_moves(white_king)
+		black_king_legal_moves = legal_moves(black_king)
+		white_king_original_position = white_king.current_position
+		black_king_original_position = black_king.current_position
+		if white_king_legal_moves.length > 0
+			@king_in_check = white_king
+			until @king_in_check == false || white_king_legal_moves.length == 0
+				move = white_king_legal_moves.pop
+				white_king.current_position = move
+				king_in_check?
+			end
 		end
-		black_pieces.each do |piece|
-			piece_legal_moves = legal_moves(piece)
-			piece_legal_moves.each {|move| all_black_legal_moves.push(move)}
+		white_king.current_position = white_king_original_position
+		@checkmate = players.select {|p| p.color == "white"}[0] if @king_in_check == white_king
+		return @checkmate if @checkmate
+		if black_king_legal_moves.length > 0
+			@king_in_check = black_king
+			until @king_in_check == false || black_king_legal_moves.length == 0
+				move = black_king_legal_moves.pop
+				black_king.current_position = move
+				king_in_check?
+			end
 		end
-		@checkmate = @white_king if white_king_legal_moves.all? {|move| all_black_legal_moves.include?(move)}
-		@checkmate = @black_king if black_king_legal_moves.all? {|move| all_white_legal_moves.include?(move)}
-		@checkmate
+		black_king.current_position = black_king_original_position
+		@checkmate = players.select {|p| p.color == "black"}[0] if @king_in_check == black_king
+		return @checkmate if @checkmate
 	end
 	
 end
