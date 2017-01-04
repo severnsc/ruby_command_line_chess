@@ -3,7 +3,7 @@ require_relative "./pieces.rb"
 require_relative "./board.rb"
 
 class Game
-	attr_reader :board, :current_player, :king_in_check
+	attr_reader :board, :current_player, :king_in_check, :checkmate
 
 	def initialize(player1, player2)
 		player1.is_a?(Player) ? @player1 = player1 : raise(TypeError)
@@ -19,6 +19,7 @@ class Game
 		end
 		@player1.color == "white" ? @current_player = @player1 : @current_player = @player2
 		@king_in_check = false
+		@checkmate = false
 	end
 
 	def players
@@ -307,7 +308,25 @@ class Game
 	def check_mate?
 		@white_king = @board.kings.select {|k| k.color == "white"}[0]
 		@black_king = @board.kings.select {|k| k.color == "black"}[0]
-
+		white_king_legal_moves = legal_moves(@white_king)
+		black_king_legal_moves = legal_moves(@black_king)
+		white_piece_squares = @board.squares.select {|sq, piece| piece != "" && piece.color == "white"}
+		black_piece_squares = @board.squares.select {|sq, piece| piece != "" && piece.color == "black"}
+		white_pieces = white_piece_squares.values
+		black_pieces = black_piece_squares.values
+		all_white_legal_moves = []
+		all_black_legal_moves = []
+		white_pieces.each do |piece|
+			piece_legal_moves = legal_moves(piece)
+			piece_legal_moves.each {|move| all_white_legal_moves.push(move)}
+		end
+		black_pieces.each do |piece|
+			piece_legal_moves = legal_moves(piece)
+			piece_legal_moves.each {|move| all_black_legal_moves.push(move)}
+		end
+		@checkmate = @white_king if white_king_legal_moves.all? {|move| all_black_legal_moves.include?(move)}
+		@checkmate = @black_king if black_king_legal_moves.all? {|move| all_white_legal_moves.include?(move)}
+		@checkmate
 	end
 	
 end
