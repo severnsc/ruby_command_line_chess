@@ -1089,7 +1089,7 @@ describe Game do
 
 	describe ".check_mate?" do
 		context "when black King is in check mate" do
-			before(:each) do
+			before(:example) do
 				@black_king = @board.squares["E8"]
 				@white_bishop = @board.squares["C1"]
 				@white_rook = @board.squares["A1"]
@@ -1108,30 +1108,31 @@ describe Game do
 			end
 
 			it "sets @checkmate to the black player" do
-				expect(@game.checkmate).to eql(@black_player)
+				expect(@game.check_mate?).to eql(@black_player)
 			end
 		end
 
 		context "when white King is in check mate" do
-			before(:each) do
+			before(:example) do
 				@white_king = @board.squares["E1"]
 				@black_bishop = @board.squares["C8"]
 				@black_rook = @board.squares["A8"]
 				@black_rook2 = @board.squares["H8"]
 				@black_queen = @board.squares["D8"]
-				@black_rook.current_position = "E7"
-				@board.squares["E7"] = @black_rook
-				@black_bishop.current_position = "D7"
-				@board.squares["D7"] = @black_bishop
-				@black_queen.current_position = "G8"
-				@board.squares["G8"] = @black_queen
-				@black_rook2.current_position = "F7"
-				@board.squares["F7"] = @black_rook2
+				@black_rook.current_position = "E2"
+				@board.squares["E2"] = @black_rook
+				@black_bishop.current_position = "F2"
+				@board.squares["F2"] = @black_bishop
+				@black_queen.current_position = "C1"
+				@board.squares["C1"] = @black_queen
+				@black_rook2.current_position = "D2"
+				@board.squares["D2"] = @black_rook2
+				@board.squares["D1"] = ""
 				@white_player = @game.players.select {|p| p.color=="white"}[0]
 			end
 
 			it "sets @checkmate to the white player" do
-				expect(@game.checkmate).to eql(@white_player)
+				expect(@game.check_mate?).to eql(@white_player)
 			end
 		end
 	end
