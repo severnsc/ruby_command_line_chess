@@ -78,6 +78,7 @@ class Game
 				@current_player = players.select {|p| p != @current_player}[0]
 			end
 		end
+		#puts @king_in_check ? "#{@current_player.name}'s turn. You are in check" : "#{@current_player.name}'s turn."
 	end
 
 	def piece_in_the_way?(piece, start, finish)
@@ -292,6 +293,21 @@ class Game
 		@black_king = @board.kings.select {|k| k.color == "black"}[0]
 		@board.squares.any? {|sq, piece| piece != "" && piece.color == "black" && piece.is_move_legal?(@white_king.current_position) && !piece_in_the_way?(piece, sq, @white_king.current_position)} ? @king_in_check = @white_king : @king_in_check = false
 		@board.squares.any? {|sq, piece| piece != "" && piece.color == "white" && piece.is_move_legal?(@black_king.current_position) && !piece_in_the_way?(piece, sq, @black_king.current_position)} ? @king_in_check = @black_king : @king_in_check = false
+	end
+
+	def legal_moves(piece)
+		if piece.is_a? Pawn
+			legal_moves = @board.squares.select {|sq, p| (piece.is_move_legal?(sq) && !piece_in_the_way?(piece, piece.current_position, sq) && @board.squares[sq] == "" ) || (@board.squares[sq] != "" && pawn_legal_capture_distance?(piece, sq))}
+		else
+			legal_moves = @board.squares.select {|sq, p| (piece.is_move_legal?(sq) && !piece_in_the_way?(piece, piece.current_position, sq) && @board.squares[sq] == "") || (@board.squares[sq] != "" && @board.squares[sq].color != piece.color && piece.is_move_legal?(sq) && !piece_in_the_way?(piece, piece.current_position, sq))}
+		end
+		legal_moves.keys
+	end
+
+	def check_mate?
+		@white_king = @board.kings.select {|k| k.color == "white"}[0]
+		@black_king = @board.kings.select {|k| k.color == "black"}[0]
+
 	end
 	
 end
