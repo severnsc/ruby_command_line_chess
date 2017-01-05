@@ -45,6 +45,14 @@ class Game
 				@board.squares[start] = moving_piece
 				@king_in_check = false
 				puts "That puts your king in check! Try again."
+			elsif @king_in_check
+				check_mate?
+				if @checkmate
+					puts "Game over! #{@current_player.name} wins!"
+				else
+					@current_player = players.select {|p| p != @current_player}[0]
+					puts "#{@current_player.name}, you are in check!"
+				end
 			else
 				@current_player = players.select {|p| p != @current_player}[0]
 			end
@@ -61,6 +69,14 @@ class Game
 				@board.squares[finish] = ""
 				@king_in_check = false
 				puts "That puts your king in check! Try again."
+			elsif @king_in_check
+				check_mate?
+				if @checkmate
+					puts "Game over! #{@current_player.name} wins!"
+				else
+					@current_player = players.select {|p| p != @current_player}[0]
+					puts "#{@current_player.name}, you are in check!"
+				end
 			else
 				@current_player = players.select {|p| p != @current_player}[0]
 			end
@@ -75,17 +91,17 @@ class Game
 				@board.squares[start] = moving_piece
 				@king_in_check = false
 				puts "That puts your king in check! Try again."
+			elsif @king_in_check
+				check_mate?
+				if @checkmate
+					puts "Game over! #{@current_player.name} wins!"
+				else
+					@current_player = players.select {|p| p != @current_player}[0]
+					puts "#{@current_player.name}, you are in check!"
+				end
 			else
 				@current_player = players.select {|p| p != @current_player}[0]
 			end
-		end
-		check_mate?
-		if @checkmate == players.select {|p| p.color=="black"}[0]
-			white_player = players.select {|p| p.color=="white"}[0]
-			puts "Game over! #{white_player.name} wins!"
-		elsif @checkmate == players.select {|p| p.color=="white"}[0]
-			black_player = players.select {|p| p.color=="black"}[0]
-			puts "Game over! #{black_player.name} wins!"
 		end
 		#puts @king_in_check ? "#{@current_player.name}'s turn. You are in check" : "#{@current_player.name}'s turn."
 	end
@@ -143,31 +159,31 @@ class Game
 		elsif piece.is_a? Bishop
 			#increasing column and row
 			if start_col < finish_col && start_row < finish_row
-				between_cols = @board.x_axis[@board.x_axis.index(start_col)...@board.x_axis.index(finish_col)]
+				between_cols = @board.x_axis[@board.x_axis.index(start_col)+1...@board.x_axis.index(finish_col)]
 				between_rows = @board.y_axis[start_row...(finish_row-1)]
 				between_squares = []
 				between_cols.each_with_index {|col, index| between_squares.push(col + between_rows[index].to_s)}
 				in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
 			#increasing column, decreasing row
 			elsif start_col < finish_col && start_row > finish_row
-				between_cols = @board.x_axis[@board.x_axis.index(start_col)...@board.x_axis.index(finish_col)]
+				between_cols = @board.x_axis[@board.x_axis.index(start_col)+1...@board.x_axis.index(finish_col)]
 				between_rows = @board.y_axis[finish_row...(start_row-1)]
 				between_squares = []
 				between_cols.each_with_index {|col, index| between_squares.push(col + between_rows[index].to_s)}
 				in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
 			#decreasing column and row
 			elsif start_col > finish_col && start_row > finish_row
-				between_cols = @board.x_axis[@board.x_axis.index(finish_col)...@board.x_axis.index(start_col)]
+				between_cols = @board.x_axis[@board.x_axis.index(finish_col)+1...@board.x_axis.index(start_col)]
 				between_rows = @board.y_axis[finish_row...(start_row-1)]
 				between_squares = []
 				between_cols.each_with_index {|col, index| between_squares.push(col + between_rows[index].to_s)}
 				in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
 			#decresing column, increasing row
 			else
-				between_cols = @board.x_axis[@board.x_axis.index(finish_col)...@board.x_axis.index(start_col)]
+				between_cols = @board.x_axis[@board.x_axis.index(finish_col)+1...@board.x_axis.index(start_col)]
 				between_rows = @board.y_axis[start_row...(finish_row-1)]
 				between_squares = []
-				between_cols.each_with_index {|col, index| between_squares.push(col + between_rows[index].to_s)}
+				between_cols.each_with_index {|col, index| between_squares.push(col + between_rows[index-1].to_s)}
 				in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
 			end
 		elsif piece.is_a?(Queen)
@@ -316,34 +332,76 @@ class Game
 	end
 
 	def check_mate?
-		white_king = @board.kings.select {|k| k.color == "white"}[0]
-		black_king = @board.kings.select {|k| k.color == "black"}[0]
-		white_king_legal_moves = legal_moves(white_king)
-		black_king_legal_moves = legal_moves(black_king)
-		white_king_original_position = white_king.current_position
-		black_king_original_position = black_king.current_position
-		if white_king_legal_moves.length > 0
+		white_king = @board.kings.select {|k| k.color=="white"}[0]
+		black_king = @board.kings.select {|k| k.color=="black"}[0]
+		if @king_in_check == white_king
+			@checkmate = players.select {|p| p.color=="white"}[0]
+			white_pieces = @board.squares.values.select {|p| p != "" && p.color== "white"}
+			until @king_in_check == false || white_pieces.empty?
+				piece = white_pieces.pop
+				piece_legal_moves = legal_moves(piece)
+				original_position = piece.current_position
+				until @king_in_check == false || piece_legal_moves.empty?
+					move = piece_legal_moves.pop
+					if @board.squares[move] == ""
+						piece.current_position = move
+						@board.squares[move] = piece
+						@board.squares[original_position] = ""
+						king_in_check?
+						@board.squares[original_position] = piece
+						@board.squares[move] = ""
+						piece.current_position = original_position
+					else
+						captured_piece = @board.squares[move]
+						captured_piece.current_position = ""
+						piece.current_position = move
+						@board.squares[move] = piece
+						@board.squares[original_position] = ""
+						king_in_check?
+						@board.squares[original_position] = piece
+						@board.squares[move] = captured_piece
+						piece.current_position = original_position
+						captured_piece.current_position = move
+					end
+				end
+			end
+			@checkmate = false unless @king_in_check
 			@king_in_check = white_king
-			until @king_in_check == false || white_king_legal_moves.length == 0
-				move = white_king_legal_moves.pop
-				white_king.current_position = move
-				king_in_check?
+		elsif @king_in_check == black_king
+			@checkmate = players.select {|p| p.color=="black"}[0]
+			black_pieces = @board.squares.values.select {|p| p != "" && p.color=="black"}
+			until @king_in_check == false || black_pieces.empty?
+				piece = black_pieces.pop
+				piece_legal_moves = legal_moves(piece)
+				original_position = piece.current_position
+				until @king_in_check == false || piece_legal_moves.empty?
+					move = piece_legal_moves.pop
+					if @board.squares[move] == ""
+						piece.current_position = move
+						@board.squares[move] = piece
+						@board.squares[original_position] = ""
+						king_in_check?
+						@board.squares[original_position] = piece
+						@board.squares[move] = ""
+						piece.current_position = original_position
+					else
+						captured_piece = @board.squares[move]
+						captured_piece.current_position = ""
+						piece.current_position = move
+						@board.squares[move] = piece
+						@board.squares[original_position] = ""
+						king_in_check?
+						@board.squares[original_position] = piece
+						@board.squares[move] = captured_piece
+						piece.current_position = original_position
+						captured_piece.current_position = move
+					end
+				end
 			end
-		end
-		white_king.current_position = white_king_original_position
-		@checkmate = players.select {|p| p.color == "white"}[0] if @king_in_check == white_king
-		return @checkmate if @checkmate
-		if black_king_legal_moves.length > 0
+			@checkmate = false unless @king_in_check
 			@king_in_check = black_king
-			until @king_in_check == false || black_king_legal_moves.length == 0
-				move = black_king_legal_moves.pop
-				black_king.current_position = move
-				king_in_check?
-			end
 		end
-		black_king.current_position = black_king_original_position
-		@checkmate = players.select {|p| p.color == "black"}[0] if @king_in_check == black_king
-		return @checkmate if @checkmate
+		return @checkmate ? @checkmate : false
 	end
 	
 end
