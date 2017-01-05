@@ -266,11 +266,13 @@ describe Game do
 			before(:each) do
 				@current_player = @game.players.select {|p| p.color == "white"}[0]
 				@game.instance_variable_set(:@current_player, @current_player)
-				white_bishop = @board.squares["C1"]
+				@white_bishop = @board.squares["C1"]
+				@board.squares["C1"] = ""
 				white_rook = @board.squares["A1"]
 				white_queen = @board.squares["D1"]
-				@board.squares["D7"] = white_bishop
-				white_bishop.current_position = "D7"
+				@board.squares["D1"] = ""
+				@board.squares["D7"] = @white_bishop
+				@white_bishop.current_position = "D7"
 				@board.squares["G8"] = white_queen
 				white_queen.current_position = "G8"
 				@board.squares["F6"] = white_rook
@@ -280,6 +282,7 @@ describe Game do
 			end
 
 			it "outputs a message saying that the white player has won" do
+				puts @game.piece_in_the_way?(@white_bishop, "D7", "E8")
 				expect{@game.play_turn("F6", "F7")}.to output("RxF7\nGame over! #{@current_player.name} wins!\n").to_stdout
 			end
 		end
@@ -288,6 +291,7 @@ describe Game do
 			before(:each) do
 				@current_player = @game.players.select {|p| p.color=="black"}[0]
 				black_bishop = @board.squares["C8"]
+				@board.squares["C8"] = ""
 				black_rook = @board.squares["A8"]
 				black_queen = @board.squares["D8"]
 				@board.squares["F2"] = black_bishop
@@ -471,13 +475,13 @@ describe Game do
 					end
 				end
 
-				context "and increasing row and decreasing column" do
+				context "and decreasing row and increasing column" do
 					it "returns true" do
 						expect(@game.piece_in_the_way?(@black_bishop, "D3", "F1")).to eql(true)
 					end
 				end
 
-				context "and decreasing row and increasing column" do
+				context "and increasing row and decreasing column" do
 					before(:example) do
 						@white_pawn = Pawn.new "white"
 						@board.squares["B5"] = @white_pawn
@@ -1133,11 +1137,12 @@ describe Game do
 	describe ".check_mate?" do
 		context "when black King is in check mate" do
 			before(:example) do
-				@black_king = @board.squares["E8"]
 				@white_bishop = @board.squares["C1"]
+				@board.squares["C1"] = ""
 				@white_rook = @board.squares["A1"]
 				@white_rook2 = @board.squares["H1"]
 				@white_queen = @board.squares["D1"]
+				@board.squares["D1"] = ""
 				@white_rook.current_position = "E7"
 				@board.squares["E7"] = @white_rook
 				@white_bishop.current_position = "D7"
@@ -1146,8 +1151,11 @@ describe Game do
 				@board.squares["G8"] = @white_queen
 				@white_rook2.current_position = "F7"
 				@board.squares["F7"] = @white_rook2
+				@black_bishop = @board.squares["F8"]
+				@black_bishop.current_position = ""
 				@board.squares["F8"] = ""
 				@black_player = @game.players.select {|p| p.color=="black"}[0]
+				@game.king_in_check?
 			end
 
 			it "sets @checkmate to the black player" do
@@ -1159,6 +1167,7 @@ describe Game do
 			before(:example) do
 				@white_king = @board.squares["E1"]
 				@black_bishop = @board.squares["C8"]
+				@board.squares["C8"] = ""
 				@black_rook = @board.squares["A8"]
 				@black_rook2 = @board.squares["H8"]
 				@black_queen = @board.squares["D8"]
@@ -1172,11 +1181,75 @@ describe Game do
 				@board.squares["D2"] = @black_rook2
 				@board.squares["D1"] = ""
 				@white_player = @game.players.select {|p| p.color=="white"}[0]
+				@game.king_in_check?
 			end
 
 			it "sets @checkmate to the white player" do
 				expect(@game.check_mate?).to eql(@white_player)
 			end
+		end
+
+		context "when white king is in check" do
+			before(:each) do
+				@white_king = @board.squares["E1"]
+				@black_queen = @board.squares["D8"]
+				@black_bishop = @board.squares["C8"]
+				@black_queen.current_position = "C1"
+				@board.squares["C1"] = @black_queen
+				@board.squares["D1"] = ""
+				@black_bishop.current_position = "D2"
+				@board.squares["D2"] = @black_bishop
+				@board.squares["E2"] = ""
+			end
+			
+			context "but an open square move by the king can remove check" do
+				it "returns false" do
+					expect(@game.check_mate?).to eql(false)
+				end
+			end
+
+			context "but a piece capture by the king can remove check" do
+				before(:example) do
+					@black_rook = @board.squares["A8"]
+					@black_rook.current_position = "F2"
+					@board.squares["F2"] = @black_rook
+				end
+
+				it "returns false" do
+					expect(@game.check_mate?).to eql(false)
+				end
+			end
+
+			context "but an open square move by a white knight can remove check" do
+				before(:example) do
+					@white_knight = @board.squares["B1"]
+					@black_rook = @board.squares["A8"]
+					@black_rook.current_position = "D2"
+					@board.squares["D2"] = @black_rook
+					@white_knight.current_position = "B2"
+					@board.squares["B2"] = @white_knight
+				end
+
+				it "returns false" do
+					expect(@game.check_mate?).to eql(false)
+				end
+			end
+
+			context "but a piece capture by a white Rook can remove check" do
+				before(:example) do
+					@black_rook = @board.squares["A8"]
+					@black_rook.current_position = "D2"
+					@board.squares["D2"] = @black_rook
+					@white_rook = @board.squares["A1"]
+					@white_rook.current_position = "B1"
+					@board.squares["B1"] = @white_rook
+				end
+
+				it "returns false" do
+					expect(@game.check_mate?).to eql(false)
+				end
+			end
+
 		end
 	end
 	
