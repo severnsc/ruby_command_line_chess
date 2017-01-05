@@ -79,6 +79,14 @@ class Game
 				@current_player = players.select {|p| p != @current_player}[0]
 			end
 		end
+		check_mate?
+		if @checkmate == players.select {|p| p.color=="black"}[0]
+			white_player = players.select {|p| p.color=="white"}[0]
+			puts "Game over! #{white_player.name} wins!"
+		elsif @checkmate == players.select {|p| p.color=="white"}[0]
+			black_player = players.select {|p| p.color=="black"}[0]
+			puts "Game over! #{black_player.name} wins!"
+		end
 		#puts @king_in_check ? "#{@current_player.name}'s turn. You are in check" : "#{@current_player.name}'s turn."
 	end
 
