@@ -262,6 +262,49 @@ describe Game do
 			end
 		end
 
+		context "when a move by the white player would put the black player in checkmate" do
+			before(:each) do
+				@current_player = @game.players.select {|p| p.color == "white"}[0]
+				@game.instance_variable_set(:@current_player, @current_player)
+				white_bishop = @board.squares["C1"]
+				white_rook = @board.squares["A1"]
+				white_queen = @board.squares["D1"]
+				@board.squares["D7"] = white_bishop
+				white_bishop.current_position = "D7"
+				@board.squares["G8"] = white_queen
+				white_queen.current_position = "G8"
+				@board.squares["F6"] = white_rook
+				white_rook.current_position = "F6"
+				@board.squares["E7"] = ""
+				@board.squares["F8"] = ""
+			end
+
+			it "outputs a message saying that the white player has won" do
+				expect{@game.play_turn("F6", "F7")}.to output("RxF7\nGame over! #{@current_player.name} wins!\n").to_stdout
+			end
+		end
+
+		context "when a move by the black player would put the white player in checkmate" do
+			before(:each) do
+				@current_player = @game.players.select {|p| p.color=="black"}[0]
+				black_bishop = @board.squares["C8"]
+				black_rook = @board.squares["A8"]
+				black_queen = @board.squares["D8"]
+				@board.squares["F2"] = black_bishop
+				black_bishop.current_position = "F2"
+				@board.squares["D3"] = black_rook
+				black_rook.current_position = "D3"
+				@board.squares["C1"] = black_queen
+				black_queen.current_position = "C1"
+				@board.squares["D1"] = ""
+				@board.squares["E2"] = ""
+			end
+
+			it "outputs a message saying that the black player has won" do
+				expect{@game.play_turn("D3", "D2")}.to output("RxD2\nGame over! #{@current_player.name} wins!\n").to_stdout
+			end
+		end
+
 	end
 
 	describe ".piece_in_the_way?" do
