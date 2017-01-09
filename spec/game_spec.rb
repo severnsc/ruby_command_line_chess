@@ -109,6 +109,12 @@ describe Game do
 
 		context "when moving a pawn to an open square" do
 
+			context "but the open square is diagonal from the pawn and @en_passant is false" do
+				it "prints a message stating that the move is illegal" do
+					expect{@game.play_turn("A7", "B6")}.to output("That move is illegal! Try again.\n").to_stdout
+				end 
+			end
+
 			it "prints the algebraic notation of the move" do
 				expect{@game.play_turn("A7", "A6")}.to output("A6\n").to_stdout
 			end
@@ -1433,7 +1439,47 @@ describe Game do
 		end
 	end
 
-	describe ".en_passant_capture" do
+	describe ".en_passant_pawn_capture" do
+		context "when performing a legal en passant pawn capture with a black pawn" do
+			before(:each) do |example|
+				@black_pawn = @board.squares["A7"]
+				@black_pawn.current_position = "B4"
+				@board.squares["B4"] = @black_pawn
+				@board.squares["A7"] = ""
+				@white_pawn = @board.squares["A2"]
+				@white_pawn.current_position = "A4"
+				@board.squares["A4"] = @white_pawn
+				@board.squares["A2"] = ""
+				@game.instance_variable_set(:@en_passant, @white_pawn)
+				unless example.metadata[:skip_before]
+					@game.en_passant_pawn_capture(@black_pawn, "B4", "A3")
+				end
+			end
+
+			it "sets the current_position of the captured piece to ''" do
+				expect(@white_pawn.current_position).to eql("")
+			end
+
+			it "sets the square of the piece being captured to ''" do
+				expect(@board.squares["A4"]).to eql("")
+			end
+
+			it "sets the finish square equal to the capturing pawn" do
+				expect(@board.squares["A3"]).to eql(@black_pawn)
+			end
+
+			it "sets the start square to ''" do
+				expect(@board.squares["A4"]).to eql("")
+			end
+
+			it "sets the capturing pawn's current position to the finish square" do
+				expect(@black_pawn.current_position).to eql("A3")
+			end
+
+			it "prints the algebraic notation of the capture", skip_before: true do
+				expect{@game.en_passant_pawn_capture(@black_pawn, "B4", "A3")}.to output("BxA3e.p.\n").to_stdout
+			end
+		end
 	end
 	
 end
