@@ -50,8 +50,13 @@ describe Game do
 		context "when the move is legal and the player is not in check" do
 			subject(:white_player) {@game.players.select {|p| p.color=="white"}[0]}
 
-			it "prints the algebraic notation of the move and states that it's the next player's turn" do
+			it "prints the algebraic notation of the move" do
 				expect{@game.play_turn("A7", "A6")}.to output("A6\n").to_stdout
+			end
+
+			it "sets the piece's @moved? variable to true" do
+				@game.play_turn("A7", "A6")
+				expect(@board.squares["A6"].moved).to eql(true)
 			end
 		end
 
