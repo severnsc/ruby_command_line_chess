@@ -38,6 +38,8 @@ class Game
 		elsif moving_piece.is_a?(Pawn) && pawn_legal_capture_distance?(moving_piece, finish) && @board.squares[finish] != ""
 			captured_piece = @board.squares[finish]
 			pawn_capture(moving_piece, start, finish)
+			pawn_promotion(moving_piece) if moving_piece.color == "white" && finish.split('').last == "8"
+			pawn_promotion(moving_piece) if moving_piece.color == "black" && finish.split('').last == "1"
 			king_in_check?
 			if @king_in_check && @king_in_check.color == @current_player.color
 				@board.squares[finish] = captured_piece
@@ -86,6 +88,8 @@ class Game
 			puts "There's a piece in the way! Try again."
 		elsif @board.squares[finish] == ""
 			open_square_move(moving_piece, start, finish)
+			pawn_promotion(moving_piece) if moving_piece.is_a?(Pawn) && moving_piece.color == "white" && finish.split('').last == "8"
+			pawn_promotion(moving_piece) if moving_piece.is_a?(Pawn) && moving_piece.color == "black" && finish.split('').last == "1"
 			king_in_check?
 			if @king_in_check && @king_in_check.color == @current_player.color
 				@board.squares[start] = moving_piece
