@@ -107,6 +107,20 @@ describe Game do
 			end
 		end
 
+		context "when performing a pawn capture that leads to a promotion" do
+			before(:each) do
+				@black_pawn = @board.squares["A7"]
+				@black_pawn.current_position = "A2"
+				@board.squares["A2"] = @black_pawn
+				@black_pawn.update_row_column
+				@board.squares["A7"] = ""
+			end
+
+			it "prints the algebraic notation of the capture and the promotion" do
+				expect{@game.play_turn("A2", "B1")}.to output("AxB1\nB1Q\n").to_stdout
+			end
+		end
+
 		context "when moving a pawn to an open square" do
 
 			context "but the open square is diagonal from the pawn and @en_passant is false" do
@@ -122,6 +136,20 @@ describe Game do
 			it "changes the current player to the opponent" do
 				@game.play_turn("A7", "A6")
 				expect(@game.current_player).to eql(@game.players.select {|p| p.color=="white"}[0])
+			end
+		end
+
+		context "when moving a pawn to an open square that would lead to a promotion" do
+			before(:each) do
+				@black_pawn = @board.squares["A7"]
+				@black_pawn.current_position = "A2"
+				@board.squares["A2"] = @black_pawn
+				@board.squares["A7"] = ""
+				@board.squares["A1"] = ""
+			end
+
+			it "prints the algebraic notation of the move and the promotion" do
+				expect{@game.play_turn("A2", "A1")}.to output("A1\nA1Q\n").to_stdout
 			end
 		end
 
