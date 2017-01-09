@@ -57,6 +57,30 @@ class Game
 			else
 				@current_player = players.select {|p| p != @current_player}[0]
 			end
+		elsif @en_passant && moving_piece.is_a?(Pawn) && pawn_legal_capture_distance?(moving_piece, finish)
+			captured_pawn = @en_passant
+			en_passant_pawn_capture(moving_piece, start, finish)
+			king_in_check?
+			if @king_in_check && @king_in_check.color == @current_player.color
+				@board.squares[finish] = ""
+				captured_pawn.current_position = @en_passant.current_position
+				moving_piece.current_position = start
+				@board.squares[start] = moving_piece
+				@board.squares[captured_pawn.current_position] = captured_pawn
+				@king_in_check = false
+				puts "That puts your king in check! Try again."
+			elsif @king_in_check
+				check_mate?
+				if @checkmate
+					puts "Game over! #{@current_player.name} wins!"
+				else
+					@current_player = players.select {|p| p != @current_player}[0]
+					puts "#{@current_player.name}, you are in check!"
+					@current_player = players.select {|p| p != @current_player}[0]
+				end
+			else
+				@current_player = players.select {|p| p != @current_player}[0]
+			end
 		elsif !moving_piece.is_move_legal?(finish)
 			puts "That move is illegal! Try again."
 		elsif piece_in_the_way?(moving_piece, start, finish)
@@ -104,6 +128,7 @@ class Game
 				@current_player = players.select {|p| p != @current_player}[0]
 			end
 		end
+		en_passant?(moving_piece, start, finish) unless moving_piece == ""
 	end
 
 	def piece_in_the_way?(piece, start, finish)
@@ -342,6 +367,16 @@ class Game
 			white_pawns = @board.pawns.select {|p| p.color=="white"}
 			@en_passant = piece if white_pawns.any? {|p| pawn_legal_capture_distance?(p, passed_square)}
 		end
+	end
+
+	def en_passant_pawn_capture(pawn, start, finish)
+		en_passant_square = @en_passant.current_position
+		@board.squares[en_passant_square].current_position = ""
+		@board.squares[finish] = pawn
+		@board.squares[start] = ""
+		@board.squares[en_passant_square] = ""
+		pawn.current_position = finish
+		puts "#{start.split('').first}x" + finish + "e.p."
 	end
 
 	def check_mate?
