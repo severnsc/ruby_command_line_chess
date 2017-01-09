@@ -3,7 +3,7 @@ require_relative "./pieces.rb"
 require_relative "./board.rb"
 
 class Game
-	attr_reader :board, :current_player, :king_in_check, :checkmate
+	attr_reader :board, :current_player, :king_in_check, :checkmate, :en_passant
 
 	def initialize(player1, player2)
 		player1.is_a?(Player) ? @player1 = player1 : raise(TypeError)
@@ -20,6 +20,7 @@ class Game
 		@player1.color == "white" ? @current_player = @player1 : @current_player = @player2
 		@king_in_check = false
 		@checkmate = false
+		@en_passant = false
 	end
 
 	def players
@@ -328,6 +329,19 @@ class Game
 			legal_moves = @board.squares.select {|sq, p| (piece.is_move_legal?(sq) && !piece_in_the_way?(piece, piece.current_position, sq) && @board.squares[sq] == "") || (@board.squares[sq] != "" && @board.squares[sq].color != piece.color && piece.is_move_legal?(sq) && !piece_in_the_way?(piece, piece.current_position, sq))}
 		end
 		legal_moves.keys
+	end
+
+	def en_passant?(piece, start, finish)
+		@en_passant = false
+		if piece.color == "white" && start.split('').last == "2" && finish.split('').last == "4"
+			passed_square = start.split('').first + "3"
+			black_pawns = @board.pawns.select {|p| p.color=="black"}
+			@en_passant = piece if black_pawns.any? {|p| pawn_legal_capture_distance?(p, passed_square)}
+		elsif piece.color == "black" && start.split('').last == "7" && finish.split('').last == "5"
+			passed_square = start.split('').first + "6"
+			white_pawns = @board.pawns.select {|p| p.color=="white"}
+			@en_passant = piece if white_pawns.any? {|p| pawn_legal_capture_distance?(p, passed_square)}
+		end
 	end
 
 	def check_mate?
