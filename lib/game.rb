@@ -385,6 +385,7 @@ class Game
 		@board.queens.push(new_queen)
 		@board.squares[promote_square] = new_queen
 		new_queen.current_position = promote_square
+		puts promote_square + "Q"
 	end
 
 	def check_mate?
