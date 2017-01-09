@@ -1484,12 +1484,14 @@ describe Game do
 
 	describe ".pawn_promotion" do
 		context "when a white pawn is promoted" do
-			before(:each) do
+			before(:each) do |example|
 				@white_pawn = @board.squares["A2"]
 				@white_pawn.current_position = "A8"
 				@board.squares["A8"] = @white_pawn
 				@board.squares["A1"] = ""
-				@game.pawn_promotion(@white_pawn)
+				unless example.metadata[:skip_before]
+					@game.pawn_promotion(@white_pawn)
+				end
 			end
 
 			it "sets the pawn's current position to ''" do
@@ -1507,15 +1509,21 @@ describe Game do
 			it "sets the white queen's current position to the pawns last position" do
 				expect(@board.squares["A8"].current_position).to eql("A8")
 			end
+
+			it "prints the algebraic notation of the promotion", skip_before: true do
+				expect{@game.pawn_promotion(@white_pawn)}.to output("A8Q\n").to_stdout
+			end
 		end
 
 		context "when a black pawn is promoted" do
-			before(:each) do
+			before(:each) do |example|
 				@black_pawn = @board.squares["A7"]
 				@black_pawn.current_position = "A1"
 				@board.squares["A1"] = @black_pawn
 				@board.squares["A7"] = ""
-				@game.pawn_promotion(@black_pawn)
+				unless example.metadata[:skip_before]
+					@game.pawn_promotion(@black_pawn)
+				end
 			end
 
 			it "sets the pawn's current position to ''" do
@@ -1532,6 +1540,11 @@ describe Game do
 
 			it "sets the black queen's current position to the pawn's last position" do
 				expect(@board.squares["A1"].current_position).to eql("A1")
+			end
+
+			it "prints the algebraic notation of the promotion" do
+				@black_pawn.current_position = "A1"
+				expect{@game.pawn_promotion(@black_pawn)}.to output("A1Q\n").to_stdout
 			end
 		end
 	end
