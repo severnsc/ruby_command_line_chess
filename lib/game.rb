@@ -378,6 +378,15 @@ class Game
 		puts "#{start.split('').first}x" + finish + "e.p."
 	end
 
+	def pawn_promotion pawn
+		promote_square = pawn.current_position
+		pawn.current_position = ""
+		new_queen = Queen.new pawn.color
+		@board.queens.push(new_queen)
+		@board.squares[promote_square] = new_queen
+		new_queen.current_position = promote_square
+	end
+
 	def check_mate?
 		white_king = @board.kings.select {|k| k.color=="white"}[0]
 		black_king = @board.kings.select {|k| k.color=="black"}[0]
