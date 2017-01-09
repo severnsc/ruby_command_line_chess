@@ -103,7 +103,6 @@ class Game
 				@current_player = players.select {|p| p != @current_player}[0]
 			end
 		end
-		#puts @king_in_check ? "#{@current_player.name}'s turn. You are in check" : "#{@current_player.name}'s turn."
 	end
 
 	def piece_in_the_way?(piece, start, finish)
