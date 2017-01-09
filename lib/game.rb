@@ -35,7 +35,7 @@ class Game
 			puts "That's not your piece! Try again."
 		elsif @board.squares[finish] != "" && @board.squares[finish].color == moving_piece.color
 			puts "You already have a piece there! Try again."
-		elsif moving_piece.is_a?(Pawn) && pawn_legal_capture_distance?(moving_piece, finish)
+		elsif moving_piece.is_a?(Pawn) && pawn_legal_capture_distance?(moving_piece, finish) && @board.squares[finish] != ""
 			captured_piece = @board.squares[finish]
 			pawn_capture(moving_piece, start, finish)
 			king_in_check?
