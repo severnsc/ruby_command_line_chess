@@ -1481,5 +1481,59 @@ describe Game do
 			end
 		end
 	end
+
+	describe ".pawn_promotion" do
+		context "when a white pawn is promoted" do
+			before(:each) do
+				@white_pawn = @board.squares["A2"]
+				@white_pawn.current_position = "A8"
+				@board.squares["A8"] = @white_pawn
+				@board.squares["A1"] = ""
+				@game.pawn_promotion(@white_pawn)
+			end
+
+			it "sets the pawn's current position to ''" do
+				expect(@white_pawn.current_position).to eql("")
+			end
+
+			it "creates a new White Queen and pushes it to the board's queens array" do
+				expect(@board.queens.select {|q| q.color=="white"}.count).to eql(2)
+			end
+
+			it "updates the square to equal the new white queen" do
+				expect(@board.squares["A8"].is_a?(Queen) && @board.squares["A8"].color=="white").to eql(true)
+			end
+
+			it "sets the white queen's current position to the pawns last position" do
+				expect(@board.squares["A8"].current_position).to eql("A8")
+			end
+		end
+
+		context "when a black pawn is promoted" do
+			before(:each) do
+				@black_pawn = @board.squares["A7"]
+				@black_pawn.current_position = "A1"
+				@board.squares["A1"] = @black_pawn
+				@board.squares["A7"] = ""
+				@game.pawn_promotion(@black_pawn)
+			end
+
+			it "sets the pawn's current position to ''" do
+				expect(@black_pawn.current_position).to eql("")
+			end
+
+			it "creates a new black queen and pushes it to the board's queens array" do
+				expect(@board.queens.select {|q| q.color=="black"}.count).to eql(2)
+			end
+
+			it "updates the square to equal the new black queen" do
+				expect(@board.squares["A1"].is_a?(Queen) && @board.squares["A1"].color=="black").to eql(true)
+			end
+
+			it "sets the black queen's current position to the pawn's last position" do
+				expect(@board.squares["A1"].current_position).to eql("A1")
+			end
+		end
+	end
 	
 end
