@@ -1252,5 +1252,188 @@ describe Game do
 
 		end
 	end
+
+	describe ".en_passant?" do
+		context "when a black pawn moves 2 squares from opening position" do
+			before(:each) {@black_pawn = @board.squares["A7"]}
+
+			context "past a square that a white pawn is attacking" do 
+				before(:example) do
+					@white_pawn = @board.squares["A2"]
+					@white_pawn.current_position = "B5"
+					@white_pawn.update_row_column
+					@board.squares["B5"] = @white_pawn
+					@board.squares["A2"] = ""
+					@game.en_passant?(@black_pawn, "A7", "A5")
+				end
+
+				it "sets @en_passant equal to the black pawn that can be captured" do
+					expect(@game.en_passant).to eql(@black_pawn)
+				end
+			end
+
+			context "past a square that a white rook is attacking" do
+				before(:example) do
+					@white_rook = @board.squares["A1"]
+					@white_rook.current_position = "B6"
+					@board.squares["B6"] = @white_rook
+					@board.squares["A1"] = ""
+					@game.en_passant?(@black_pawn, "A7", "A5")
+				end
+
+				it "doesn't set @en_passant" do
+					expect(@game.en_passant).to eql(false)
+				end
+			end
+
+			context "past a square that a white knight is attacking" do
+				before(:example) do
+					@white_knight = @board.squares["B1"]
+					@white_knight.current_position = "B4"
+					@board.squares["B4"] = @white_knight
+					@board.squares["B1"] = ""
+					@game.en_passant?(@black_pawn, "A7", "A5")
+				end
+
+				it "doesn't set @en_passant" do
+					expect(@game.en_passant).to eql(false)
+				end
+			end
+
+			context "past a square that a white bishop is attacking" do
+				before(:example) do
+					@white_bishop = @board.squares["F1"]
+					@white_bishop.current_position = "B5"
+					@board.squares["B5"] = @white_bishop
+					@board.squares["F1"] = ""
+					@game.en_passant?(@black_pawn, "A7", "A5")
+				end
+
+				it "doesn't set @en_passant" do
+					expect(@game.en_passant).to eql(false)
+				end
+			end
+
+			context "past a square that a white queen is attacking" do
+				before(:example) do
+					@white_queen = @board.squares["D1"]
+					@white_queen.current_position = "B5"
+					@board.squares["B5"] = @white_queen
+					@board.squares["D1"] = ""
+					@game.en_passant?(@black_pawn, "A7", "A5")
+				end
+
+				it "doesn't set @en_passant" do
+					expect(@game.en_passant).to eql(false)
+				end
+			end
+
+			context "past a square that a white king is attacking" do
+				before(:example) do
+					@white_king = @board.squares["E1"]
+					@white_king.current_position = "B5"
+					@board.squares["B5"] = @white_king
+					@board.squares["E1"] = ""
+					@game.en_passant?(@black_pawn, "A7", "A5")
+				end
+
+				it "doesn't set @en_passant" do
+					expect(@game.en_passant).to eql(false)
+				end
+			end
+		end
+
+		context "when a white pawn moves 2 squares from opening position" do
+			before(:each) {@white_pawn = @board.squares["A2"]}
+
+			context "past a square that a black pawn is attacking" do
+				before(:example) do
+					@black_pawn = @board.squares["A7"]
+					@black_pawn.current_position = "B4"
+					@black_pawn.update_row_column
+					@board.squares["B4"] = @black_pawn
+					@board.squares["A7"] = ""
+					@game.en_passant?(@white_pawn, "A2", "A4")
+				end
+
+				it "sets @en_passant equal to the white pawn that can be captured" do
+					expect(@game.en_passant).to eql(@white_pawn)
+				end
+			end
+
+			context "past a square that a black rook is attacking" do
+				before(:example) do
+					@black_rook = @board.squares["A8"]
+					@black_rook.current_position = "B3"
+					@board.squares["B3"] = @black_rook
+					@board.squares["A8"] = ""
+					@game.en_passant?(@white_pawn, "A2", "A4")
+				end
+
+				it "doesn't set @en_passant" do
+					expect(@game.en_passant).to eql(false)
+				end
+			end
+
+			context "past a square that a black bishop is attacking" do
+				before(:example) do
+					@black_bishop = @board.squares["F8"]
+					@black_bishop.current_position = "B4"
+					@board.squares["B4"] = @black_bishop
+					@board.squares["F8"] = ""
+					@game.en_passant?(@white_pawn, "A2", "A4")
+				end
+
+				it "doesn't set @en_passant" do
+					expect(@game.en_passant).to eql(false)
+				end
+			end
+
+			context "past a square that a black knight is attacking" do
+				before(:example) do
+					@black_knight = @board.squares["B8"]
+					@black_knight.current_position = "B5"
+					@board.squares["B5"] = @black_knight
+					@board.squares["B8"] = ""
+					@game.en_passant?(@white_pawn, "A2", "A4")
+				end
+
+				it "doesn't set @en_passant" do
+					expect(@game.en_passant).to eql(false)
+				end
+			end
+
+			context "past a square that a black queen is attacking" do
+				before(:example) do
+					@black_queen = @board.squares["D8"]
+					@black_queen.current_position = "B4"
+					@board.squares["B4"] = @black_queen
+					@board.squares["D8"] = ""
+					@game.en_passant?(@white_pawn, "A2", "A4")
+				end
+
+				it "doesn't set @en_passant" do
+					expect(@game.en_passant).to eql(false)
+				end
+			end
+
+			context "past a square that a black king is attacking" do
+				before(:example) do
+					@black_king = @board.squares["E8"]
+					@black_king.current_position = "B4"
+					@board.squares["B4"] = @black_king
+					@board.squares["E8"] = ""
+					@game.en_passant?(@white_pawn, "A2", "A4")
+				end
+
+				it "doesn't set @en_passant" do
+					expect(@game.en_passant).to eql(false)
+				end
+			end
+		end
+	end
+
+	describe ".en_passant_capture" do
+	end
 	
 end
