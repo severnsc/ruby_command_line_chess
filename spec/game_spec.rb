@@ -51,7 +51,7 @@ describe Game do
 			subject(:white_player) {@game.players.select {|p| p.color=="white"}[0]}
 
 			it "prints the algebraic notation of the move and states that it's the next player's turn" do
-				expect{@game.play_turn("A7", "A6")}.to output("A6\n#{white_player.name}'s turn.\n").to_stdout
+				expect{@game.play_turn("A7", "A6")}.to output("A6\n").to_stdout
 			end
 		end
 
