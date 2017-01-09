@@ -1576,5 +1576,14 @@ describe Game do
 			end
 		end
 	end
+
+	describe ".castle" do
+		context "when performing a legal queenside castle with the white king" do
+			before(:each) do
+				@board.squares["B1"], @board.squares["C1"], @board.squares["D1"] = "", "", ""
+				
+			end
+		end
+	end
 	
 end
