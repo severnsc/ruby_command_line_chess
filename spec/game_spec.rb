@@ -1796,6 +1796,43 @@ describe Game do
 		end
 
 		context "when attempting to perform a kingside castle with a white rook that has already moved" do
+			before(:each) do |example|
+				@white_rook = @board.squares["H1"]
+				@white_king = @board.squares["E1"]
+				@white_rook.moved = true
+				@board.squares["F1"], @board.squares["G1"] = "", ""
+				unless example.metadata[:skip_before]
+					@game.castle(@white_rook, @white_king)
+				end
+			end
+
+			it "leaves rooks' current_position as H1" do
+				expect(@white_rook.current_position).to eql("H1")
+			end
+
+			it "leaves the king's current position as E1" do
+				expect(@white_king.current_position).to eql("E1")
+			end
+
+			it "leaves H1 as the white rook" do
+				expect(@board.squares["H1"]).to eql(@white_rook)
+			end
+
+			it "leaves E1 as white king" do
+				expect(@board.squares["E1"]).to eql(@white_king)
+			end
+
+			it "leaves F1 empty" do
+				expect(@board.squares["F1"]).to eql("")
+			end
+
+			it "leaves G1 empty" do
+				expect(@board.squares["G1"]).to eql("")
+			end
+
+			it "prints a message saying you can't castle with a rook that has already moved", skip_before: true do
+				expect{@game.castle(@white_rook, @white_king)}.to output("Illegal castle! The rook has already moved.").to_stdout
+			end
 		end
 
 		context "when attempting to perform a queenside castle with a white king that has already moved" do
