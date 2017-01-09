@@ -76,7 +76,6 @@ class Game
 				else
 					@current_player = players.select {|p| p != @current_player}[0]
 					puts "#{@current_player.name}, you are in check!"
-					@current_player = players.select {|p| p != @current_player}[0]
 				end
 			else
 				@current_player = players.select {|p| p != @current_player}[0]
