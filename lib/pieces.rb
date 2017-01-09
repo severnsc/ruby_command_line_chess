@@ -1,10 +1,10 @@
 class Piece
-	attr_reader :color, :current_column, :current_row, :moved?
-	attr_accessor :current_position
+	attr_reader :color, :current_column, :current_row
+	attr_accessor :current_position, :moved
 
 	def initialize(color)
 		@color = color
-		@moved? = false
+		@moved = false
 	end
 
 	def update_row_column
