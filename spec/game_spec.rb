@@ -1794,6 +1794,27 @@ describe Game do
 				expect{@game.castle(@white_rook, @white_king)}.to output("Illegal castle! The rook has already moved.").to_stdout
 			end
 		end
+
+		context "when attempting to perform a kingside castle with a white rook that has already moved" do
+		end
+
+		context "when attempting to perform a queenside castle with a white king that has already moved" do
+		end
+
+		context "when attempting to perform a kingside castle with a white king that has already moved" do
+		end
+
+		context "when attempting a queenside castle with a black rook that has already moved" do
+		end
+
+		context "when attempting a kingside castle with a black rook that has already moved" do
+		end
+
+		context "when attempting a queenside castle with a black king that has already moved" do
+		end
+
+		context "when attempting a kingside castle with a black_king that has already moved" do
+		end
 	end
 	
 end
