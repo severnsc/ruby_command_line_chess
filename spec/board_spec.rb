@@ -1,4 +1,5 @@
 require_relative "../lib/board.rb"
+require_relative "./spec_helper.rb"
 
 describe Board do 
 

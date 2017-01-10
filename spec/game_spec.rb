@@ -1,4 +1,5 @@
 require_relative "../lib/game.rb"
+require_relative "./spec_helper.rb"
 
 describe Game do
 

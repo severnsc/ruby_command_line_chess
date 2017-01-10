@@ -1,0 +1,178 @@
+A6
+AxB6
+A6
+RxC5
+ExD6
+That puts your king in check! Try again.
+ExD6
+That puts your king in check! Try again.
+ExD6
+That puts your king in check! Try again.
+ExD6
+That puts your king in check! Try again.
+ExD6
+That puts your king in check! Try again.
+ExD6
+That puts your king in check! Try again.
+D6
+That puts your king in check! Try again.
+D6
+That puts your king in check! Try again.
+D6
+That puts your king in check! Try again.
+D6
+That puts your king in check! Try again.
+NxF5
+That puts your king in check! Try again.
+NxF5
+That puts your king in check! Try again.
+NxF5
+That puts your king in check! Try again.
+NxF5
+That puts your king in check! Try again.
+NxF5
+That puts your king in check! Try again.
+false
+AxB6
+AxB6
+AxB6
+AxB6
+A6
+A6
+A6
+RxC5
+RxC5
+RxC5
+RxC5
+BxA3e.p.
+BxA3e.p.
+BxA3e.p.
+BxA3e.p.
+BxA3e.p.
+A8Q
+A8Q
+A8Q
+A8Q
+A1Q
+A1Q
+A1Q
+A1Q
+A1Q
+0-0-0
+0-0-0
+0-0-0
+0-0-0
+0-0-0
+0-0-0
+0-0-0
+0-0
+0-0
+0-0
+0-0
+0-0
+0-0
+0-0-0
+0-0-0
+0-0-0
+0-0-0
+0-0-0
+0-0-0
+0-0
+0-0
+0-0
+0-0
+0-0
+0-0
+Illegal castle! The rook has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The rook has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! The king has already moved.
+Illegal castle! King can't end in check.
+Illegal castle! King can't end in check.
+Illegal castle! King can't end in check.
+Illegal castle! King can't end in check.
+Illegal castle! King can't end in check.
+Illegal castle! King can't end in check.
+Illegal castle! King can't move through check.
+Illegal castle! King can't move through check.
+Illegal castle! King can't move through check.
+Illegal castle! King can't move through check.
+Illegal castle! King can't move through check.
+Illegal castle! King can't move through check.
+Illegal castle! King can't end in check.
+Illegal castle! King can't end in check.
+Illegal castle! King can't end in check.
+Illegal castle! King can't end in check.
+Illegal castle! King can't end in check.
+Illegal castle! King can't end in check.
+Illegal castle! King can't move through check.
+Illegal castle! King can't move through check.
+Illegal castle! King can't move through check.
+Illegal castle! King can't move through check.
+Illegal castle! King can't move through check.
+Illegal castle! King can't move through check.
+Illegal castle! King can't end in check.
+Illegal castle! King can't end in check.
+Illegal castle! King can't end in check.
+Illegal castle! King can't end in check.
+Illegal castle! King can't end in check.
+Illegal castle! King can't end in check.
+Illegal castle! King can't end in check.
+Illegal castle! King can't end in check.
+Illegal castle! King can't end in check.
+Illegal castle! King can't end in check.
+Illegal castle! King can't end in check.
+Illegal castle! King can't end in check.
+Illegal castle! King can't move through check.
+Illegal castle! King can't move through check.
+Illegal castle! King can't move through check.
+Illegal castle! King can't move through check.
+Illegal castle! King can't move through check.
+Illegal castle! King can't move through check.
