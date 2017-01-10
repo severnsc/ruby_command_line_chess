@@ -414,8 +414,10 @@ class Game
 
 	def castle(rook, king)
 		unless rook.moved || king.moved
+			black_pieces = @board.squares.values.select {|p| p != "" && p.color=="black"}
+			white_pieces = @board.squares.values.select {|p| p != "" && p.color=="white"}
 			if rook.color == "white"
-				if rook.current_position == "A1"
+				if rook.current_position == "A1" && black_pieces.none? {|p| legal_moves(p).include?("D1") || legal_moves(p).include?("C1")}
 					rook.current_position = "D1"
 					king.current_position = "C1"
 					@board.squares["D1"] = rook
@@ -423,7 +425,7 @@ class Game
 					@board.squares["A1"] = ""
 					@board.squares["E1"] = ""
 					puts "0-0-0"
-				elsif rook.current_position == "H1"
+				elsif rook.current_position == "H1" && black_pieces.none? {|p| legal_moves(p).include?("F1") || legal_moves(p).include?("G1")}
 					rook.current_position = "F1"
 					king.current_position = "G1"
 					@board.squares["F1"] = rook
@@ -431,9 +433,13 @@ class Game
 					@board.squares["E1"] = ""
 					@board.squares["H1"] = ""
 					puts "0-0"
+				elsif black_pieces.any? {|p| legal_moves(p).include?("D1") || legal_moves(p).include?("F1")}
+					puts "Illegal castle! King can't move through check."
+				elsif black_pieces.any? {|p| legal_moves(p).include?("C1") || legal_moves(p).include?("G1")}
+					puts "Illegal castle! King can't end in check."
 				end
 			else
-				if rook.current_position == "A8"
+				if rook.current_position == "A8" && white_pieces.none? {|p| legal_moves(p).include?("D8") || legal_moves(p).include?("C8")}
 					rook.current_position = "D8"
 					king.current_position = "C8"
 					@board.squares["D8"] = rook
@@ -441,7 +447,7 @@ class Game
 					@board.squares["A8"] = ""
 					@board.squares["E8"] = ""
 					puts "0-0-0"
-				elsif rook.current_position == "H8"
+				elsif rook.current_position == "H8" && !white_pieces.any? {|p| legal_moves(p).include?("F8") || legal_moves(p).include?("G8")}
 					rook.current_position = "F8"
 					king.current_position = "G8"
 					@board.squares["F8"] = rook
@@ -449,6 +455,10 @@ class Game
 					@board.squares["E8"] = ""
 					@board.squares["H8"] = ""
 					puts "0-0"
+				elsif white_pieces.any? {|p| legal_moves(p).include?("D8") || legal_moves(p).include?("F8")}
+					puts "Illegal castle! King can't move through check."
+				elsif white_pieces.any? {|p| legal_moves(p).include?("C8") || legal_moves(p).include?("G8")}
+					puts "Illegal castle! King can't end in check."
 				end
 			end
 		end
