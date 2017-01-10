@@ -398,6 +398,52 @@ class Game
 		puts promote_square + "Q"
 	end
 
+	def castle(rook, king)
+		unless rook.moved || king.moved
+			if rook.color == "white"
+				if rook.current_position == "A1"
+					rook.current_position = "D1"
+					king.current_position = "C1"
+					@board.squares["D1"] = rook
+					@board.squares["C1"] = king
+					@board.squares["A1"] = ""
+					@board.squares["E1"] = ""
+					puts "0-0-0"
+				elsif rook.current_position == "H1"
+					rook.current_position = "F1"
+					king.current_position = "G1"
+					@board.squares["F1"] = rook
+					@board.squares["G1"] = king
+					@board.squares["E1"] = ""
+					@board.squares["H1"] = ""
+					puts "0-0"
+				end
+			else
+				if rook.current_position == "A8"
+					rook.current_position = "D8"
+					king.current_position = "C8"
+					@board.squares["D8"] = rook
+					@board.squares["C8"] = king
+					@board.squares["A8"] = ""
+					@board.squares["E8"] = ""
+					puts "0-0-0"
+				elsif rook.current_position == "H8"
+					rook.current_position = "F8"
+					king.current_position = "G8"
+					@board.squares["F8"] = rook
+					@board.squares["G8"] = king
+					@board.squares["E8"] = ""
+					@board.squares["H8"] = ""
+					puts "0-0"
+				end
+			end
+		elsif rook.moved
+			puts "Illegal castle! The rook has already moved."
+		elsif king.moved
+			puts "Illegal castle! The king has already moved."
+		end
+	end
+
 	def check_mate?
 		white_king = @board.kings.select {|k| k.color=="white"}[0]
 		black_king = @board.kings.select {|k| k.color=="black"}[0]
