@@ -541,5 +541,17 @@ class Game
 		end
 		return @checkmate ? @checkmate : false
 	end
+
+	def offer_draw
+		if @current_player == @player1
+			puts "#{@player2.name}, #{@player1.name} has offered a draw. Do you accept? Type 'Y' for yes or 'N' for no."
+			response = gets.chomp.upcase
+			puts response == "Y" ? "Game over! It's a draw." : "Draw rejected."
+		else
+			puts "#{@player1.name}, #{@player2.name} has offered a draw. Do you accept? Type 'Y' for yes or 'N' for no."
+			response = gets.chomp.upcase
+			puts response == "Y" ? puts "Game over! It's a draw." : "Draw rejected."
+		end
+	end
 	
 end
