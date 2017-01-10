@@ -1,0 +1,275 @@
+--- !ruby/object:Game
+player1: &33 !ruby/object:Player
+  name: A
+  color: black
+player2: !ruby/object:Player
+  name: B
+  color: white
+board: !ruby/object:Board
+  pawns:
+  - &3 !ruby/object:Pawn
+    color: black
+    moved: false
+    current_position: A7
+    current_column: A
+    current_row: 7
+  - &7 !ruby/object:Pawn
+    color: black
+    moved: false
+    current_position: B7
+    current_column: B
+    current_row: 7
+  - &11 !ruby/object:Pawn
+    color: black
+    moved: false
+    current_position: C7
+    current_column: C
+    current_row: 7
+  - &15 !ruby/object:Pawn
+    color: black
+    moved: false
+    current_position: D7
+    current_column: D
+    current_row: 7
+  - &19 !ruby/object:Pawn
+    color: black
+    moved: false
+    current_position: E7
+    current_column: E
+    current_row: 7
+  - &23 !ruby/object:Pawn
+    color: black
+    moved: false
+    current_position: F7
+    current_column: F
+    current_row: 7
+  - &27 !ruby/object:Pawn
+    color: black
+    moved: false
+    current_position: G7
+    current_column: G
+    current_row: 7
+  - &31 !ruby/object:Pawn
+    color: black
+    moved: false
+    current_position: H7
+    current_column: H
+    current_row: 7
+  - &2 !ruby/object:Pawn
+    color: white
+    moved: true
+    current_position: A3
+    current_column: A
+    current_row: 3
+  - &6 !ruby/object:Pawn
+    color: white
+    moved: false
+    current_position: B2
+    current_column: B
+    current_row: 2
+  - &10 !ruby/object:Pawn
+    color: white
+    moved: false
+    current_position: C2
+    current_column: C
+    current_row: 2
+  - &14 !ruby/object:Pawn
+    color: white
+    moved: false
+    current_position: D2
+    current_column: D
+    current_row: 2
+  - &18 !ruby/object:Pawn
+    color: white
+    moved: false
+    current_position: E2
+    current_column: E
+    current_row: 2
+  - &22 !ruby/object:Pawn
+    color: white
+    moved: false
+    current_position: F2
+    current_column: F
+    current_row: 2
+  - &26 !ruby/object:Pawn
+    color: white
+    moved: false
+    current_position: G2
+    current_column: G
+    current_row: 2
+  - &30 !ruby/object:Pawn
+    color: white
+    moved: false
+    current_position: H2
+    current_column: H
+    current_row: 2
+  rooks:
+  - &4 !ruby/object:Rook
+    color: black
+    moved: false
+    current_position: A8
+    current_column: A
+    current_row: 8
+  - &32 !ruby/object:Rook
+    color: black
+    moved: false
+    current_position: H8
+    current_column: H
+    current_row: 8
+  - &1 !ruby/object:Rook
+    color: white
+    moved: false
+    current_position: A1
+    current_column: A
+    current_row: 1
+  - &29 !ruby/object:Rook
+    color: white
+    moved: false
+    current_position: H1
+    current_column: H
+    current_row: 1
+  knights:
+  - &8 !ruby/object:Knight
+    color: black
+    moved: false
+    current_position: B8
+    current_column: B
+    current_row: 8
+  - &28 !ruby/object:Knight
+    color: black
+    moved: false
+    current_position: G8
+    current_column: G
+    current_row: 8
+  - &5 !ruby/object:Knight
+    color: white
+    moved: false
+    current_position: B1
+    current_column: B
+    current_row: 1
+  - &25 !ruby/object:Knight
+    color: white
+    moved: false
+    current_position: G1
+    current_column: G
+    current_row: 1
+  bishops:
+  - &12 !ruby/object:Bishop
+    color: black
+    moved: false
+    current_position: C8
+    current_column: C
+    current_row: 8
+  - &24 !ruby/object:Bishop
+    color: black
+    moved: false
+    current_position: F8
+    current_column: F
+    current_row: 8
+  - &9 !ruby/object:Bishop
+    color: white
+    moved: false
+    current_position: C1
+    current_column: C
+    current_row: 1
+  - &21 !ruby/object:Bishop
+    color: white
+    moved: false
+    current_position: F1
+    current_column: F
+    current_row: 1
+  queens:
+  - &16 !ruby/object:Queen
+    color: black
+    moved: false
+    current_position: D8
+    current_column: D
+    current_row: 8
+  - &13 !ruby/object:Queen
+    color: white
+    moved: false
+    current_position: D1
+    current_column: D
+    current_row: 1
+  kings:
+  - &20 !ruby/object:King
+    color: black
+    moved: false
+    current_position: E8
+    current_column: E
+    current_row: 8
+  - &17 !ruby/object:King
+    color: white
+    moved: false
+    current_position: E1
+    current_column: E
+    current_row: 1
+  squares:
+    A1: *1
+    A2: ''
+    A3: *2
+    A4: ''
+    A5: ''
+    A6: ''
+    A7: *3
+    A8: *4
+    B1: *5
+    B2: *6
+    B3: ''
+    B4: ''
+    B5: ''
+    B6: ''
+    B7: *7
+    B8: *8
+    C1: *9
+    C2: *10
+    C3: ''
+    C4: ''
+    C5: ''
+    C6: ''
+    C7: *11
+    C8: *12
+    D1: *13
+    D2: *14
+    D3: ''
+    D4: ''
+    D5: ''
+    D6: ''
+    D7: *15
+    D8: *16
+    E1: *17
+    E2: *18
+    E3: ''
+    E4: ''
+    E5: ''
+    E6: ''
+    E7: *19
+    E8: *20
+    F1: *21
+    F2: *22
+    F3: ''
+    F4: ''
+    F5: ''
+    F6: ''
+    F7: *23
+    F8: *24
+    G1: *25
+    G2: *26
+    G3: ''
+    G4: ''
+    G5: ''
+    G6: ''
+    G7: *27
+    G8: *28
+    H1: *29
+    H2: *30
+    H3: ''
+    H4: ''
+    H5: ''
+    H6: ''
+    H7: *31
+    H8: *32
+current_player: *33
+king_in_check: false
+checkmate: false
+en_passant: false
