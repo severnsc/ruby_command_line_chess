@@ -348,6 +348,47 @@ describe Game do
 			end
 		end
 
+		context "when performing castles with the white king" do
+			before(:each) do
+				current_player = @game.players.select {|p| p.color=="white"}
+				@game.instance_variable_set(:@current_player, current_player[0])
+			end
+
+			context "queenside castle" do
+				before(:example) {@board.squares["B1"], @board.squares["C1"], @board.squares["D1"] = "", "", ""}
+
+				it "outputs the algebraic notation of the castle" do
+					expect{@game.play_turn("A1", "E1")}.to output("0-0-0\n").to_stdout
+				end
+			end
+
+			context "kingside castle" do
+				before(:example) {@board.squares["F1"], @board.squares["G1"] = "", ""}
+
+				it "outputs the algebraic notation of the castle" do
+					expect{@game.play_turn("H1", "E1")}.to output("0-0\n").to_stdout
+				end
+			end
+		end
+
+		context "when performing castles with the black king" do
+			context "queenside castle" do
+				before(:example) {@board.squares["B8"], @board.squares["C8"], @board.squares["D8"] = "", "", ""}
+
+				it "prints the algebraic notation of the castle" do
+					expect{@game.play_turn("A8", "E8")}.to output("0-0-0\n").to_stdout
+				end
+			end
+
+			context "kingside castle" do
+				before(:example) {@board.squares["F8"], @board.squares["G8"] = "", ""}
+
+				it "prints the algebraic notation of the castle" do
+					expect{@game.play_turn("H8", "E8")}.to output("0-0\n").to_stdout
+				end
+			end
+		end
+
 	end
 
 	describe ".piece_in_the_way?" do
