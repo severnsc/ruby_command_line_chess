@@ -1,6 +1,7 @@
 require_relative "./player.rb"
 require_relative "./pieces.rb"
 require_relative "./board.rb"
+require 'yaml'
 
 class Game
 	attr_reader :board, :current_player, :king_in_check, :checkmate, :en_passant
@@ -555,6 +556,19 @@ class Game
 			response = gets.chomp.upcase
 			puts response == "Y" ? "Game over! It's a draw." : "Draw rejected."
 		end
+	end
+
+	def save
+		serial = YAML::dump(self)
+		savefile = File.open(File.join(__dir__, 'saves', 'savefile.txt'), 'w')
+		savefile.puts serial
+		savefile.close
+	end
+
+	def load
+		savefile = File.open(File.join(__dir__, 'saves', 'savefile.txt'), 'r')
+		contents = savefile.read
+		YAML::load(contents)
 	end
 	
 end
