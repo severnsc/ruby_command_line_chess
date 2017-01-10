@@ -1593,18 +1593,6 @@ describe Game do
 				end
 			end
 
-			it "checks that the rook hasn't moved yet this game" do
-				expect(@white_rook).to receive(:moved)
-			end
-
-			it "confirms that rook's moved is equal to false" do
-				expect(@white_rook.moved).to eql(false)
-			end
-
-			it "checks that the king hasn't moved yet this game" do
-				expect(@white_king).to receive(:moved)
-			end
-
 			it "confirms that king's moved is equal to false" do
 				expect(@white_king.moved).to eql(false)
 			end
@@ -1926,7 +1914,7 @@ describe Game do
 				@board.squares["B8"], @board.squares["C8"], @board.squares["D8"] = "", "", ""
 				@black_rook.moved = true
 				unless example.metadata[:skip_before]
-					@game.castle(@white_rook, @white_king)
+					@game.castle(@black_rook, @black_king)
 				end
 			end
 
@@ -1935,7 +1923,7 @@ describe Game do
 			end
 
 			it "leaves kings current_position as E8" do
-				expect(@black_king,.current_position).to eql("E8")
+				expect(@black_king.current_position).to eql("E8")
 			end
 
 			it "leaves A8 as rook" do
@@ -1959,7 +1947,7 @@ describe Game do
 			end
 
 			it "prints a message stating you can't castle with a rook taht has already moved", skip_before: true do
-				expect{@game.castle(@black_rook, @black_king)}.to output("Illegal castle! The rook has already moved.\n")
+				expect{@game.castle(@black_rook, @black_king)}.to output("Illegal castle! The rook has already moved.\n").to_stdout
 			end
 		end
 
@@ -2067,7 +2055,7 @@ describe Game do
 			end
 
 			it "leaves H8 as rook" do
-				expect(@board.squares["E8"]).to eql(@black_rook)
+				expect(@board.squares["H8"]).to eql(@black_rook)
 			end 
 
 			it "leaves E8 as king" do
