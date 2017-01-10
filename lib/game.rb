@@ -154,6 +154,7 @@ class Game
 			end
 		end
 		en_passant?(moving_piece, start, finish) unless moving_piece == ""
+		@board.display
 	end
 
 	def piece_in_the_way?(piece, start, finish)
