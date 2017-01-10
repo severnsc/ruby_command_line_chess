@@ -560,13 +560,17 @@ class Game
 
 	def save
 		serial = YAML::dump(self)
-		savefile = File.open(File.join(__dir__, 'saves', 'savefile.txt'), 'w')
+		puts "What do you want to name the file?"
+		name = gets.chomp
+		savefile = File.new(File.join(__dir__, 'saves', "#{name}.txt"), 'w')
 		savefile.puts serial
 		savefile.close
 	end
 
 	def load
-		savefile = File.open(File.join(__dir__, 'saves', 'savefile.txt'), 'r')
+		puts "What's the name of the file you want to load?"
+		name = gets.chomp
+		savefile = File.open(File.join(__dir__, 'saves', "#{name}.txt"), 'r')
 		contents = savefile.read
 		YAML::load(contents)
 	end
