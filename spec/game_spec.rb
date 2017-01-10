@@ -2115,6 +2115,335 @@ describe Game do
 				expect{@game.castle(@black_rook, @black_king)}.to output("Illegal castle! The king has already moved.\n").to_stdout
 			end
 		end
+
+		context "when attempting a castle that would put the white king in check" do
+			subject(:white_king) {@board.squares["E1"]}
+
+			context "queenside castling" do
+				subject(:white_rook) {@board.squares["A1"]}
+
+				before(:each) {@board.squares["B1"], @board.squares["C1"], @board.squares["D1"] = "", "", ""}
+
+				context "and king's queenside castle ending square is under attack" do
+
+					before(:each) do |example|
+						@board.squares["C2"] = @board.squares["A8"]
+						@board.squares["C2"].current_position = "C2"
+						@board.squares["C2"].update_row_column
+						@game.castle(white_rook, white_king) unless example.metadata[:skip_before]
+					end
+
+					it "resets the king's current_position back to E1" do
+						expect(white_king.current_position).to eql("E1")
+					end
+
+					it "resets E1 to the white king" do
+						expect(@board.squares["E1"]).to eql(white_king)
+					end
+
+					it "resets the rook's current_position to A1" do
+						expect(white_rook.current_position).to eql("A1")
+					end
+
+					it "resets A1 to the rook" do
+						expect(@board.squares["A1"]).to eql(white_rook)
+					end
+
+					it "resets C1 to empty" do
+						expect(@board.squares["C1"]).to eql("")
+					end
+
+					it "resets D1 to empty" do
+						expect(@board.squares["D1"]).to eql("")
+					end
+
+					it "prints a message saying that the king castle can't end in check", skip_before: true do
+						expect{@game.castle(white_rook, white_king)}.to output("Illegal castle! King can't end in check.\n").to_stdout
+					end
+				end
+
+				context "and king's queenside castle passing through square is under attack" do
+					before(:each) do |example|
+						@board.squares["D2"] = @board.squares["A8"]
+						@board.squares["D2"].current_position = "D2"
+						@board.squares["D2"].update_row_column
+						@game.castle(white_rook, white_king) unless example.metadata[:skip_before]
+					end
+
+					it "resets kings current position to E1" do
+						expect(white_king.current_position).to eql("E1")
+					end
+
+					it "resets rook's current_position to A1" do
+						expect(white_rook.current_position).to eql("A1")
+					end
+
+					it "resets E1 to the king" do
+						expect(@board.squares["E1"]).to eql(white_king)
+					end
+
+					it "resets A1 to the rook" do
+						expect(@board.squares["A1"]).to eql(white_rook)
+					end
+
+					it "resets C1 to empty" do
+						expect(@board.squares["C1"]).to eql("")
+					end
+
+					it "resets D1 to empty" do
+						expect(@board.squares["D1"]).to eql("")
+					end
+
+					it "prints a message saying that the king castle can't pass through check", skip_before: true do
+						expect{@game.castle(white_rook, white_king)}.to output("Illegal castle! King can't move through check.\n").to_stdout
+					end
+				end
+
+			end
+
+			context "kingside castling" do
+				subject(:white_rook) {@board.squares["H1"]}
+
+				before(:each) {@board.squares["F1"], @board.squares["G1"] = "", ""}
+
+				context "and the king's kingside castle ending square is under attack" do
+					before(:each) do |example|
+						@board.squares["G2"] = @board.squares["A8"]
+						@board.squares["G2"].current_position = "G2"
+						@board.squares["G2"].update_row_column
+						@game.castle(white_rook, white_king) unless example.metadata[:skip_before]
+					end
+
+					it "resets king's current_position to E1" do
+						expect(white_king.current_position).to eql("E1")
+					end
+
+					it "resets rook's current_position to H1" do
+						expect(white_rook.current_position).to eql("H1")
+					end
+
+					it "resets E1 to king" do
+						expect(@board.squares["E1"]).to eql(white_king)
+					end
+
+					it "resets H1 to rook" do
+						expect(@board.squares["H1"]).to eql(white_rook)
+					end
+
+					it "resets F1 to empty" do
+						expect(@board.squares["F1"]).to eql("")
+					end
+
+					it "resets G1 to empty" do
+						expect(@board.squares["G1"]).to eql("")
+					end
+
+					it "prints a message saying that the king castle can't end in check", skip_before: true do
+						expect{@game.castle(white_rook, white_king)}.to output("Illegal castle! King can't end in check.\n").to_stdout
+					end
+				end
+
+				context "and the king's kingside castle passing through square is under attack" do
+					before(:each) do |example|
+						@board.squares["F2"] = @board.squares["A8"]
+						@board.squares["F2"].current_position = "F2"
+						@board.squares["F2"].update_row_column
+						@game.castle(white_rook, white_king) unless example.metadata[:skip_before]
+					end
+
+					it "resets the king's current_position to E1" do
+						expect(white_king.current_position).to eql("E1")
+					end
+
+					it "resets the rook's current_position to H1" do
+						expect(white_rook.current_position).to eql("H1")
+					end
+
+					it "resets E1 to the king" do
+						expect(@board.squares["E1"]).to eql(white_king)
+					end
+
+					it "resets H1 to the rook" do
+						expect(@board.squares["H1"]).to eql(white_rook)
+					end
+
+					it "resets F1 to empty" do
+						expect(@board.squares["F1"]).to eql("")
+					end
+
+					it "resets G1 to empty" do
+						expect(@board.squares["G1"]).to eql("")
+					end
+
+					it "prints a message saying the king castle can't pass through check", skip_before: true do 
+						expect{@game.castle(white_rook, white_king)}.to output("Illegal castle! King can't move through check.\n").to_stdout
+					end
+				end
+			end
+		end
+
+		context "when attempting a castle that would put the black king in check" do
+			subject(:black_king) {@board.squares["E8"]}
+
+			context "queenside castling" do
+				subject(:black_rook) {@board.squares["A8"]}
+
+				before(:each) {@board.squares["B8"], @board.squares["C8"], @board.squares["D8"] = "", "", ""}
+
+				context "and the king's queenside castle ending square is under attack" do
+					before(:each) do |example|
+						@board.squares["C7"] = @board.squares["A1"]
+						@board.squares["C7"].current_position = "C7"
+						@board.squares["C7"].update_row_column
+						@game.castle(black_rook, black_king) unless example.metadata[:skip_before]
+					end
+
+					it "resets the king's current_position to E8" do
+						expect(black_king.current_position).to eql("E8")
+					end
+
+					it "resets the rook's current_position to A8" do
+						expect(black_rook.current_position).to eql("A8")
+					end
+
+					it "resets E8 to the black king" do
+						expect(@board.squares["E8"]).to eql(black_king)
+					end
+
+					it "resets A8 to rook" do
+						expect(@board.squares["A8"]).to eql(black_rook)
+					end
+
+					it "resets D8 to empty" do
+						expect(@board.squares["D8"]).to eql("")
+					end
+
+					it "resets C8 to empty" do
+						expect(@board.squares["C8"]).to eql("")
+					end
+
+					it "pints a message saying that castle can't end in check", skip_before: true do
+						expect{@game.castle(black_rook, black_king)}.to output("Illegal castle! King can't end in check.\n").to_stdout
+					end
+				end
+
+				context "and the king's queenside castle passing through square is under attack" do
+					before(:each) do 
+						@board.squares["D7"] = @board.squares["A1"]
+						@board.squares["D7"].current_position = "D7"
+						@board.squares["D7"].update_row_column
+					end
+
+					it "resets the kings current_position to E8" do
+						expect(black_king.current_position).to eql("E8")
+					end
+
+					it "resets the rooks current_position to A8" do
+						expect(black_rook.current_position).to eql("A8")
+					end
+
+					it "resets E8 to the king" do
+						expect(@board.squares["E8"]).to eql(black_king)
+					end
+
+					it "resets A8 to the rook" do
+						expect(@board.squares["A8"]).to eql(black_rook)
+					end
+
+					it "resets C8 to empty" do
+						expect(@board.squares["C8"]).to eql("")
+					end
+
+					it "resets D8 to empty" do
+						expect(@board.squares["D8"]).to eql("")
+					end
+
+					it "prints a message saying that the king can't move through check", skip_before: true do
+						expect{@game.castle(black_rook, black_king)}.to output("Illegal castle! King can't move through check.\n").to_stdout
+					end
+				end
+			end
+
+			context "kingside castling" do
+				subject(:black_rook) {@board.squares["H8"]}
+
+				before(:each) {@board.squares["F8"], @board.squares["G8"] = "", ""}
+
+				context "and the king's kingside castle end square is under attack" do
+					before(:each) do |example|
+						@board.squares["G7"] = @board.squares["A1"]
+						@board.squares["G7"].current_position = "G7"
+						@board.squares["G7"].update_row_column
+						@game.castle(black_rook, black_king) unless example.metadata[:skip_before]
+					end
+
+					it "resets the king's current_position to E8" do
+						expect(black_king.current_position).to eql("E8")
+					end
+
+					it "resets the rook's current_position to H8" do
+						expect(black_rook.current_position).to eql("H8")
+					end
+
+					it "resets E8 to the king" do
+						expect(@board.squares["E8"]).to eql(black_king)
+					end
+
+					it "resets H8 to the rook" do
+						expect(@board.squares["H8"]).to eql(black_rook)
+					end
+
+					it "resets F8 to empty" do
+						expect(@board.squares["F8"]).to eql("")
+					end
+
+					it "resets G8 to empty" do
+						expect(@board.squares["G8"]).to eql("")
+					end
+
+					it "prints a message saying that the king can't end in check", skip_before: true do
+						expect{@game.castle(black_rook, black_king)}.to output("Illegal castle! King can't end in check.\n").to_stdout
+					end
+				end
+
+				context "and the king's kingside castle passing through square is under attack" do
+					before(:each) do |example|
+						@board.squares["F7"] = @board.squares["A1"]
+						@board.squares["F7"].current_position = "F7"
+						@board.squares["F7"].update_row_column
+						@game.castle(black_rook, black_king) unless example.metadata[:skip_before]
+					end
+
+					it "resets kings current_position to E8" do
+						expect(black_king.current_position).to eql("E8")
+					end
+
+					it "resets rook's current_position to H8" do
+						expect(black_rook.current_position).to eql("H8")
+					end
+
+					it "resets E8 to king" do
+						expect(@board.squares["E8"]).to eql(black_king)
+					end
+
+					it "resets H8 to rook" do
+						expect(@board.squares["H8"]).to eql(black_rook)
+					end
+
+					it "resets F8 to empty" do
+						expect(@board.squares["F8"]).to eql("")
+					end
+
+					it "resets G8 to empty" do
+						expect(@board.squares["G8"]).to eql("")
+					end
+
+					it "prints a message saying that the king can't pass through check", skip_before: true do
+						expect{@game.castle(black_rook, black_king)}.to output("Illegal castle! King can't move through check.\n").to_stdout
+					end
+ 				end
+			end
+		end
 	end
 	
 end
