@@ -360,6 +360,30 @@ describe Game do
 				it "outputs the algebraic notation of the castle" do
 					expect{@game.play_turn("A1", "E1")}.to output("0-0-0\n").to_stdout
 				end
+
+				context "and the king would end in check" do
+					before(:example) do
+						@board.squares["C2"] = @board.squares["A8"]
+						@board.squares["C2"].current_position = "C2"
+						@board.squares["C2"].update_row_column
+					end
+
+					it "prints a message saying the king can't end in check" do
+						expect{@game.play_turn("A1", "E1")}.to output("Illegal castle! King can't end in check.\n").to_stdout
+					end
+				end
+
+				context "and the king would pass through check" do
+					before(:example) do
+						@board.squares["D2"] = @board.squares["A8"]
+						@board.squares["D2"].current_position = "D2"
+						@board.squares["D2"].update_row_column
+					end
+
+					it "prints a message saying that the king can't move throguh check" do
+						expect{@game.play_turn("A1", "E1")}.to output("Illegal castle! King can't move through check.\n").to_stdout
+					end
+				end
 			end
 
 			context "kingside castle" do
@@ -367,6 +391,30 @@ describe Game do
 
 				it "outputs the algebraic notation of the castle" do
 					expect{@game.play_turn("H1", "E1")}.to output("0-0\n").to_stdout
+				end
+
+				context "and the king would end in check" do
+					before(:example) do
+						@board.squares["G2"] = @board.squares["A8"]
+						@board.squares["G2"].current_position = "G2"
+						@board.squares["G2"].update_row_column
+					end
+
+					it "prints a message saying that the king can't end in check" do
+						expect{@game.play_turn("H1", "E1")}.to output("Illegal castle! King can't end in check.\n").to_stdout
+					end
+				end
+
+				context "and the king would pass through check" do
+					before(:example) do
+						@board.squares["F2"] = @board.squares["A8"]
+						@board.squares["F2"].current_position = "F2"
+						@board.squares["F2"].update_row_column
+					end
+
+					it "prints a message saying that the king can't move through check" do
+						expect{@game.play_turn("H1", "E1")}.to output("Illegal castle! King can't move through check.\n").to_stdout
+					end
 				end
 			end
 		end
@@ -378,6 +426,30 @@ describe Game do
 				it "prints the algebraic notation of the castle" do
 					expect{@game.play_turn("A8", "E8")}.to output("0-0-0\n").to_stdout
 				end
+
+				context "and the king would end in check" do
+					before(:example) do
+						@board.squares["C7"] = @board.squares["A1"]
+						@board.squares["C7"].current_position = "C7"
+						@board.squares["C7"].update_row_column
+					end
+
+					it "prints a message saying that the king can't end in check" do
+						expect{@game.play_turn("A8", "E8")}.to output("Illegal castle! King can't end in check.\n").to_stdout
+					end
+				end
+
+				context "and the king would pass through check" do
+					before(:example) do
+						@board.squares["D7"] = @board.squares["A1"]
+						@board.squares["D7"].current_position = "D7"
+						@board.squares["D7"].update_row_column
+					end
+
+					it "prints a message saying that the king can't move through check" do
+						expect{@game.play_turn("A8", "E8")}.to output("Illegal castle! King can't move through check.\n").to_stdout
+					end
+				end
 			end
 
 			context "kingside castle" do
@@ -385,6 +457,30 @@ describe Game do
 
 				it "prints the algebraic notation of the castle" do
 					expect{@game.play_turn("H8", "E8")}.to output("0-0\n").to_stdout
+				end
+
+				context "and the king would end in check" do
+					before(:example) do
+						@board.squares["G7"] = @board.squares["A1"]
+						@board.squares["G7"].current_position = "G7"
+						@board.squares["G7"].update_row_column
+					end
+
+					it "prints a message saying that the king can't end in check" do
+						expect{@game.play_turn("H8", "E8")}.to output("Illegal castle! King can't end in check.\n").to_stdout
+					end
+				end
+
+				context "and the queen would end in check" do
+					before(:example) do
+						@board.squares["F7"] = @board.squares["A1"]
+						@board.squares["F7"].current_position = "F7"
+						@board.squares["F7"].update_row_column
+					end
+
+					it "prints a message saying that the king can't pass through check" do
+						expect{@game.play_turn("H8", "E8")}.to output("Illegal castle! King can't move through check.\n").to_stdout
+					end
 				end
 			end
 		end
