@@ -39,12 +39,14 @@ class Game
 					puts "There's a piece in the way! Try again."
 				else
 					castle(moving_piece, @board.squares[finish])
+					@current_player = players.select {|p| p != @current_player}[0]
 				end
 			elsif moving_piece.is_a?(King) && @board.squares[finish].is_a?(Rook)
 				if piece_in_the_way?(moving_piece, start, finish)
 					puts "There's a piece in the way! Try again."
 				else
-					castle(moving_piece, @board.squares[finish])
+					castle(@board.squares[finish], moving_piece)
+					@current_player = players.select {|p| p != @current_player}[0]
 				end	
 			else
 				puts "You already have a piece there! Try again."
@@ -217,7 +219,7 @@ class Game
 				between_cols = @board.x_axis[@board.x_axis.index(start_col)+1...@board.x_axis.index(finish_col)]
 				between_rows = @board.y_axis[finish_row...(start_row-1)]
 				between_squares = []
-				between_cols.each_with_index {|col, index| between_squares.push(col + between_rows[index].to_s)}
+				between_cols.each_with_index {|col, index| between_squares.push(col + between_rows.reverse[index].to_s)}
 				in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
 			#decreasing column and row
 			elsif start_col > finish_col && start_row > finish_row
@@ -231,12 +233,12 @@ class Game
 				between_cols = @board.x_axis[@board.x_axis.index(finish_col)+1...@board.x_axis.index(start_col)]
 				between_rows = @board.y_axis[start_row...(finish_row-1)]
 				between_squares = []
-				between_cols.each_with_index {|col, index| between_squares.push(col + between_rows[index-1].to_s)}
+				between_cols.each_with_index {|col, index| between_squares.push(col + between_rows.reverse[index].to_s)}
 				in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
 			end
 		elsif piece.is_a?(Queen)
 			#moving horizontally
-			if start_col != finish_col
+			if start_col != finish_col && start_row == finish_row
 				#moving right
 				if start_col < finish_col
 					between_cols = @board.x_axis[(@board.x_axis.index(start_col)+1)...@board.x_axis.index(finish_col)]
@@ -251,7 +253,7 @@ class Game
 					in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
 				end
 			#moving vertically
-			elsif start_row != finish_row
+			elsif start_row != finish_row && start_col == finish_col
 				#moving up the board
 				if start_row < finish_row
 					between_rows = @board.y_axis[(start_row)...(finish_row-1)]
@@ -267,28 +269,28 @@ class Game
 				end
 			#increasing column and row
 			elsif start_col < finish_col && start_row < finish_row
-				between_cols = @board.x_axis[@board.x_axis.index(start_col)...@board.x_axis.index(finish_col)]
+				between_cols = @board.x_axis[@board.x_axis.index(start_col)+1...@board.x_axis.index(finish_col)]
 				between_rows = @board.y_axis[start_row...(finish_row-1)]
 				between_squares = []
 				between_cols.each_with_index {|col, index| between_squares.push(col + between_rows[index].to_s)}
 				in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
 			#increasing column, decreasing row
 			elsif start_col < finish_col && start_row > finish_row
-				between_cols = @board.x_axis[@board.x_axis.index(start_col)...@board.x_axis.index(finish_col)]
+				between_cols = @board.x_axis[@board.x_axis.index(start_col)+1...@board.x_axis.index(finish_col)]
 				between_rows = @board.y_axis[finish_row...(start_row-1)]
 				between_squares = []
-				between_cols.each_with_index {|col, index| between_squares.push(col + between_rows[index].to_s)}
+				between_cols.each_with_index {|col, index| between_squares.push(col + between_rows.reverse[index].to_s)}
 				in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
 			#decreasing column and row
 			elsif start_col > finish_col && start_row > finish_row
-				between_cols = @board.x_axis[@board.x_axis.index(finish_col)...@board.x_axis.index(start_col)]
+				between_cols = @board.x_axis[@board.x_axis.index(finish_col)+1...@board.x_axis.index(start_col)]
 				between_rows = @board.y_axis[finish_row...(start_row-1)]
 				between_squares = []
 				between_cols.each_with_index {|col, index| between_squares.push(col + between_rows[index].to_s)}
 				in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
 			#decresing column, increasing row
 			else
-				between_cols = @board.x_axis[@board.x_axis.index(finish_col)...@board.x_axis.index(start_col)]
+				between_cols = @board.x_axis[@board.x_axis.index(finish_col)+1...@board.x_axis.index(start_col)]
 				between_rows = @board.y_axis[start_row...(finish_row-1)]
 				between_squares = []
 				between_cols.each_with_index {|col, index| between_squares.push(col + between_rows[index].to_s)}
@@ -550,7 +552,7 @@ class Game
 		else
 			puts "#{@player1.name}, #{@player2.name} has offered a draw. Do you accept? Type 'Y' for yes or 'N' for no."
 			response = gets.chomp.upcase
-			puts response == "Y" ? puts "Game over! It's a draw." : "Draw rejected."
+			puts response == "Y" ? "Game over! It's a draw." : "Draw rejected."
 		end
 	end
 	
