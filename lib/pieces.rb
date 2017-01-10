@@ -41,9 +41,9 @@ class Pawn < Piece
 
 	def display
 		if @color == "white"
-			print "♙"
+			return "♙"
 		else
-			print "♟"
+			return "♟"
 		end
 	end
 
@@ -63,9 +63,9 @@ class Rook < Piece
 
 	def display
 		if @color == "white"
-			print "♖"
+			return "♖"
 		else
-			print "♜"
+			return "♜"
 		end
 	end
 
@@ -85,9 +85,9 @@ class Knight < Piece
 
 	def display
 		if @color == "white"
-			print "♘"
+			return "♘"
 		else
-			print "♞"
+			return "♞"
 		end
 	end
 
@@ -107,9 +107,9 @@ class Bishop < Piece
 
 	def display
 		if @color == "white"
-			print "♗"
+			return "♗"
 		else
-			print "♝"
+			return "♝"
 		end
 	end
 
@@ -131,9 +131,9 @@ class Queen < Piece
 
 	def display
 		if @color == "white"
-			print "♕"
+			return "♕"
 		else
-			print "♛"
+			return "♛"
 		end
 	end
 
@@ -155,9 +155,9 @@ class King < Piece
 
 	def display
 		if @color == "white"
-			print "♔"
+			return "♔"
 		else
-			print "♚"
+			return "♚"
 		end
 	end
 
