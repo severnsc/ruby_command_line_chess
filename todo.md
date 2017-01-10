@@ -1,14 +1,14 @@
 - [x] Board
-  - [ ] 8 x 8
-  - [ ] X-axis letter markers
-  - [ ] Y-axis number markers
-  - [ ] When created, places all pieces in correct positions
-    - [ ] 8 pawns (for each color)
-    - [ ] 2 rooks
-    - [ ] 2 bishops
-    - [ ] 2 knights
-    - [ ] 1 queen
-    - [ ] 1 king
+  - [x] 8 x 8
+  - [x] X-axis letter markers
+  - [x] Y-axis number markers
+  - [x] When created, places all pieces in correct positions
+    - [x] 8 pawns (for each color)
+    - [x] 2 rooks
+    - [x] 2 bishops
+    - [x] 2 knights
+    - [x] 1 queen
+    - [x] 1 king
 - [x] Pieces
   - [x] Are black or white
   - [x] Pawn
@@ -35,13 +35,13 @@
   - [x] Has a name
   - [x] Has a color
   - [x] When created only the name is provided
-- [ ] Game
-  - [ ] Has two players
-  - [ ] Assigns colors to the two players randomly
-  - [ ] Tracks which player's turn it is
-  - [ ] Assigns the white player to go first
+- [x] Game
+  - [x] Has two players
+  - [x] Assigns colors to the two players randomly
+  - [x] Tracks which player's turn it is
+  - [x] Assigns the white player to go first
   - [ ] tracks if the game is over
-    - [ ] If either king is in check mate the other player wins
+    - [x] If either king is in check mate the other player wins
     - [ ] If the current player is not in check but has no legal moves left it is a draw
     - [ ] If the same position is repeated three times it is a draw (threefold rule)
       - [ ] Must involve the same types of pieces with the same move options each time
@@ -51,8 +51,8 @@
       - [ ] King and Bishop vs King
       - [ ] King and Knight vs King
       - [ ] King and Bishop vs King and Bishop when Bishops are on same color squares
-- [ ] Turn
-  - [ ] player gives a piece and coordinate order to take the turn i.e. Qe6 (Queen to E6)
-  - [ ] checks if the move is legal
-  - [ ] if an opponents piece is on the ending square then it is captured
-  - [ ] Captured pieces are removed from the board
+- [x] Turn
+  - [x] player gives two coordinates to make a move
+  - [x] checks if the move is legal
+  - [x] if an opponents piece is on the ending square then it is captured
+  - [x] Captured pieces are removed from the board
