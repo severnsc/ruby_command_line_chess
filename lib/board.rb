@@ -147,7 +147,8 @@ class Board
 				index = @@y_axis.reverse.index(square.split('').last.to_i)
 				piece == "" ? rows[index] << " " : rows[index] << piece.display
 			end
-			t << @@x_axis.unshift(" ")
+			x_labels = [" ", "A", "B", "C", "D", "E", "F", "G", "H"]
+			t << x_labels
 			t << :separator
 			rows.each_with_index do |row, index|
 				t << row
