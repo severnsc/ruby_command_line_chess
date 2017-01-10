@@ -437,7 +437,8 @@ class Game
 					puts "0-0"
 				end
 			end
-		elsif rook.moved
+		end
+		if rook.moved
 			puts "Illegal castle! The rook has already moved."
 		elsif king.moved
 			puts "Illegal castle! The king has already moved."
