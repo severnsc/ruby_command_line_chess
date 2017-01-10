@@ -1791,7 +1791,7 @@ describe Game do
 			end
 
 			it "prints a message saying that you can't castle with a rook that has previously moved", skip_before: true do
-				expect{@game.castle(@white_rook, @white_king)}.to output("Illegal castle! The rook has already moved.").to_stdout
+				expect{@game.castle(@white_rook, @white_king)}.to output("Illegal castle! The rook has already moved.\n").to_stdout
 			end
 		end
 
@@ -1831,26 +1831,260 @@ describe Game do
 			end
 
 			it "prints a message saying you can't castle with a rook that has already moved", skip_before: true do
-				expect{@game.castle(@white_rook, @white_king)}.to output("Illegal castle! The rook has already moved.").to_stdout
+				expect{@game.castle(@white_rook, @white_king)}.to output("Illegal castle! The rook has already moved.\n").to_stdout
 			end
 		end
 
 		context "when attempting to perform a queenside castle with a white king that has already moved" do
+			before(:each) do |example|
+				@white_rook = @board.squares["A1"]
+				@white_king = @board.squares["E1"]
+				@board.squares["B1"], @board.squares["C1"], @board.squares["D1"] = "", "", ""
+				@white_king.moved = true
+				unless example.metadata[:skip_before]
+					@game.castle(@white_rook, @white_king)
+				end
+			end
+
+			it "leaves the rook's current position as A1" do
+				expect(@white_rook.current_position).to eql("A1")
+			end
+
+			it "leaves the king's current position as E1" do
+				expect(@white_king.current_position).to eql("E1")
+			end
+
+			it "leaves A1 as the rook" do
+				expect(@board.squares["A1"]).to eql(@white_rook)
+			end
+
+			it "leaves E1 as the king" do
+				expect(@board.squares["E1"]).to eql(@white_king)
+			end
+
+			it "leaves B1 empty" do
+				expect(@board.squares["B1"]).to eql("")
+			end
+
+			it "leaves C1 empty" do
+				expect(@board.squares["C1"]).to eql("")
+			end
+
+			it "leaves D1 empty" do
+				expect(@board.squares["D1"]).to eql("")
+			end
+
+			it "prints a message saying you can't castle with a king that has already moved", skip_before: true do
+				expect{@game.castle(@white_rook, @white_king)}.to output("Illegal castle! The king has already moved.\n").to_stdout
+			end
 		end
 
 		context "when attempting to perform a kingside castle with a white king that has already moved" do
+			before(:each) do |example|
+				@white_rook = @board.squares["H1"]
+				@white_king = @board.squares["E1"]
+				@board.squares["F1"], @board.squares["G1"] = "", ""
+				@white_king.moved = true
+				unless example.metadata[:skip_before]
+					@game.castle(@white_rook, @white_king)
+				end
+			end
+
+			it "leaves rook's current_position as H1" do
+				expect(@white_rook.current_position).to eql("H1")
+			end
+
+			it "leaves king's current_position as E1" do
+				expect(@white_king.current_position).to eql("E1")
+			end
+
+			it "leaves H1 as rook" do
+				expect(@board.squares["H1"]).to eql(@white_rook)
+			end
+
+			it "leaves E1 as king" do
+				expect(@board.squares["E1"]).to eql(@white_king)
+			end
+
+			it "leaves F1 empty" do
+				expect(@board.squares["F1"]).to eql("")
+			end
+
+			it "leaves G1 empty" do
+				expect(@board.squares["G1"]).to eql("")
+			end
+
+			it "prints a message saying you can't castle with a king that has already moved", skip_before: true do
+				expect{@game.castle(@white_rook, @white_king)}.to output("Illegal castle! The king has already moved.\n").to_stdout
+			end
 		end
 
 		context "when attempting a queenside castle with a black rook that has already moved" do
+			before(:each) do |example|
+				@black_rook = @board.squares["A8"]
+				@black_king = @board.squares["E8"]
+				@board.squares["B8"], @board.squares["C8"], @board.squares["D8"] = "", "", ""
+				@black_rook.moved = true
+				unless example.metadata[:skip_before]
+					@game.castle(@white_rook, @white_king)
+				end
+			end
+
+			it "leaves rooks current position as A8" do
+				expect(@black_rook.current_position).to eql("A8")
+			end
+
+			it "leaves kings current_position as E8" do
+				expect(@black_king,.current_position).to eql("E8")
+			end
+
+			it "leaves A8 as rook" do
+				expect(@board.squares["A8"]).to eql(@black_rook)
+			end
+
+			it "leaves E8 as king" do
+				expect(@board.squares["E8"]).to eql(@black_king)
+			end
+
+			it "leaves B8 empty" do
+				expect(@board.squares["B8"]).to eql("")
+			end
+
+			it "leaves C8 empty" do
+				expect(@board.squares["C8"]).to eql("")
+			end
+
+			it "leaves D8 empty" do
+				expect(@board.squares["D8"]).to eql("")
+			end
+
+			it "prints a message stating you can't castle with a rook taht has already moved", skip_before: true do
+				expect{@game.castle(@black_rook, @black_king)}.to output("Illegal castle! The rook has already moved.\n")
+			end
 		end
 
 		context "when attempting a kingside castle with a black rook that has already moved" do
+			before(:each) do |example|
+				@black_rook = @board.squares["H8"]
+				@black_king = @board.squares["E8"]
+				@board.squares["F8"], @board.squares["G8"] = "", ""
+				@black_rook.moved = true
+				unless example.metadata[:skip_before]
+					@game.castle(@black_rook, @black_king)
+				end
+			end
+
+			it "leaves rook's current_position as H8" do
+				expect(@black_rook.current_position).to eql("H8")
+			end
+
+			it "leaves king's current position as E8" do
+				expect(@black_king.current_position).to eql("E8")
+			end
+
+			it "leaves H8 as rook" do
+				expect(@board.squares["H8"]).to eql(@black_rook)
+			end
+
+			it "leaves E8 as king" do
+				expect(@board.squares["E8"]).to eql(@black_king)
+			end
+
+			it "leaves F8 empty" do
+				expect(@board.squares["F8"]).to eql("")
+			end
+
+			it "leaves G8 empty" do
+				expect(@board.squares["G8"]).to eql("")
+			end
+
+			it "prints a message stating you can't castle with a rook that's already moved", skip_before: true do
+				expect{@game.castle(@black_rook, @black_king)}.to output("Illegal castle! The rook has already moved.\n").to_stdout
+			end
 		end
 
 		context "when attempting a queenside castle with a black king that has already moved" do
+			before(:each) do |example|
+				@black_rook = @board.squares["A8"]
+				@black_king = @board.squares["E8"]
+				@board.squares["B8"], @board.squares["C8"], @board.squares["D8"] = "", "", ""
+				@black_king.moved = true
+				unless example.metadata[:skip_before]
+					@game.castle(@black_rook, @black_king)
+				end
+			end
+
+			it "leaves rooks current_position as A8" do
+				expect(@black_rook.current_position).to eql("A8")
+			end
+
+			it "leaves kings current_position as E8" do
+				expect(@black_king.current_position).to eql("E8")
+			end
+
+			it "leaves A8 as rook" do
+				expect(@board.squares["A8"]).to eql(@black_rook)
+			end
+
+			it "leaves E8 as king" do
+				expect(@board.squares["E8"]).to eql(@black_king)
+			end
+
+			it "leaves B8 empty" do
+				expect(@board.squares["B8"]).to eql("")
+			end
+
+			it "leaves C8 empty" do
+				expect(@board.squares["C8"]).to eql("")
+			end
+
+			it "leaves D8 empty" do
+				expect(@board.squares["D8"]).to eql("")
+			end
+
+			it "prints a message stating that you can't castle with a king that has already moved", skip_before: true do
+				expect{@game.castle(@black_rook, @black_king)}.to output("Illegal castle! The king has already moved.\n").to_stdout
+			end
 		end
 
 		context "when attempting a kingside castle with a black_king that has already moved" do
+			before(:each) do |example|
+				@black_rook = @board.squares["H8"]
+				@black_king = @board.squares["E8"]
+				@board.squares["F8"], @board.squares["G8"] = "", ""
+				@black_king.moved = true
+				unless example.metadata[:skip_before]
+					@game.castle(@black_rook, @black_king)
+				end
+			end
+
+			it "leaves rook's current position as H8" do
+				expect(@black_rook.current_position).to eql("H8")
+			end 
+
+			it "leaves king's current_position as E8" do
+				expect(@black_king.current_position).to eql("E8")
+			end
+
+			it "leaves H8 as rook" do
+				expect(@board.squares["E8"]).to eql(@black_rook)
+			end 
+
+			it "leaves E8 as king" do
+				expect(@board.squares["E8"]).to eql(@black_king)
+			end
+
+			it "leaves F8 empty" do
+				expect(@board.squares["F8"]).to eql("")
+			end
+
+			it "leaves G8 empty" do
+				expect(@board.squares["G8"]).to eql("")
+			end
+
+			it "prints a message stating that you can't castle with a king that has already moved", skip_before: true do
+				expect{@game.castle(@black_rook, @black_king)}.to output("Illegal castle! The king has already moved.\n").to_stdout
+			end
 		end
 	end
 	
