@@ -25,13 +25,13 @@ describe Piece do
 		end
 
 		it "should print white pawn when white" do
-			expect{pawn.display}.to output("♙").to_stdout
+			expect(pawn.display).to eql("♙")
 		end
 
 		subject(:black_pawn) {Pawn.new "black"}
 
 		it "should print black pawn when black" do
-			expect{black_pawn.display}.to output("♟").to_stdout
+			expect(black_pawn.display).to eql("♟")
 		end
 
 		context "when in the starting position" do
@@ -81,13 +81,13 @@ describe Piece do
 		end
 
 		it "should print a white rook when color is white" do
-			expect{rook.display}.to output("♖").to_stdout
+			expect(rook.display).to eql("♖")
 		end
 
 		subject(:black_rook) {Rook.new "black"}
 
 		it "should print a black rook when color is black" do
-			expect{black_rook.display}.to output("♜").to_stdout
+			expect(black_rook.display).to eql("♜")
 		end
 
 		context "when in the starting position" do
@@ -134,13 +134,13 @@ describe Piece do
 		end
 
 		it "should print a white knight when color is white" do
-			expect{knight.display}.to output("♘").to_stdout
+			expect(knight.display).to eql("♘")
 		end
 
 		subject(:black_knight) {Knight.new "black"}
 
 		it "should print a black knight when color is black" do
-			expect{black_knight.display}.to output("♞").to_stdout
+			expect(black_knight.display).to eql("♞")
 		end
 
 		current_position = "D4"
@@ -207,13 +207,13 @@ describe Piece do
 		end
 
 		it "should print a white bishop when color is white" do
-			expect{bishop.display}.to output("♗").to_stdout
+			expect(bishop.display).to eql("♗")
 		end
 
 		subject(:black_bishop) {Bishop.new "black"}
 
 		it "should print a black bishop when color is black" do
-			expect{black_bishop.display}.to output("♝").to_stdout
+			expect(black_bishop.display).to eql("♝")
 		end
 
 		context "when in starting position on black square" do
@@ -287,13 +287,13 @@ describe Piece do
 		end
 
 		it "should print a white queen when color is white" do
-			expect{queen.display}.to output("♕").to_stdout
+			expect(queen.display).to eql("♕")
 		end
 
 		subject(:black_queen) {Queen.new "black"}
 
 		it "should print a black queen when color is black" do
-			expect{black_queen.display}.to output("♛").to_stdout
+			expect(black_queen.display).to eql("♛")
 		end
 
 		current_position = "D4"
@@ -344,13 +344,13 @@ describe Piece do
 		end
 
 		it "should print a white king when color is white" do
-			expect{king.display}.to output("♔").to_stdout
+			expect(king.display).to eql("♔")
 		end
 
 		subject(:black_king) {King.new "black"}
 
 		it "should print a black king when color is black" do
-			expect{black_king.display}.to output("♚").to_stdout
+			expect(black_king.display).to eql("♚")
 		end
 
 		current_position = "D4"
