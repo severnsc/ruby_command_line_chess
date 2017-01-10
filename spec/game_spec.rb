@@ -52,7 +52,7 @@ describe Game do
 			subject(:white_player) {@game.players.select {|p| p.color=="white"}[0]}
 
 			it "prints the algebraic notation of the move" do
-				expect{@game.play_turn("A7", "A6")}.to output("A6\n").to_stdout
+				expect{@game.play_turn("A7", "A6")}.to output(/A6\n/).to_stdout
 			end
 
 			it "sets the piece's @moved? variable to true" do
@@ -67,19 +67,19 @@ describe Game do
 
 		context "when start square is empty" do
 			it "prints a message stating that there's no piece there" do
-				expect{@game.play_turn("A4", "A5")}.to output("There's no piece there! Try again.\n").to_stdout
+				expect{@game.play_turn("A4", "A5")}.to output(/There's no piece there! Try again.\n/).to_stdout
 			end
 		end
 
 		context "when moving piece isn't the same color as the current player" do
 			it "prints a message stating that the piece the player is attempting to move doesn't belong to them" do
-				expect{@game.play_turn("A2", "A3")}.to output("That's not your piece! Try again.\n").to_stdout
+				expect{@game.play_turn("A2", "A3")}.to output(/That's not your piece! Try again.\n/).to_stdout
 			end
 		end
 
 		context "when attempting to move a piece to a square where a different piece of the same color already is" do
 			it "prints a message stating that the player already has a piece on that square" do
-				expect{@game.play_turn("A8", "A7")}.to output("You already have a piece there! Try again.\n").to_stdout
+				expect{@game.play_turn("A8", "A7")}.to output(/You already have a piece there! Try again.\n/).to_stdout
 			end
 		end
 
@@ -90,13 +90,13 @@ describe Game do
 			end
 
 			it "prints a message stating that there is a piece in the way" do
-				expect{@game.play_turn("A7", "A5")}.to output("There's a piece in the way! Try again.\n").to_stdout
+				expect{@game.play_turn("A7", "A5")}.to output(/There's a piece in the way! Try again.\n/).to_stdout
 			end
 		end
 
 		context "when move is illegal" do
 			it "prints a message stating that the move is illegal" do
-				expect{@game.play_turn("A7", "A4")}.to output("That move is illegal! Try again.\n").to_stdout
+				expect{@game.play_turn("A7", "A4")}.to output(/That move is illegal! Try again.\n/).to_stdout
 			end
 		end
 
@@ -104,7 +104,7 @@ describe Game do
 			before(:each) {@board.squares["B6"] = Pawn.new "white"}
 
 			it "prints the algebraic notation of the capture" do
-				expect{@game.play_turn("A7", "B6")}.to output("AxB6\n").to_stdout
+				expect{@game.play_turn("A7", "B6")}.to output(/AxB6\n/).to_stdout
 			end
 
 			it "updates the current player to the player of the opposing color" do
@@ -123,7 +123,7 @@ describe Game do
 			end
 
 			it "prints the algebraic notation of the capture and the promotion" do
-				expect{@game.play_turn("A2", "B1")}.to output("AxB1\nB1Q\n").to_stdout
+				expect{@game.play_turn("A2", "B1")}.to output(/AxB1\nB1Q\n/).to_stdout
 			end
 		end
 
@@ -131,12 +131,12 @@ describe Game do
 
 			context "but the open square is diagonal from the pawn and @en_passant is false" do
 				it "prints a message stating that the move is illegal" do
-					expect{@game.play_turn("A7", "B6")}.to output("That move is illegal! Try again.\n").to_stdout
+					expect{@game.play_turn("A7", "B6")}.to output(/That move is illegal! Try again.\n/).to_stdout
 				end 
 			end
 
 			it "prints the algebraic notation of the move" do
-				expect{@game.play_turn("A7", "A6")}.to output("A6\n").to_stdout
+				expect{@game.play_turn("A7", "A6")}.to output(/A6\n/).to_stdout
 			end
 
 			it "changes the current player to the opponent" do
@@ -155,7 +155,7 @@ describe Game do
 			end
 
 			it "prints the algebraic notation of the move and the promotion" do
-				expect{@game.play_turn("A2", "A1")}.to output("A1\nA1Q\n").to_stdout
+				expect{@game.play_turn("A2", "A1")}.to output(/A1\nA1Q\n/).to_stdout
 			end
 		end
 
@@ -172,7 +172,7 @@ describe Game do
 			end
 
 			it "prints the algebraic notation of the capture" do
-				expect{@game.play_turn("C6", "C5")}.to output("RxC5\n").to_stdout
+				expect{@game.play_turn("C6", "C5")}.to output(/RxC5\n/).to_stdout
 			end
 
 			it "updates the current player to the player of opposing color" do
@@ -197,7 +197,7 @@ describe Game do
 			end
 
 			it "prints a message saying the move is illegal because it puts current player's king in check", skip_before: true do
-				expect{@game.play_turn("E7", "D6")}.to output("ExD6\nThat puts your king in check! Try again.\n").to_stdout
+				expect{@game.play_turn("E7", "D6")}.to output(/ExD6\nThat puts your king in check! Try again.\n/).to_stdout
 			end
 
 			it "replaces the captured piece on the board" do
@@ -239,7 +239,7 @@ describe Game do
 			end
 
 			it "prints a message stating that you can't put your own king in check", skip_before: true do
-				expect{@game.play_turn("D7", "D6")}.to output("D6\nThat puts your king in check! Try again.\n").to_stdout
+				expect{@game.play_turn("D7", "D6")}.to output(/D6\nThat puts your king in check! Try again.\n/).to_stdout
 			end
 
 			it "resets the moving piece back to the start square" do
@@ -278,7 +278,7 @@ describe Game do
 			end
 
 			it "prints a message stating that you can't put your own king in check", skip_before: true do
-				expect{@game.play_turn("E7", "F5")}.to output("NxF5\nThat puts your king in check! Try again.\n").to_stdout
+				expect{@game.play_turn("E7", "F5")}.to output(/NxF5\nThat puts your king in check! Try again.\n/).to_stdout
 			end
 
 			it "replaces the captured piece on the board" do
@@ -323,7 +323,7 @@ describe Game do
 
 			it "outputs a message saying that the white player has won" do
 				puts @game.piece_in_the_way?(@white_bishop, "D7", "E8")
-				expect{@game.play_turn("F6", "F7")}.to output("RxF7\nGame over! #{@current_player.name} wins!\n").to_stdout
+				expect{@game.play_turn("F6", "F7")}.to output(/RxF7\nGame over! #{@current_player.name} wins!\n/).to_stdout
 			end
 		end
 
@@ -345,7 +345,7 @@ describe Game do
 			end
 
 			it "outputs a message saying that the black player has won" do
-				expect{@game.play_turn("D3", "D2")}.to output("RxD2\nGame over! #{@current_player.name} wins!\n").to_stdout
+				expect{@game.play_turn("D3", "D2")}.to output(/RxD2\nGame over! #{@current_player.name} wins!\n/).to_stdout
 			end
 		end
 
@@ -359,7 +359,7 @@ describe Game do
 				before(:example) {@board.squares["B1"], @board.squares["C1"], @board.squares["D1"] = "", "", ""}
 
 				it "outputs the algebraic notation of the castle" do
-					expect{@game.play_turn("A1", "E1")}.to output("0-0-0\n").to_stdout
+					expect{@game.play_turn("A1", "E1")}.to output(/0-0-0\n/).to_stdout
 				end
 
 				context "and the king would end in check" do
@@ -370,7 +370,7 @@ describe Game do
 					end
 
 					it "prints a message saying the king can't end in check" do
-						expect{@game.play_turn("A1", "E1")}.to output("Illegal castle! King can't end in check.\n").to_stdout
+						expect{@game.play_turn("A1", "E1")}.to output(/Illegal castle! King can't end in check.\n/).to_stdout
 					end
 				end
 
@@ -382,7 +382,7 @@ describe Game do
 					end
 
 					it "prints a message saying that the king can't move throguh check" do
-						expect{@game.play_turn("A1", "E1")}.to output("Illegal castle! King can't move through check.\n").to_stdout
+						expect{@game.play_turn("A1", "E1")}.to output(/Illegal castle! King can't move through check.\n/).to_stdout
 					end
 				end
 			end
@@ -391,7 +391,7 @@ describe Game do
 				before(:example) {@board.squares["F1"], @board.squares["G1"] = "", ""}
 
 				it "outputs the algebraic notation of the castle" do
-					expect{@game.play_turn("H1", "E1")}.to output("0-0\n").to_stdout
+					expect{@game.play_turn("H1", "E1")}.to output(/0-0\n/).to_stdout
 				end
 
 				context "and the king would end in check" do
@@ -402,7 +402,7 @@ describe Game do
 					end
 
 					it "prints a message saying that the king can't end in check" do
-						expect{@game.play_turn("H1", "E1")}.to output("Illegal castle! King can't end in check.\n").to_stdout
+						expect{@game.play_turn("H1", "E1")}.to output(/Illegal castle! King can't end in check.\n/).to_stdout
 					end
 				end
 
@@ -414,7 +414,7 @@ describe Game do
 					end
 
 					it "prints a message saying that the king can't move through check" do
-						expect{@game.play_turn("H1", "E1")}.to output("Illegal castle! King can't move through check.\n").to_stdout
+						expect{@game.play_turn("H1", "E1")}.to output(/Illegal castle! King can't move through check.\n/).to_stdout
 					end
 				end
 			end
@@ -425,7 +425,7 @@ describe Game do
 				before(:example) {@board.squares["B8"], @board.squares["C8"], @board.squares["D8"] = "", "", ""}
 
 				it "prints the algebraic notation of the castle" do
-					expect{@game.play_turn("A8", "E8")}.to output("0-0-0\n").to_stdout
+					expect{@game.play_turn("A8", "E8")}.to output(/0-0-0\n/).to_stdout
 				end
 
 				context "and the king would end in check" do
@@ -436,7 +436,7 @@ describe Game do
 					end
 
 					it "prints a message saying that the king can't end in check" do
-						expect{@game.play_turn("A8", "E8")}.to output("Illegal castle! King can't end in check.\n").to_stdout
+						expect{@game.play_turn("A8", "E8")}.to output(/Illegal castle! King can't end in check.\n/).to_stdout
 					end
 				end
 
@@ -448,7 +448,7 @@ describe Game do
 					end
 
 					it "prints a message saying that the king can't move through check" do
-						expect{@game.play_turn("A8", "E8")}.to output("Illegal castle! King can't move through check.\n").to_stdout
+						expect{@game.play_turn("A8", "E8")}.to output(/Illegal castle! King can't move through check.\n/).to_stdout
 					end
 				end
 			end
@@ -457,7 +457,7 @@ describe Game do
 				before(:example) {@board.squares["F8"], @board.squares["G8"] = "", ""}
 
 				it "prints the algebraic notation of the castle" do
-					expect{@game.play_turn("H8", "E8")}.to output("0-0\n").to_stdout
+					expect{@game.play_turn("H8", "E8")}.to output(/0-0\n/).to_stdout
 				end
 
 				context "and the king would end in check" do
@@ -468,7 +468,7 @@ describe Game do
 					end
 
 					it "prints a message saying that the king can't end in check" do
-						expect{@game.play_turn("H8", "E8")}.to output("Illegal castle! King can't end in check.\n").to_stdout
+						expect{@game.play_turn("H8", "E8")}.to output(/Illegal castle! King can't end in check.\n/).to_stdout
 					end
 				end
 
@@ -480,7 +480,7 @@ describe Game do
 					end
 
 					it "prints a message saying that the king can't pass through check" do
-						expect{@game.play_turn("H8", "E8")}.to output("Illegal castle! King can't move through check.\n").to_stdout
+						expect{@game.play_turn("H8", "E8")}.to output(/Illegal castle! King can't move through check.\n/).to_stdout
 					end
 				end
 			end
@@ -1648,7 +1648,7 @@ describe Game do
 			end
 
 			it "prints the algebraic notation of the capture", skip_before: true do
-				expect{@game.en_passant_pawn_capture(@black_pawn, "B4", "A3")}.to output("BxA3e.p.\n").to_stdout
+				expect{@game.en_passant_pawn_capture(@black_pawn, "B4", "A3")}.to output(/BxA3e.p.\n/).to_stdout
 			end
 		end
 	end
@@ -1682,7 +1682,7 @@ describe Game do
 			end
 
 			it "prints the algebraic notation of the promotion", skip_before: true do
-				expect{@game.pawn_promotion(@white_pawn)}.to output("A8Q\n").to_stdout
+				expect{@game.pawn_promotion(@white_pawn)}.to output(/A8Q\n/).to_stdout
 			end
 		end
 
@@ -1715,7 +1715,7 @@ describe Game do
 
 			it "prints the algebraic notation of the promotion" do
 				@black_pawn.current_position = "A1"
-				expect{@game.pawn_promotion(@black_pawn)}.to output("A1Q\n").to_stdout
+				expect{@game.pawn_promotion(@black_pawn)}.to output(/A1Q\n/).to_stdout
 			end
 		end
 	end
@@ -1760,7 +1760,7 @@ describe Game do
 			end
 
 			it "prints the algebraic notation of the castle", skip_before:true do
-				expect{@game.castle(@white_rook, @white_king)}.to output("0-0-0\n").to_stdout
+				expect{@game.castle(@white_rook, @white_king)}.to output(/0-0-0\n/).to_stdout
 			end
 		end
 
@@ -1799,7 +1799,7 @@ describe Game do
 			end
 
 			it "prints the algebraic notation of the castle", skip_before: true do
-				expect{@game.castle(@white_rook, @white_king)}.to output("0-0\n").to_stdout
+				expect{@game.castle(@white_rook, @white_king)}.to output(/0-0\n/).to_stdout
 			end
 		end
 
@@ -1838,7 +1838,7 @@ describe Game do
 			end
 
 			it "prints the algebraic notation of the castle", skip_before: true do
-				expect{@game.castle(@black_rook, @black_king)}.to output("0-0-0\n").to_stdout
+				expect{@game.castle(@black_rook, @black_king)}.to output(/0-0-0\n/).to_stdout
 			end
 		end
 
@@ -1877,7 +1877,7 @@ describe Game do
 			end
 
 			it "prints the algebraic notation of the castle", skip_before: true do
-				expect{@game.castle(@black_rook, @black_king)}.to output("0-0\n").to_stdout
+				expect{@game.castle(@black_rook, @black_king)}.to output(/0-0\n/).to_stdout
 			end
 		end
 
@@ -1917,7 +1917,7 @@ describe Game do
 			end
 
 			it "prints a message saying that you can't castle with a rook that has previously moved", skip_before: true do
-				expect{@game.castle(@white_rook, @white_king)}.to output("Illegal castle! The rook has already moved.\n").to_stdout
+				expect{@game.castle(@white_rook, @white_king)}.to output(/Illegal castle! The rook has already moved.\n/).to_stdout
 			end
 		end
 
@@ -1957,7 +1957,7 @@ describe Game do
 			end
 
 			it "prints a message saying you can't castle with a rook that has already moved", skip_before: true do
-				expect{@game.castle(@white_rook, @white_king)}.to output("Illegal castle! The rook has already moved.\n").to_stdout
+				expect{@game.castle(@white_rook, @white_king)}.to output(/Illegal castle! The rook has already moved.\n/).to_stdout
 			end
 		end
 
@@ -2001,7 +2001,7 @@ describe Game do
 			end
 
 			it "prints a message saying you can't castle with a king that has already moved", skip_before: true do
-				expect{@game.castle(@white_rook, @white_king)}.to output("Illegal castle! The king has already moved.\n").to_stdout
+				expect{@game.castle(@white_rook, @white_king)}.to output(/Illegal castle! The king has already moved.\n/).to_stdout
 			end
 		end
 
@@ -2041,7 +2041,7 @@ describe Game do
 			end
 
 			it "prints a message saying you can't castle with a king that has already moved", skip_before: true do
-				expect{@game.castle(@white_rook, @white_king)}.to output("Illegal castle! The king has already moved.\n").to_stdout
+				expect{@game.castle(@white_rook, @white_king)}.to output(/Illegal castle! The king has already moved.\n/).to_stdout
 			end
 		end
 
@@ -2085,7 +2085,7 @@ describe Game do
 			end
 
 			it "prints a message stating you can't castle with a rook taht has already moved", skip_before: true do
-				expect{@game.castle(@black_rook, @black_king)}.to output("Illegal castle! The rook has already moved.\n").to_stdout
+				expect{@game.castle(@black_rook, @black_king)}.to output(/Illegal castle! The rook has already moved.\n/).to_stdout
 			end
 		end
 
@@ -2125,7 +2125,7 @@ describe Game do
 			end
 
 			it "prints a message stating you can't castle with a rook that's already moved", skip_before: true do
-				expect{@game.castle(@black_rook, @black_king)}.to output("Illegal castle! The rook has already moved.\n").to_stdout
+				expect{@game.castle(@black_rook, @black_king)}.to output(/Illegal castle! The rook has already moved.\n/).to_stdout
 			end
 		end
 
@@ -2169,7 +2169,7 @@ describe Game do
 			end
 
 			it "prints a message stating that you can't castle with a king that has already moved", skip_before: true do
-				expect{@game.castle(@black_rook, @black_king)}.to output("Illegal castle! The king has already moved.\n").to_stdout
+				expect{@game.castle(@black_rook, @black_king)}.to output(/Illegal castle! The king has already moved.\n/).to_stdout
 			end
 		end
 
@@ -2209,7 +2209,7 @@ describe Game do
 			end
 
 			it "prints a message stating that you can't castle with a king that has already moved", skip_before: true do
-				expect{@game.castle(@black_rook, @black_king)}.to output("Illegal castle! The king has already moved.\n").to_stdout
+				expect{@game.castle(@black_rook, @black_king)}.to output(/Illegal castle! The king has already moved.\n/).to_stdout
 			end
 		end
 
@@ -2255,7 +2255,7 @@ describe Game do
 					end
 
 					it "prints a message saying that the king castle can't end in check", skip_before: true do
-						expect{@game.castle(white_rook, white_king)}.to output("Illegal castle! King can't end in check.\n").to_stdout
+						expect{@game.castle(white_rook, white_king)}.to output(/Illegal castle! King can't end in check.\n/).to_stdout
 					end
 				end
 
@@ -2292,7 +2292,7 @@ describe Game do
 					end
 
 					it "prints a message saying that the king castle can't pass through check", skip_before: true do
-						expect{@game.castle(white_rook, white_king)}.to output("Illegal castle! King can't move through check.\n").to_stdout
+						expect{@game.castle(white_rook, white_king)}.to output(/Illegal castle! King can't move through check.\n/).to_stdout
 					end
 				end
 
@@ -2336,7 +2336,7 @@ describe Game do
 					end
 
 					it "prints a message saying that the king castle can't end in check", skip_before: true do
-						expect{@game.castle(white_rook, white_king)}.to output("Illegal castle! King can't end in check.\n").to_stdout
+						expect{@game.castle(white_rook, white_king)}.to output(/Illegal castle! King can't end in check.\n/).to_stdout
 					end
 				end
 
@@ -2373,7 +2373,7 @@ describe Game do
 					end
 
 					it "prints a message saying the king castle can't pass through check", skip_before: true do 
-						expect{@game.castle(white_rook, white_king)}.to output("Illegal castle! King can't move through check.\n").to_stdout
+						expect{@game.castle(white_rook, white_king)}.to output(/Illegal castle! King can't move through check.\n/).to_stdout
 					end
 				end
 			end
@@ -2420,7 +2420,7 @@ describe Game do
 					end
 
 					it "pints a message saying that castle can't end in check", skip_before: true do
-						expect{@game.castle(black_rook, black_king)}.to output("Illegal castle! King can't end in check.\n").to_stdout
+						expect{@game.castle(black_rook, black_king)}.to output(/Illegal castle! King can't end in check.\n/).to_stdout
 					end
 				end
 
@@ -2456,7 +2456,7 @@ describe Game do
 					end
 
 					it "prints a message saying that the king can't move through check", skip_before: true do
-						expect{@game.castle(black_rook, black_king)}.to output("Illegal castle! King can't move through check.\n").to_stdout
+						expect{@game.castle(black_rook, black_king)}.to output(/Illegal castle! King can't move through check.\n/).to_stdout
 					end
 				end
 			end
@@ -2499,7 +2499,7 @@ describe Game do
 					end
 
 					it "prints a message saying that the king can't end in check", skip_before: true do
-						expect{@game.castle(black_rook, black_king)}.to output("Illegal castle! King can't end in check.\n").to_stdout
+						expect{@game.castle(black_rook, black_king)}.to output(/Illegal castle! King can't end in check.\n/).to_stdout
 					end
 				end
 
@@ -2536,7 +2536,7 @@ describe Game do
 					end
 
 					it "prints a message saying that the king can't pass through check", skip_before: true do
-						expect{@game.castle(black_rook, black_king)}.to output("Illegal castle! King can't move through check.\n").to_stdout
+						expect{@game.castle(black_rook, black_king)}.to output(/Illegal castle! King can't move through check.\n/).to_stdout
 					end
  				end
 			end
