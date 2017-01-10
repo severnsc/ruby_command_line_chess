@@ -293,7 +293,7 @@ class Game
 				between_cols = @board.x_axis[@board.x_axis.index(finish_col)+1...@board.x_axis.index(start_col)]
 				between_rows = @board.y_axis[start_row...(finish_row-1)]
 				between_squares = []
-				between_cols.each_with_index {|col, index| between_squares.push(col + between_rows[index].to_s)}
+				between_cols.each_with_index {|col, index| between_squares.push(col + between_rows.reverse[index].to_s)}
 				in_the_way = false if between_squares.all? {|sq| @board.squares[sq] == ""}
 			end
 		else
