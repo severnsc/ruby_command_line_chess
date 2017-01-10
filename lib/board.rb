@@ -1,4 +1,5 @@
 require_relative "./pieces.rb"
+require 'terminal-table'
 
 class Board
 
@@ -136,6 +137,24 @@ class Board
 
 	def create_king(color)
 		@kings.push(King.new color)
+	end
+
+	def display
+		table = Terminal::Table.new do |t|
+			rows = []
+			8.times {|i| rows << [8-i]}
+			@squares.each do |square, piece|
+				index = @@y_axis.reverse.index(square.split('').last.to_i)
+				piece == "" ? rows[index] << " " : rows[index] << piece.display
+			end
+			t << @@x_axis.unshift(" ")
+			t << :separator
+			rows.each_with_index do |row, index|
+				t << row
+				t << :separator unless index==7
+			end
+		end
+		puts table
 	end
 
 end
