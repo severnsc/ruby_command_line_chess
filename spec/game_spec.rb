@@ -903,8 +903,8 @@ describe Game do
 
 			context "and attacking queen at F8" do
 				before(:example) do
-					@board.squares["E8"] = queen
-					queen.current_position = "E8"
+					@board.squares["F8"] = queen
+					queen.current_position = "F8"
 					@game.king_in_check?
 				end
 
