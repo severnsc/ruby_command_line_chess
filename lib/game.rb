@@ -262,8 +262,6 @@ class Game
 				#moving up the board
 				in_the_way = vertical_movement_check(piece, start, finish)
 			end
-		elsif piece.is_a? Knight
-			in_the_way = false
 		elsif piece.is_a? Bishop
 			in_the_way = diagnoal_movement_check(piece, start, finish)
 		elsif piece.is_a?(Queen)
@@ -436,55 +434,59 @@ class Game
 		puts promote_square + "Q"
 	end
 
+	def white_castle(rook, king)
+		black_pieces = @board.squares.values.select {|p| p != "" && p.color=="black"}
+		if rook.current_position == "A1" && black_pieces.none? {|p| legal_moves(p).include?("D1") || legal_moves(p).include?("C1")}
+			rook.current_position = "D1"
+			king.current_position = "C1"
+			@board.squares["D1"] = rook
+			@board.squares["C1"] = king
+			@board.squares["A1"] = ""
+			@board.squares["E1"] = ""
+			puts "0-0-0"
+		elsif rook.current_position == "H1" && black_pieces.none? {|p| legal_moves(p).include?("F1") || legal_moves(p).include?("G1")}
+			rook.current_position = "F1"
+			king.current_position = "G1"
+			@board.squares["F1"] = rook
+			@board.squares["G1"] = king
+			@board.squares["E1"] = ""
+			@board.squares["H1"] = ""
+			puts "0-0"
+		elsif black_pieces.any? {|p| legal_moves(p).include?("D1") || legal_moves(p).include?("F1")}
+			puts "Illegal castle! King can't move through check."
+		elsif black_pieces.any? {|p| legal_moves(p).include?("C1") || legal_moves(p).include?("G1")}
+			puts "Illegal castle! King can't end in check."
+		end
+	end
+
+	def black_castle(rook, king)
+		white_pieces = @board.squares.values.select {|p| p != "" && p.color=="white"}
+		if rook.current_position == "A8" && white_pieces.none? {|p| legal_moves(p).include?("D8") || legal_moves(p).include?("C8")}
+			rook.current_position = "D8"
+			king.current_position = "C8"
+			@board.squares["D8"] = rook
+			@board.squares["C8"] = king
+			@board.squares["A8"] = ""
+			@board.squares["E8"] = ""
+			puts "0-0-0"
+		elsif rook.current_position == "H8" && !white_pieces.any? {|p| legal_moves(p).include?("F8") || legal_moves(p).include?("G8")}
+			rook.current_position = "F8"
+			king.current_position = "G8"
+			@board.squares["F8"] = rook
+			@board.squares["G8"] = king
+			@board.squares["E8"] = ""
+			@board.squares["H8"] = ""
+			puts "0-0"
+		elsif white_pieces.any? {|p| legal_moves(p).include?("D8") || legal_moves(p).include?("F8")}
+			puts "Illegal castle! King can't move through check."
+		elsif white_pieces.any? {|p| legal_moves(p).include?("C8") || legal_moves(p).include?("G8")}
+			puts "Illegal castle! King can't end in check."
+		end
+	end
+
 	def castle(rook, king)
 		unless rook.moved || king.moved
-			black_pieces = @board.squares.values.select {|p| p != "" && p.color=="black"}
-			white_pieces = @board.squares.values.select {|p| p != "" && p.color=="white"}
-			if rook.color == "white"
-				if rook.current_position == "A1" && black_pieces.none? {|p| legal_moves(p).include?("D1") || legal_moves(p).include?("C1")}
-					rook.current_position = "D1"
-					king.current_position = "C1"
-					@board.squares["D1"] = rook
-					@board.squares["C1"] = king
-					@board.squares["A1"] = ""
-					@board.squares["E1"] = ""
-					puts "0-0-0"
-				elsif rook.current_position == "H1" && black_pieces.none? {|p| legal_moves(p).include?("F1") || legal_moves(p).include?("G1")}
-					rook.current_position = "F1"
-					king.current_position = "G1"
-					@board.squares["F1"] = rook
-					@board.squares["G1"] = king
-					@board.squares["E1"] = ""
-					@board.squares["H1"] = ""
-					puts "0-0"
-				elsif black_pieces.any? {|p| legal_moves(p).include?("D1") || legal_moves(p).include?("F1")}
-					puts "Illegal castle! King can't move through check."
-				elsif black_pieces.any? {|p| legal_moves(p).include?("C1") || legal_moves(p).include?("G1")}
-					puts "Illegal castle! King can't end in check."
-				end
-			else
-				if rook.current_position == "A8" && white_pieces.none? {|p| legal_moves(p).include?("D8") || legal_moves(p).include?("C8")}
-					rook.current_position = "D8"
-					king.current_position = "C8"
-					@board.squares["D8"] = rook
-					@board.squares["C8"] = king
-					@board.squares["A8"] = ""
-					@board.squares["E8"] = ""
-					puts "0-0-0"
-				elsif rook.current_position == "H8" && !white_pieces.any? {|p| legal_moves(p).include?("F8") || legal_moves(p).include?("G8")}
-					rook.current_position = "F8"
-					king.current_position = "G8"
-					@board.squares["F8"] = rook
-					@board.squares["G8"] = king
-					@board.squares["E8"] = ""
-					@board.squares["H8"] = ""
-					puts "0-0"
-				elsif white_pieces.any? {|p| legal_moves(p).include?("D8") || legal_moves(p).include?("F8")}
-					puts "Illegal castle! King can't move through check."
-				elsif white_pieces.any? {|p| legal_moves(p).include?("C8") || legal_moves(p).include?("G8")}
-					puts "Illegal castle! King can't end in check."
-				end
-			end
+			rook.color == "white" ? white_castle(rook, king) : black_castle(rook, king)
 		end
 		if rook.moved
 			puts "Illegal castle! The rook has already moved."
