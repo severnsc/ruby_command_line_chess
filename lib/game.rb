@@ -7,21 +7,33 @@ class Game
 	attr_reader :board, :current_player, :king_in_check, :checkmate, :en_passant
 
 	def initialize(player1, player2)
-		player1.is_a?(Player) ? @player1 = player1 : raise(TypeError)
-		player2.is_a?(Player) ? @player2 = player2 : raise(TypeError)
+		verify_player_type(player1, player2)
 		@board = Board.new
-		random = rand(0..1)
-		if random == 0
-			@player1.color = "white"
-			@player2.color = "black"
-		else
-			@player1.color = "black"
-			@player2.color = "white"
-		end
-		@player1.color == "white" ? @current_player = @player1 : @current_player = @player2
+		assign_player_colors(@player1, @player2)
+		set_current_player(@player1, @player2)
 		@king_in_check = false
 		@checkmate = false
 		@en_passant = false
+	end
+
+	def verify_player_type(player1, player2)
+		player1.is_a?(Player) ? @player1 = player1 : raise(TypeError)
+		player2.is_a?(Player) ? @player2 = player2 : raise(TypeError)
+	end
+
+	def assign_player_colors(player1, player2)
+		random = rand(0..1)
+		if random == 0
+			player1.color = "white"
+			player2.color = "black"
+		else
+			player1.color = "black"
+			player2.color = "white"
+		end
+	end
+
+	def set_current_player(player1, player2)
+		player1.color == "white" ? @current_player = player1 : @current_player = player2
 	end
 
 	def players
@@ -30,132 +42,103 @@ class Game
 
 	def play_turn(start, finish)
 		moving_piece = @board.squares[start]
+		destination_square = @board.squares[finish]
 		if moving_piece == ""
 			puts "There's no piece there! Try again."
+			return
 		elsif moving_piece.color != @current_player.color
 			puts "That's not your piece! Try again."
-		elsif @board.squares[finish] != "" && @board.squares[finish].color == moving_piece.color
-			if moving_piece.is_a?(Rook) && @board.squares[finish].is_a?(King)
+		elsif destination_square != "" && destination_square.color == moving_piece.color
+			if moving_piece.is_a?(Rook) && destination_square.is_a?(King)
 				if piece_in_the_way?(moving_piece, start, finish)
 					puts "There's a piece in the way! Try again."
 				else
-					castle(moving_piece, @board.squares[finish])
-					@current_player = players.select {|p| p != @current_player}[0]
+					castle(moving_piece, destination_square)
 				end
-			elsif moving_piece.is_a?(King) && @board.squares[finish].is_a?(Rook)
+			elsif moving_piece.is_a?(King) && destination_square.is_a?(Rook)
 				if piece_in_the_way?(moving_piece, start, finish)
 					puts "There's a piece in the way! Try again."
 				else
-					castle(@board.squares[finish], moving_piece)
-					@current_player = players.select {|p| p != @current_player}[0]
+					castle(destination_square, moving_piece)
 				end	
 			else
 				puts "You already have a piece there! Try again."
 			end
-		elsif moving_piece.is_a?(Pawn) && pawn_legal_capture_distance?(moving_piece, finish) && @board.squares[finish] != ""
-			captured_piece = @board.squares[finish]
+		elsif moving_piece.is_a?(Pawn) && pawn_legal_capture_distance?(moving_piece, finish) && destination_square != ""
+			captured_piece = destination_square
 			pawn_capture(moving_piece, start, finish)
-			if moving_piece.moved == false
-				moving_piece.moved = true
-			end
-			pawn_promotion(moving_piece) if moving_piece.color == "white" && finish.split('').last == "8"
-			pawn_promotion(moving_piece) if moving_piece.color == "black" && finish.split('').last == "1"
+			moving_piece.moved = true if moving_piece.moved == false
+			pawn_promotion(moving_piece) if moving_piece.color == "white" && moving_piece.current_position.split('').last == "8"
+			pawn_promotion(moving_piece) if moving_piece.color == "black" && moving_piece.current_position.split('').last == "1"
 			king_in_check?
-			if @king_in_check && @king_in_check.color == @current_player.color
-				@board.squares[finish] = captured_piece
-				captured_piece.current_position = finish
-				moving_piece.current_position = start
-				@board.squares[start] = moving_piece
-				@king_in_check = false
-				puts "That puts your king in check! Try again."
-			elsif @king_in_check
-				check_mate?
-				if @checkmate
-					puts "Game over! #{@current_player.name} wins!"
-				else
-					@current_player = players.select {|p| p != @current_player}[0]
-					puts "#{@current_player.name}, you are in check!"
-				end
-			else
-				@current_player = players.select {|p| p != @current_player}[0]
-			end
+			check_mate?
 		elsif @en_passant && moving_piece.is_a?(Pawn) && pawn_legal_capture_distance?(moving_piece, finish)
 			captured_pawn = @en_passant
 			en_passant_pawn_capture(moving_piece, start, finish)
 			moving_piece.moved = true if moving_piece.moved == false
 			king_in_check?
-			if @king_in_check && @king_in_check.color == @current_player.color
-				@board.squares[finish] = ""
-				captured_pawn.current_position = @en_passant.current_position
-				moving_piece.current_position = start
-				@board.squares[start] = moving_piece
-				@board.squares[captured_pawn.current_position] = captured_pawn
-				@king_in_check = false
-				puts "That puts your king in check! Try again."
-			elsif @king_in_check
-				check_mate?
-				if @checkmate
-					puts "Game over! #{@current_player.name} wins!"
-				else
-					@current_player = players.select {|p| p != @current_player}[0]
-					puts "#{@current_player.name}, you are in check!"
-				end
-			else
-				@current_player = players.select {|p| p != @current_player}[0]
-			end
+			check_mate?
 		elsif !moving_piece.is_move_legal?(finish)
 			puts "That move is illegal! Try again."
 		elsif piece_in_the_way?(moving_piece, start, finish)
 			puts "There's a piece in the way! Try again."
-		elsif @board.squares[finish] == ""
+		elsif destination_square == ""
 			open_square_move(moving_piece, start, finish)
 			moving_piece.moved = true if moving_piece.moved == false
 			pawn_promotion(moving_piece) if moving_piece.is_a?(Pawn) && moving_piece.color == "white" && finish.split('').last == "8"
 			pawn_promotion(moving_piece) if moving_piece.is_a?(Pawn) && moving_piece.color == "black" && finish.split('').last == "1"
 			king_in_check?
-			if @king_in_check && @king_in_check.color == @current_player.color
-				@board.squares[start] = moving_piece
-				moving_piece.current_position = start
-				@board.squares[finish] = ""
-				@king_in_check = false
-				puts "That puts your king in check! Try again."
-			elsif @king_in_check
-				check_mate?
-				if @checkmate
-					puts "Game over! #{@current_player.name} wins!"
-				else
-					@current_player = players.select {|p| p != @current_player}[0]
-					puts "#{@current_player.name}, you are in check!"
-				end
-			else
-				@current_player = players.select {|p| p != @current_player}[0]
-			end
-		elsif @board.squares[finish] != ""
-			captured_piece = @board.squares[finish]
+			check_mate?
+		elsif destination_square != ""
+			captured_piece = destination_square
 			piece_capture(moving_piece, start, finish)
 			moving_piece.moved = true if moving_piece.moved == false
 			king_in_check?
-			if @king_in_check && @king_in_check.color == @current_player.color
-				@board.squares[finish] = captured_piece
-				captured_piece.current_position = finish
-				moving_piece.current_position = start
-				@board.squares[start] = moving_piece
-				@king_in_check = false
-				puts "That puts your king in check! Try again."
-			elsif @king_in_check
-				check_mate?
-				if @checkmate
-					puts "Game over! #{@current_player.name} wins!"
-				else
-					@current_player = players.select {|p| p != @current_player}[0]
-					puts "#{@current_player.name}, you are in check!"
-				end
-			else
-				@current_player = players.select {|p| p != @current_player}[0]
-			end
+			check_mate?
 		end
+		change_current_player unless moving_piece.current_position == start
 		en_passant?(moving_piece, start, finish) unless moving_piece == ""
 		@board.display
+	end
+
+	def change_current_player
+		if @checkmate
+			puts "Game over! #{@current_player.name} wins!"
+		elsif @king_in_check && @king_in_check.color != @current_player.color
+			@current_player = players.select {|p| p != @current_player}[0]
+			puts "#{@current_player.name}, you are in check!"
+		else
+			@current_player = players.select {|p| p != @current_player}[0]
+		end
+	end
+	
+	def offer_draw
+		if @current_player == @player1
+			puts "#{@player2.name}, #{@player1.name} has offered a draw. Do you accept? Type 'Y' for yes or 'N' for no."
+			response = gets.chomp.upcase
+			puts response == "Y" ? "Game over! It's a draw." : "Draw rejected."
+		else
+			puts "#{@player1.name}, #{@player2.name} has offered a draw. Do you accept? Type 'Y' for yes or 'N' for no."
+			response = gets.chomp.upcase
+			puts response == "Y" ? "Game over! It's a draw." : "Draw rejected."
+		end
+	end
+
+	def save
+		serial = YAML::dump(self)
+		puts "What do you want to name the file?"
+		name = gets.chomp
+		savefile = File.new(File.join(__dir__, 'saves', "#{name}.txt"), 'w')
+		savefile.puts serial
+		savefile.close
+	end
+
+	def load
+		puts "What's the name of the file you want to load?"
+		name = gets.chomp
+		savefile = File.open(File.join(__dir__, 'saves', "#{name}.txt"), 'r')
+		contents = savefile.read
+		YAML::load(contents)
 	end
 
 	def piece_in_the_way?(piece, start, finish)
@@ -320,29 +303,49 @@ class Game
 	end
 
 	def pawn_capture(pawn, start, finish)
-		@board.squares[finish].current_position = ""
+		captured_piece = @board.squares[finish]
+		captured_piece.current_position = ""
 		@board.squares[finish] = pawn
 		@board.squares[start] = ""
 		pawn.current_position = finish
-		puts "#{start.split('').first}x" + finish
+		king_in_check?
+		if @king_in_check && @king_in_check.color == pawn.color
+			pawn.current_position = start
+			@board.squares[start] = pawn
+			captured_piece.current_position = finish
+			@board.squares[finish] = captured_piece
+			@king_in_check = false
+			puts "That puts your king in check! Try again."
+		else
+			puts "#{start.split('').first}x" + finish
+		end
 	end
 
 	def open_square_move(piece, start, finish)
 		@board.squares[finish] = piece
 		@board.squares[start] = ""
 		piece.current_position = finish
-		if piece.is_a? Pawn
-			puts finish
-		elsif piece.is_a? Rook
-			puts "R" + finish
-		elsif piece.is_a? Knight
-			puts "N" + finish
-		elsif piece.is_a? Bishop
-			puts "B" + finish
-		elsif piece.is_a? Queen
-			puts "Q" + finish
+		king_in_check?
+		if @king_in_check && @king_in_check.color == piece.color
+			piece.current_position = start
+			@board.squares[start] = piece
+			@board.squares[finish] = ""
+			@king_in_check = false
+			puts "That puts your king in check! Try again."
 		else
-			puts "K" + finish
+			if piece.is_a? Pawn
+				puts finish
+			elsif piece.is_a? Rook
+				puts "R" + finish
+			elsif piece.is_a? Knight
+				puts "N" + finish
+			elsif piece.is_a? Bishop
+				puts "B" + finish
+			elsif piece.is_a? Queen
+				puts "Q" + finish
+			else
+				puts "K" + finish
+			end
 		end
 	end
 
@@ -352,16 +355,26 @@ class Game
 		@board.squares[finish] = piece
 		@board.squares[start] = ""
 		piece.current_position = finish
-		if piece.is_a? Rook
-			puts "Rx" + finish
-		elsif piece.is_a? Knight
-			puts "Nx" + finish
-		elsif piece.is_a? Bishop
-			puts "Bx" + finish
-		elsif piece.is_a? Queen
-			puts "Qx" + finish
+		king_in_check?
+		if @king_in_check && @king_in_check.color == piece.color
+			piece.current_position = start
+			@board.squares[start] = piece
+			@board.squares[finish] = captured_piece
+			captured_piece.current_position = finish
+			@king_in_check = false
+			puts "That puts your king in check! Try again."
 		else
-			puts "Kx" + finish
+			if piece.is_a? Rook
+				puts "Rx" + finish
+			elsif piece.is_a? Knight
+				puts "Nx" + finish
+			elsif piece.is_a? Bishop
+				puts "Bx" + finish
+			elsif piece.is_a? Queen
+				puts "Qx" + finish
+			else
+				puts "Kx" + finish
+			end
 		end
 	end
 
@@ -369,9 +382,9 @@ class Game
 		white_king = @board.kings.select {|k| k.color == "white"}[0]
 		black_king = @board.kings.select {|k| k.color == "black"}[0]
 		@board.squares.any? {|sq, piece| piece != "" && piece.color == "black" && piece.is_move_legal?(white_king.current_position) && !piece_in_the_way?(piece, sq, white_king.current_position)} ? @king_in_check = white_king : @king_in_check = false
-		return @king_in_check if @king_in_check
+		return @king_in_check if @king_in_check == white_king
 		@board.squares.any? {|sq, piece| piece != "" && piece.color == "white" && piece.is_move_legal?(black_king.current_position) && !piece_in_the_way?(piece, sq, black_king.current_position)} ? @king_in_check = black_king : @king_in_check = false
-		return @king_in_check if @king_in_check
+		return @king_in_check if @king_in_check == black_king
 	end
 
 	def legal_moves(piece)
@@ -397,13 +410,25 @@ class Game
 	end
 
 	def en_passant_pawn_capture(pawn, start, finish)
-		en_passant_square = @en_passant.current_position
-		@board.squares[en_passant_square].current_position = ""
+		captured_piece = @en_passant
+		en_passant_square = captured_piece.current_position
+		@board.squares[en_passant_square] = ""
+		captured_piece.current_position = ""
 		@board.squares[finish] = pawn
 		@board.squares[start] = ""
-		@board.squares[en_passant_square] = ""
 		pawn.current_position = finish
-		puts "#{start.split('').first}x" + finish + "e.p."
+		king_in_check?
+		if @king_in_check && @king_in_check.color == pawn.color
+			pawn.current_position = start
+			@board.squares[start] = pawn
+			@board.squares[finish] = ""
+			@board.squares[en_passant_square] = captured_piece
+			captured_piece.current_position = en_passant_square
+			@king_in_check = false
+			puts "That puts your king in check! Try again."
+		else
+			puts "#{start.split('').first}x" + finish + "e.p."
+		end
 	end
 
 	def pawn_promotion pawn
@@ -544,35 +569,6 @@ class Game
 			@king_in_check = black_king
 		end
 		return @checkmate ? @checkmate : false
-	end
-
-	def offer_draw
-		if @current_player == @player1
-			puts "#{@player2.name}, #{@player1.name} has offered a draw. Do you accept? Type 'Y' for yes or 'N' for no."
-			response = gets.chomp.upcase
-			puts response == "Y" ? "Game over! It's a draw." : "Draw rejected."
-		else
-			puts "#{@player1.name}, #{@player2.name} has offered a draw. Do you accept? Type 'Y' for yes or 'N' for no."
-			response = gets.chomp.upcase
-			puts response == "Y" ? "Game over! It's a draw." : "Draw rejected."
-		end
-	end
-
-	def save
-		serial = YAML::dump(self)
-		puts "What do you want to name the file?"
-		name = gets.chomp
-		savefile = File.new(File.join(__dir__, 'saves', "#{name}.txt"), 'w')
-		savefile.puts serial
-		savefile.close
-	end
-
-	def load
-		puts "What's the name of the file you want to load?"
-		name = gets.chomp
-		savefile = File.open(File.join(__dir__, 'saves', "#{name}.txt"), 'r')
-		contents = savefile.read
-		YAML::load(contents)
 	end
 	
 end
