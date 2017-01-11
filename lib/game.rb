@@ -16,28 +16,6 @@ class Game
 		@en_passant = false
 	end
 
-	def verify_player_type(player1, player2)
-		player1.is_a?(Player) ? @player1 = player1 : raise(TypeError)
-		player2.is_a?(Player) ? @player2 = player2 : raise(TypeError)
-	end
-
-	def assign_player_colors(player1, player2)
-		random = rand(0..1)
-		if random == 0
-			player1.color = "white"
-			player2.color = "black"
-		else
-			player1.color = "black"
-			player2.color = "white"
-		end
-		@white_player = players.select {|p| p.color=="white"}[0]
-		@black_player = players.select {|p| p.color=="black"}[0]
-	end
-
-	def set_current_player(player1, player2)
-		player1.color == "white" ? @current_player = player1 : @current_player = player2
-	end
-
 	def players
 		[@player1, @player2]
 	end
@@ -95,17 +73,6 @@ class Game
 		@board.display
 	end
 
-	def change_current_player
-		if @checkmate
-			puts "Game over! #{@current_player.name} wins!"
-		elsif @king_in_check && @king_in_check.color != @current_player.color
-			@current_player = players.select {|p| p != @current_player}[0]
-			puts "#{@current_player.name}, you are in check!"
-		else
-			@current_player = players.select {|p| p != @current_player}[0]
-		end
-	end
-	
 	def offer_draw
 		if @current_player == @player1
 			puts "#{@player2.name}, #{@player1.name} has offered a draw. Do you accept? Type 'Y' for yes or 'N' for no."
@@ -133,6 +100,41 @@ class Game
 		savefile = File.open(File.join(__dir__, 'saves', "#{name}.txt"), 'r')
 		contents = savefile.read
 		YAML::load(contents)
+	end
+
+	private
+
+	def verify_player_type(player1, player2)
+		player1.is_a?(Player) ? @player1 = player1 : raise(TypeError)
+		player2.is_a?(Player) ? @player2 = player2 : raise(TypeError)
+	end
+
+	def assign_player_colors(player1, player2)
+		random = rand(0..1)
+		if random == 0
+			player1.color = "white"
+			player2.color = "black"
+		else
+			player1.color = "black"
+			player2.color = "white"
+		end
+		@white_player = players.select {|p| p.color=="white"}[0]
+		@black_player = players.select {|p| p.color=="black"}[0]
+	end
+
+	def set_current_player(player1, player2)
+		player1.color == "white" ? @current_player = player1 : @current_player = player2
+	end
+
+	def change_current_player
+		if @checkmate
+			puts "Game over! #{@current_player.name} wins!"
+		elsif @king_in_check && @king_in_check.color != @current_player.color
+			@current_player = players.select {|p| p != @current_player}[0]
+			puts "#{@current_player.name}, you are in check!"
+		else
+			@current_player = players.select {|p| p != @current_player}[0]
+		end
 	end
 
 	def get_column(square)
