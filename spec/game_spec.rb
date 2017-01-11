@@ -87,6 +87,7 @@ describe Game do
 			before(:each) do
 				@black_pawn = Pawn.new "black"
 				@board.squares["A6"] = @black_pawn
+				@black_pawn.current_position = "A6"
 			end
 
 			it "prints a message stating that there is a piece in the way" do
