@@ -499,19 +499,29 @@ describe Game do
 
 	describe ".offer_draw" do
 		context "when player 1 offers the draw" do
-			before(:example) {@game.instance_variable_set(:@current_player, @player1)}
+			before(:each) {@game.instance_variable_set(:@current_player, @player1)}
 
-			it "prints a message saying that player 1 has offered a draw and asks player 2 whether s/he accepts" do
-				expect{@game.offer_draw}.to output("#{@player2.name}, #{@player1.name} has offered a draw. Do you accept? Type 'Y' for yes or 'N' for no.\nDraw rejected.\n").to_stdout
+			context "and it is rejected" do
+				before(:example) {allow(@game).to receive(:gets).and_return('Draw rejected.')}
+
+				it "prints a message saying that player 1 has offered a draw and asks player 2 whether s/he accepts. Then says Draw rejected." do
+					expect{@game.offer_draw}.to output("#{@player2.name}, #{@player1.name} has offered a draw. Do you accept? Type 'Y' for yes or 'N' for no.\nDraw rejected.\n").to_stdout
+				end
 			end
+
 		end
 
 		context "when player 2 offers the draw" do
-			before(:example) {@game.instance_variable_set(:@current_player, @player2)}
+			before(:each) {@game.instance_variable_set(:@current_player, @player2)}
 
-			it "prints a message saying that player 2 has offered a draw and asks player 2 whether s/he accepts" do
-				expect{@game.offer_draw}.to output("#{@player1.name}, #{@player2.name} has offered a draw. Do you accept? Type 'Y' for yes or 'N' for no.\nDraw rejected.\n").to_stdout
+			context "and it's rejected" do
+				before(:example) {allow(@game).to receive(:gets).and_return('Draw rejected.')}
+
+				it "prints a message saying that player 2 has offered a draw and asks player 2 whether s/he accepts" do
+					expect{@game.offer_draw}.to output("#{@player1.name}, #{@player2.name} has offered a draw. Do you accept? Type 'Y' for yes or 'N' for no.\nDraw rejected.\n").to_stdout
+				end
 			end
+ 
 		end
 	end
 end
