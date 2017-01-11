@@ -191,13 +191,15 @@ describe Game do
 				@board.squares["D6"] = @white_pawn
 				@white_queen.current_position = "E6"
 				@board.squares["E6"] = @white_queen
+				@board.squares["D1"] = ""
+				@board.squares["D2"] = ""
 				unless example.metadata[:skip_before]
 					@game.play_turn("E7", "D6")
 				end
 			end
 
 			it "prints a message saying the move is illegal because it puts current player's king in check", skip_before: true do
-				expect{@game.play_turn("E7", "D6")}.to output(/ExD6\nThat puts your king in check! Try again.\n/).to_stdout
+				expect{@game.play_turn("E7", "D6")}.to output(/That puts your king in check! Try again.\n/).to_stdout
 			end
 
 			it "replaces the captured piece on the board" do
@@ -233,13 +235,14 @@ describe Game do
 				@white_queen = @board.squares["D1"]
 				@white_queen.current_position = "C6"
 				@board.squares["C6"] = @white_queen
+				@board.squares["D1"] = ""
 				unless example.metadata[:skip_before]
 					@game.play_turn("D7", "D6")
 				end
 			end
 
 			it "prints a message stating that you can't put your own king in check", skip_before: true do
-				expect{@game.play_turn("D7", "D6")}.to output(/D6\nThat puts your king in check! Try again.\n/).to_stdout
+				expect{@game.play_turn("D7", "D6")}.to output(/That puts your king in check! Try again.\n/).to_stdout
 			end
 
 			it "resets the moving piece back to the start square" do
@@ -272,13 +275,14 @@ describe Game do
 				@board.squares["E6"] = @white_queen
 				@white_pawn.current_position = "F5"
 				@board.squares["F5"] = @white_pawn
+				@board.squares["B8"], @board.squares["D1"], @board.squares["D2"] = "", "", ""
 				unless example.metadata[:skip_before]
 					@game.play_turn("E7", "F5")
 				end
 			end
 
 			it "prints a message stating that you can't put your own king in check", skip_before: true do
-				expect{@game.play_turn("E7", "F5")}.to output(/NxF5\nThat puts your king in check! Try again.\n/).to_stdout
+				expect{@game.play_turn("E7", "F5")}.to output(/That puts your king in check! Try again.\n/).to_stdout
 			end
 
 			it "replaces the captured piece on the board" do
