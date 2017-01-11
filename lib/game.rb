@@ -4,7 +4,7 @@ require_relative "./board.rb"
 require 'yaml'
 
 class Game
-	attr_reader :board, :current_player, :king_in_check, :checkmate, :en_passant
+	attr_reader :board, :current_player, :king_in_check, :checkmate, :en_passant, :white_player, :black_player
 
 	def initialize(player1, player2)
 		verify_player_type(player1, player2)
@@ -30,6 +30,8 @@ class Game
 			player1.color = "black"
 			player2.color = "white"
 		end
+		@white_player = players.select {|p| p.color=="white"}[0]
+		@black_player = players.select {|p| p.color=="black"}[0]
 	end
 
 	def set_current_player(player1, player2)
@@ -56,7 +58,7 @@ class Game
 					castle(moving_piece, destination_square)
 				end
 			elsif moving_piece.is_a?(King) && destination_square.is_a?(Rook)
-				if piece_in_the_way?(moving_piece, start, finish)
+				if piece_in_the_way?(destination_square, start, finish)
 					puts "There's a piece in the way! Try again."
 				else
 					castle(destination_square, moving_piece)
@@ -70,14 +72,9 @@ class Game
 			moving_piece.moved = true if moving_piece.moved == false
 			pawn_promotion(moving_piece) if moving_piece.color == "white" && moving_piece.current_position.split('').last == "8"
 			pawn_promotion(moving_piece) if moving_piece.color == "black" && moving_piece.current_position.split('').last == "1"
-			king_in_check?
-			check_mate?
 		elsif @en_passant && moving_piece.is_a?(Pawn) && pawn_legal_capture_distance?(moving_piece, finish)
-			captured_pawn = @en_passant
 			en_passant_pawn_capture(moving_piece, start, finish)
-			moving_piece.moved = true if moving_piece.moved == false
-			king_in_check?
-			check_mate?
+			moving_piece.moved = true if moving_piece.moved == false			
 		elsif !moving_piece.is_move_legal?(finish)
 			puts "That move is illegal! Try again."
 		elsif piece_in_the_way?(moving_piece, start, finish)
@@ -87,15 +84,12 @@ class Game
 			moving_piece.moved = true if moving_piece.moved == false
 			pawn_promotion(moving_piece) if moving_piece.is_a?(Pawn) && moving_piece.color == "white" && finish.split('').last == "8"
 			pawn_promotion(moving_piece) if moving_piece.is_a?(Pawn) && moving_piece.color == "black" && finish.split('').last == "1"
-			king_in_check?
-			check_mate?
 		elsif destination_square != ""
-			captured_piece = destination_square
 			piece_capture(moving_piece, start, finish)
 			moving_piece.moved = true if moving_piece.moved == false
-			king_in_check?
-			check_mate?
 		end
+		king_in_check?
+		check_mate?
 		change_current_player unless moving_piece.current_position == start
 		en_passant?(moving_piece, start, finish) unless moving_piece == ""
 		@board.display
@@ -435,7 +429,7 @@ class Game
 	end
 
 	def white_castle(rook, king)
-		black_pieces = @board.squares.values.select {|p| p != "" && p.color=="black"}
+		black_pieces = @board.black_pieces
 		if rook.current_position == "A1" && black_pieces.none? {|p| legal_moves(p).include?("D1") || legal_moves(p).include?("C1")}
 			rook.current_position = "D1"
 			king.current_position = "C1"
@@ -460,7 +454,7 @@ class Game
 	end
 
 	def black_castle(rook, king)
-		white_pieces = @board.squares.values.select {|p| p != "" && p.color=="white"}
+		white_pieces = @board.white_pieces
 		if rook.current_position == "A8" && white_pieces.none? {|p| legal_moves(p).include?("D8") || legal_moves(p).include?("C8")}
 			rook.current_position = "D8"
 			king.current_position = "C8"
@@ -499,73 +493,53 @@ class Game
 		white_king = @board.kings.select {|k| k.color=="white"}[0]
 		black_king = @board.kings.select {|k| k.color=="black"}[0]
 		if @king_in_check == white_king
-			@checkmate = players.select {|p| p.color=="white"}[0]
-			white_pieces = @board.squares.values.select {|p| p != "" && p.color== "white"}
+			@checkmate = @white_player
+			white_pieces = @board.white_pieces
 			until @king_in_check == false || white_pieces.empty?
 				piece = white_pieces.pop
-				piece_legal_moves = legal_moves(piece)
-				original_position = piece.current_position
-				until @king_in_check == false || piece_legal_moves.empty?
-					move = piece_legal_moves.pop
-					if @board.squares[move] == ""
-						piece.current_position = move
-						@board.squares[move] = piece
-						@board.squares[original_position] = ""
-						king_in_check?
-						@board.squares[original_position] = piece
-						@board.squares[move] = ""
-						piece.current_position = original_position
-					else
-						captured_piece = @board.squares[move]
-						captured_piece.current_position = ""
-						piece.current_position = move
-						@board.squares[move] = piece
-						@board.squares[original_position] = ""
-						king_in_check?
-						@board.squares[original_position] = piece
-						@board.squares[move] = captured_piece
-						piece.current_position = original_position
-						captured_piece.current_position = move
-					end
-				end
+				check_mate_checker(piece)
 			end
 			@checkmate = false unless @king_in_check
 			@king_in_check = white_king
 		elsif @king_in_check == black_king
-			@checkmate = players.select {|p| p.color=="black"}[0]
-			black_pieces = @board.squares.values.select {|p| p != "" && p.color=="black"}
+			@checkmate = @black_player
+			black_pieces = @board.black_pieces
 			until @king_in_check == false || black_pieces.empty?
 				piece = black_pieces.pop
-				piece_legal_moves = legal_moves(piece)
-				original_position = piece.current_position
-				until @king_in_check == false || piece_legal_moves.empty?
-					move = piece_legal_moves.pop
-					if @board.squares[move] == ""
-						piece.current_position = move
-						@board.squares[move] = piece
-						@board.squares[original_position] = ""
-						king_in_check?
-						@board.squares[original_position] = piece
-						@board.squares[move] = ""
-						piece.current_position = original_position
-					else
-						captured_piece = @board.squares[move]
-						captured_piece.current_position = ""
-						piece.current_position = move
-						@board.squares[move] = piece
-						@board.squares[original_position] = ""
-						king_in_check?
-						@board.squares[original_position] = piece
-						@board.squares[move] = captured_piece
-						piece.current_position = original_position
-						captured_piece.current_position = move
-					end
-				end
+				check_mate_checker(piece)
 			end
 			@checkmate = false unless @king_in_check
 			@king_in_check = black_king
 		end
 		return @checkmate ? @checkmate : false
+	end
+
+	def check_mate_checker(piece)
+		piece_legal_moves = legal_moves(piece)
+		original_position = piece.current_position
+		until @king_in_check == false || piece_legal_moves.empty?
+			move = piece_legal_moves.pop
+			if @board.squares[move] == ""
+				piece.current_position = move
+				@board.squares[move] = piece
+				@board.squares[original_position] = ""
+				king_in_check?
+				@board.squares[original_position] = piece
+				@board.squares[move] = ""
+				piece.current_position = original_position
+			else
+				captured_piece = @board.squares[move]
+				captured_piece.current_position = ""
+				piece.current_position = move
+				@board.squares[move] = piece
+				@board.squares[original_position] = ""
+				king_in_check?
+				@board.squares[original_position] = piece
+				@board.squares[move] = captured_piece
+				piece.current_position = original_position
+				captured_piece.current_position = move
+			end
+		end
 	end
 	
 end
