@@ -158,4 +158,14 @@ class Board
 		puts table
 	end
 
+	def black_pieces
+		black_pieces = squares.values.select {|p| p != "" && p.color=="black"}
+		black_pieces
+	end
+
+	def white_pieces
+		white_pieces = squares.values.select {|p| p != "" && p.color=="white"}
+		white_pieces
+	end
+
 end
